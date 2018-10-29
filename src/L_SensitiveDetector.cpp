@@ -52,17 +52,16 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
 	G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
 	G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
-	G4LogicalVolume *SDVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
+    G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
 	G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
-	G4String  PreName = SDVolume->GetName();
-	G4String SDName = PrevVolume->GetName();
+    G4String  PreName = PrevVolume->GetName();
+    G4String PostName = PostVolume->GetName();
+
+    const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
+
+    if (aParticle->GetCharge() == 0) return false;
 
 
-
-	//if(newHit->myData.SecID != -3)
-	//G4cout<<"newHit->myData.SecID = "<<newHit->myData.SecID<<G4endl;
-
-	// Fill the stuff that wasn't passed in the hitInfo struct
 	newHit->myData.TrackID = aTrack->GetTrackID();
 	newHit->myData.ParentID = aTrack->GetParentID();
 	newHit->myData.Energy = aTrack->GetKineticEnergy();
@@ -71,15 +70,13 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 	newHit->myData.X = globalPosition.x();
 	newHit->myData.Y = globalPosition.y();
 	newHit->myData.Z = globalPosition.z();
+    newHit->myData.Momentum= aTrack->GetMomentum().mag();
 	newHit->myData.Px = aTrack->GetMomentum().x();
 	newHit->myData.Py = aTrack->GetMomentum().y();
 	newHit->myData.Pz = aTrack->GetMomentum().z();
-	if (SDName == "HStationB2" && PreName == "World")     newHit->myData.StationID = -2;
-	else if (SDName == "HStationB1" && PreName == "World") newHit->myData.StationID = -1;
-	else if (SDName == "HStationB0" && PreName == "World") newHit->myData.StationID = 0;
-	else if (SDName == "HStationF1" && PreName == "World") newHit->myData.StationID = 1;
-	else if (SDName == "HStationF2" && PreName == "World") newHit->myData.StationID = 2;
-	else return true;
+
+    if (PreName == "LPlane" && PostName == "World") newHit->myData.StationID = 0;
+    else return false;
 
 
 	// Insert this hit

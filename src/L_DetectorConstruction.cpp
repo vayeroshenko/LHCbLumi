@@ -23,18 +23,14 @@ G4VPhysicalVolume* L_DetectorConstruction::Construct() {
 }
 
 void L_DetectorConstruction::ConstructSDandField() {
-    HSD = new L_SensitiveDetector("HSD");
-	G4SDManager::GetSDMpointer()->AddNewDetector(HSD);
+    LSD = new L_SensitiveDetector("LSD");
+    G4SDManager::GetSDMpointer()->AddNewDetector(LSD);
 
-	HStationB2Log->SetSensitiveDetector(HSD);
-	HStationB1Log->SetSensitiveDetector(HSD);
-	HStationB0Log->SetSensitiveDetector(HSD);
-	HStationF2Log->SetSensitiveDetector(HSD);
-	HStationF1Log->SetSensitiveDetector(HSD);
+    LPlaneLog->SetSensitiveDetector(LSD);
 
 
 
-	G4cout << "_____________________________________________Detectors are made" << G4endl;
+//    G4cout << "_____________________________________________Detectors are made" << G4endl;
 }
 
 void L_DetectorConstruction::DefineMateials() {
@@ -61,6 +57,11 @@ void L_DetectorConstruction::DefineMateials() {
 	G4Material* Scint = man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
 	ScintMaterial = Scint;
 
+    BPMaterial = man->FindOrBuildMaterial("G4_Be");
+
+    Vacuum = new G4Material( "Galactic", z=1., a=1.01*g/mole, density= universe_mean_density,
+                             kStateGas, 2.73*kelvin, 3.e-18*pascal );
+
 }
 
 G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
@@ -82,85 +83,69 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 			false,
 			0);
 
-	G4VSolid *HStationB0Solid = new G4Box("HStationB0",
-            LConst::StB0Width/2,
-            LConst::StB0Height/2,
-            LConst::StB0Thickness/2);
-	HStationB0Log = new G4LogicalVolume(HStationB0Solid,
-			ScintMaterial,
-			"HStationB0");
-	G4VPhysicalVolume *HStationB0Phys =  new G4PVPlacement(
-			new G4RotationMatrix(),
-            G4ThreeVector(0.,0.,LConst::StB0PozZ),
-			HStationB0Log,
-			"HStationB0",
-			worldLogical,
-			false,
-			0);
 
-	G4VSolid *HStationB1Solid = new G4Box("HStationB1",
-            LConst::StB1Width/2,
-            LConst::StB1Height/2,
-            LConst::StB1Thickness/2);
-	HStationB1Log = new G4LogicalVolume(HStationB1Solid,
-			ScintMaterial,
-			"HStationB1");
-	G4VPhysicalVolume *HStationB1Phys =  new G4PVPlacement(
-			new G4RotationMatrix(),
-            G4ThreeVector(0.,0.,LConst::StB1PozZ),
-			HStationB1Log,
-			"HStationB1",
-			worldLogical,
-			false,
-			0);
 
-	G4VSolid *HStationB2Solid = new G4Box("HStationB2",
-            LConst::StB2Width/2,
-            LConst::StB2Height/2,
-            LConst::StB2Thickness/2);
-	HStationB2Log = new G4LogicalVolume(HStationB2Solid,
-			ScintMaterial,
-			"HStationB2");
-	G4VPhysicalVolume *HStationB2Phys =  new G4PVPlacement(
-			new G4RotationMatrix(),
-            G4ThreeVector(0.,0.,LConst::StB2PozZ),
-			HStationB2Log,
-			"HStationB2",
-			worldLogical,
-			false,
-			0);
 
-	G4VSolid *HStationF1Solid = new G4Box("HStationF1",
-            LConst::StF1Width/2,
-            LConst::StF1Height/2,
-            LConst::StF1Thickness/2);
-	HStationF1Log = new G4LogicalVolume(HStationF1Solid,
-			ScintMaterial,
-			"HStationF1");
-	G4VPhysicalVolume *HStationF1Phys =  new G4PVPlacement(
-			new G4RotationMatrix(),
-            G4ThreeVector(0.,0.,LConst::StF1PozZ),
-			HStationF1Log,
-			"HStationF1",
-			worldLogical,
-			false,
-			0);
+    G4VSolid *BPSolid = new G4Tubs("BeamPipe",			// name
+            LConst::BPInnerRadius,						// inner radius
+            LConst::BPOuterRadius,						// outer radius
+            LConst::worldSizeZ/2.,						// dZ/2
+            0,											// theta start
+            twopi);										// theta of sector
 
-	G4VSolid *HStationF2Solid = new G4Box("HStationF2",
-            LConst::StF2Width/2,
-            LConst::StF2Height/2,
-            LConst::StF2Thickness/2);
-	HStationF2Log = new G4LogicalVolume(HStationF2Solid,
-			ScintMaterial,
-			"HStationF2");
-	G4VPhysicalVolume *HStationF2Phys =  new G4PVPlacement(
-			new G4RotationMatrix(),
-            G4ThreeVector(0.,0.,LConst::StF2PozZ),
-			HStationF2Log,
-			"HStationF2",
-			worldLogical,
-			false,
-			0);
+    G4LogicalVolume *BPLogical = new G4LogicalVolume(BPSolid,
+            BPMaterial,
+            "BeamPipe");
+    G4VPhysicalVolume *BPPhysical =  new G4PVPlacement(
+            new G4RotationMatrix(),
+            G4ThreeVector(0.,0.,0.),
+            BPLogical,
+            "BeamPipe",
+            worldLogical,
+            false,
+            0);
+
+
+    G4VSolid *BPVSolid = new G4Tubs("BeamPipeVacuum",               // name
+            0.,                                                     // inner radius
+            LConst::BPInnerRadius,                              	// outer radius
+            LConst::worldSizeZ/2.,                                  // dZ/2
+            0,                                                      // theta start
+            twopi);                                                 // theta of sector
+
+    G4LogicalVolume *BPVLogical = new G4LogicalVolume(BPVSolid,
+            Vacuum,
+            "BeamPipeVacuum");
+    G4VPhysicalVolume *BPVPhysical =  new G4PVPlacement(
+            new G4RotationMatrix(),
+            G4ThreeVector(0.,0.,0.),
+            BPVLogical,
+            "BeamPipe",
+            worldLogical,
+            false,
+            0);
+
+
+
+    G4VSolid *LSolid= new G4Box("LPlane",
+            100*cm,
+            100*cm,
+            1*mm);
+    LPlaneLog = new G4LogicalVolume(LSolid,
+            Vacuum,
+            "LPlane");
+    G4VPhysicalVolume *LPlanePhys =  new G4PVPlacement(
+            new G4RotationMatrix(),
+            G4ThreeVector(0.,0.,LConst::LpozZ),
+            LPlaneLog,
+            "LPlane",
+            worldLogical,
+            false,
+            0);
+
+
+
+
 
 	G4cout << "_____________________________________________Volumes are made" << G4endl;
 	return worldPhysical;

@@ -8,5 +8,5 @@ make main -j8
 
 cp events.root ../build/
 cd ../build
-./herschel vis_file.mac
+./LHCbLumi vis_file.mac
 

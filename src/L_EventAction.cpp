@@ -85,6 +85,7 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 		runAction->_Px[i] = (*THC)[i]->myData.Px;
 		runAction->_Py[i] = (*THC)[i]->myData.Py;
 		runAction->_Pz[i] = (*THC)[i]->myData.Pz;
+        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
 	}
 
 	runAction->_EventID = eventNum;

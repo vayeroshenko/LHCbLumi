@@ -17,6 +17,7 @@ struct HitData
   G4double Px;
   G4double Py;
   G4double Pz;
+  G4double Momentum;
 };
 
 #endif

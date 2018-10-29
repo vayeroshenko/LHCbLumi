@@ -52,6 +52,7 @@ void L_RunAction::BeginOfRunAction(const G4Run*)
 	tree->Branch("X", _X, "X[nPart]/D");
 	tree->Branch("Y", _Y, "Y[nPart]/D");
 	tree->Branch("Z", _Z, "Z[nPart]/D");
+    tree->Branch("Momentum", _Momentum, "Momentum[nPart]/D");
 	tree->Branch("Px", _Px, "Px[nPart]/D");
 	tree->Branch("Py", _Py, "Py[nPart]/D");
 	tree->Branch("Pz", _Pz, "Pz[nPart]/D");

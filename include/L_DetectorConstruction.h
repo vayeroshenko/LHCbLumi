@@ -49,25 +49,19 @@ public:
 
 	  void DefineMateials();
 	  G4VPhysicalVolume* DefineVolumes();
-      L_SensitiveDetector *SDB2;
-      L_SensitiveDetector *SDB1;
-      L_SensitiveDetector *SDB0;
-      L_SensitiveDetector *SDF1;
-      L_SensitiveDetector *SDF2;
+      L_SensitiveDetector *LSD;
 
-      L_SensitiveDetector *HSD;
 
-	  G4LogicalVolume *HStationB2Log;
-	  G4LogicalVolume *HStationB1Log;
-	  G4LogicalVolume *HStationB0Log;
-	  G4LogicalVolume *HStationF1Log;
-	  G4LogicalVolume *HStationF2Log;
+      G4LogicalVolume *LPlaneLog;
+
 
 
 
 private:
 	  G4Material *worldMaterial;
 	  G4Material *ScintMaterial;
+      G4Material *Vacuum;
+      G4Material *BPMaterial;
 
 
 

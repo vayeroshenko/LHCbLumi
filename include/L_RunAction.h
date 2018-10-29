@@ -54,6 +54,7 @@ public:
     G4double _Px[_nPartMax];
     G4double _Py[_nPartMax];
     G4double _Pz[_nPartMax];
+    G4double _Momentum[_nPartMax];
 
 
 private:
