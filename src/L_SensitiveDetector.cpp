@@ -37,7 +37,7 @@ void L_SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 }
 
 
-G4bool L_SensitiveDetector::ProcessHitsH(G4Step* aStep, G4TouchableHistory* hist) {
+G4bool L_SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist) {
 	return ProcessHits(aStep, hist);
 }
 
@@ -47,27 +47,31 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
 	G4Track* aTrack = aStep->GetTrack();
 	G4ThreeVector globalPosition = aStep->GetPostStepPoint()->GetPosition();
-    L_Hit* newHit = new L_Hit();
-	newHit->myData;
+//	newHit->myData;
 
 	G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
 	G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
+    if (!aPostPoint->GetPhysicalVolume()) return false;
     G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
 	G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
-    G4String  PreName = PrevVolume->GetName();
+
+
+    G4String PreName = PrevVolume->GetName();
     G4String PostName = PostVolume->GetName();
 
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
 
+
     if (aParticle->GetCharge() == 0) return false;
 
+    L_Hit* newHit = new L_Hit();
 
 	newHit->myData.TrackID = aTrack->GetTrackID();
 	newHit->myData.ParentID = aTrack->GetParentID();
 	newHit->myData.Energy = aTrack->GetKineticEnergy();
 	newHit->myData.PdgID = aTrack->GetParticleDefinition()->GetPDGEncoding();
 	newHit->myData.Time = aTrack->GetGlobalTime();
-	newHit->myData.X = globalPosition.x();
+    newHit->myData.X = globalPosition.x();
 	newHit->myData.Y = globalPosition.y();
 	newHit->myData.Z = globalPosition.z();
     newHit->myData.Momentum= aTrack->GetMomentum().mag();
@@ -75,7 +79,8 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 	newHit->myData.Py = aTrack->GetMomentum().y();
 	newHit->myData.Pz = aTrack->GetMomentum().z();
 
-    if (PreName == "LPlane" && PostName == "World") newHit->myData.StationID = 0;
+    if (PreName == "L1Plane" && PostName == "World") newHit->myData.StationID = 0;
+    else if (PreName == "L2Plane" && PostName == "World") newHit->myData.StationID = 1;
     else return false;
 
 

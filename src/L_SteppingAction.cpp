@@ -40,8 +40,8 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 	G4VPhysicalVolume* aPostPV = aPostPoint->GetPhysicalVolume();
 
 	//
-//	if (!aPostPV) return;
-//	if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    if (!aPostPV) return;
+    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
 
 	return;
 }

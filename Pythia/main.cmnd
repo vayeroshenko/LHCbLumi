@@ -1,4 +1,4 @@
-Main:numberOfEvents = 1000       ! number of events to generate
+Main:numberOfEvents = 10000       ! number of events to generate
 
 Beams:idA = 2212
 Beams:idB = 2212
@@ -8,4 +8,4 @@ SoftQCD::all = on
 HardQCD:all = on
 
 Random:setSeed = on
-Random:seed = 1214457
+Random:seed = 1115457

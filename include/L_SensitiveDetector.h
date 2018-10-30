@@ -27,7 +27,7 @@ public:
 
 	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
 
-	G4bool ProcessHitsH(G4Step*, G4TouchableHistory*);
+    G4bool ProcessHitsL(G4Step*, G4TouchableHistory*);
 
 	void EndOfEvent(G4HCofThisEvent*);
 private:

@@ -17,6 +17,7 @@
 #include "G4Tubs.hh"
 #include "G4Trd.hh"
 #include "G4Trap.hh"
+#include "G4Sphere.hh"
 #include "G4ExtrudedSolid.hh"
 #include "G4VSolid.hh"
 #include "G4UnionSolid.hh"
@@ -52,7 +53,8 @@ public:
       L_SensitiveDetector *LSD;
 
 
-      G4LogicalVolume *LPlaneLog;
+      G4LogicalVolume *L1PlaneLog;
+      G4LogicalVolume *L2PlaneLog;
 
 
 
@@ -62,6 +64,7 @@ private:
 	  G4Material *ScintMaterial;
       G4Material *Vacuum;
       G4Material *BPMaterial;
+      G4Material *INOX;
 
 
 

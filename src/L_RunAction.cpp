@@ -30,9 +30,9 @@ void L_RunAction::BeginOfRunAction(const G4Run*)
 	timer->Start();
 
 	// Histogramming
-	hfile = new TFile(_outputFileName, "RECREATE", "HeRSCheL Simulation Data", 1);
+    hfile = new TFile(_outputFileName, "RECREATE", "LHCb Luminometer Simulation Data", 1);
 	if (hfile->IsZombie()) exit(-1);
-	tree = new TTree("T", "HeRSCheL Data Tree");
+    tree = new TTree("T", "LHCb Luminometer Data Tree");
 //	tree->SetAutoSave(1000000);
 
 	// Create new event
