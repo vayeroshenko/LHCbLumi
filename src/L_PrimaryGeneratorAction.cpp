@@ -9,14 +9,15 @@
 
 
 L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
-//    ReadFile();
     iEv = 0;
 
+    Int_t pythiaSeed = time(NULL)%10000000;
 
     G4RunManager *runManager = G4RunManager::GetRunManager();
     G4int evToGen = runManager->GetNumberOfEventsToBeProcessed();
     pythia.readFile("PythiaSettings.cmnd");
     pythia.readString("Main:numberOfEvents = " + std::to_string(evToGen));
+    pythia.readString("Random:seed = " + std::to_string(pythiaSeed));
     pythia.init();
 }
 

@@ -129,7 +129,6 @@ set(LHCbLumi_SCRIPTS
     run.mac
     LHCbLumi.cc
     vis.mac
-    events.root
     vis_file.mac
     PythiaSettings.cmnd
     )

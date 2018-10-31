@@ -20,6 +20,8 @@
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
+#include "TRandom3.h"
+#include "G4Timer.hh"
 
 #include "TROOT.h"
 #include "TFile.h"
@@ -29,6 +31,7 @@
 
 #include "Pythia8/Pythia.h"
 
+#include <time.h>
 
 #include "Randomize.hh"
 

@@ -3,7 +3,7 @@
 	theChain->Add("data.root");
 	TCanvas *c = new TCanvas("plots","plots", 1500,800);
 
-	c->Divide(3,1);
+	c->Divide(2,1);
 
 
 	Int_t EventID;
@@ -36,19 +36,37 @@
 	theChain->SetBranchAddress("Time", Time);
 	theChain->SetBranchAddress("PdgID", PdgID);
 
-	nBinX = 20; nBinY = 20;
-	// xMin = -500; xMax = 500;
-	// yMin = -500; yMax = 500;
-	xMin = -5; xMax = 5;
-	yMin = -5; yMax = 5;
+	Int_t nBinXIn, nBinYIn, nBinXOut, nBinYOut;
+	Double_t xMinIn, xMaxIn, yMinIn, yMaxIn;
+	Double_t xMinOut, xMaxOut, yMinOut, yMaxOut;
+
+	nBinXOut = 10; nBinYOut = 10;
+	nBinXIn= 10; nBinYIn = 10;
+
+	xMinIn = -30; xMaxIn = 30;
+	yMinIn = -30; yMaxIn = 30;
+
+	xMinOut = -100; xMaxOut = 100;
+	yMinOut = -100; yMaxOut = 100;
+
 
 	TH2D StationMap[2];
-	StationMap[0] =  TH2D("Farthest", "Farthest", 
-		nBinX, xMin, xMax,
-		nBinY, yMin, yMax);
-	StationMap[1] =  TH2D("Nearest", "Nearest", 
-		nBinX, xMin, xMax,
-		nBinY, yMin, yMax);
+	StationMap[0] =  TH2D("FarthestOut", "FarthestOut", 
+		nBinXOut, xMinOut, xMaxOut,
+		nBinYOut, yMinOut, yMaxOut);
+	StationMap[1] =  TH2D("FarthestIn", "FarthestIn", 
+		nBinXIn, xMinIn, xMaxIn,
+		nBinYIn, yMinIn, yMaxIn);
+
+
+	TH2D CountMap[2];
+	CountMap[0] =  TH2D("FarthestOut1", "FarthestOut1", 
+		nBinXOut, xMinOut, xMaxOut,
+		nBinYOut, yMinOut, yMaxOut);
+	CountMap[1] =  TH2D("FarthestIn1", "FarthestIn1", 
+		nBinXIn, xMinIn, xMaxIn,
+		nBinYIn, yMinIn, yMaxIn);
+
 
 
 	Long_t nEv = theChain->GetEntries();
@@ -56,33 +74,91 @@
 	for (Long_t j = 0; j < nEv; ++j) {
 		theChain->GetEntry(j);
 
+		TH2D TempMap[2];
+		TempMap[0] =  TH2D("FarthestOut2", "FarthestOut2", 
+			nBinXOut, xMinOut, xMaxOut,
+			nBinYOut, yMinOut, yMaxOut);
+		TempMap[1] =  TH2D("FarthestIn2", "FarthestIn2", 
+			nBinXIn, xMinIn, xMaxIn,
+			nBinYIn, yMinIn, yMaxIn);
+
+
+
 		for (Int_t i = 0; i < nPart; ++i){
 			// if (X[i] < 8. && X[i] > -8 && Y[i] < 8. && Y[i] > -8) continue;
-			if (StationID[i] ==  0) StationMap[0].Fill(X[i],Y[i]);
-			if (StationID[i] ==  1) StationMap[1].Fill(X[i],Y[i]);
+			if (StationID[i] ==  1){ 
+				StationMap[0].Fill(X[i],Y[i]);
+				TempMap[0].Fill(X[i],Y[i]);
+			}
+			if (StationID[i] == -1){
+				StationMap[1].Fill(X[i],Y[i]);
+				TempMap[1].Fill(X[i],Y[i]);
+			}
 		}
+
+		for (Int_t xI = 1; xI <= nBinXOut; ++xI){
+			for (Int_t yI = 1; yI <= nBinYOut; ++yI){
+				if (TempMap[0].GetBinContent(xI,yI) == 0) 
+					CountMap[0].SetBinContent(xI,yI,
+						CountMap[0].GetBinContent(xI,yI) + 1);
+		}}
+
+		for (Int_t xI = 1; xI <= nBinXIn; ++xI){
+			for (Int_t yI = 1; yI <= nBinYIn; ++yI){
+				if (TempMap[1].GetBinContent(xI,yI) == 0) 
+					CountMap[1].SetBinContent(xI,yI,
+						CountMap[1].GetBinContent(xI,yI) + 1);
+		}}
+		TempMap[0].Reset(); TempMap[1].Reset();
+
+
 	}
 
 
-	// for (Int_t xI = 0; xI < nBinX; ++xI){
-	// 	for (Int_t yI = 0; yI < nBinY; ++yI){
-	// 		for (Int_t i = 0; i < 2; ++i){
-	// 			Double_t BinVal = StationMap[i].GetBinContent(xI,yI) / nEv;
-	// 			BinVal = round(BinVal * 10.)/10.;
-	// 			StationMap[i].SetBinContent(xI, yI, BinVal);
-	// 		}
-	// 	}
-	// } 
 
-	c->cd(1);
-	theChain->Draw("Z");
+
+	// for (Int_t xI = 0; xI <= nBinXOut; ++xI){
+	// 	for (Int_t yI = 0; yI <= nBinYOut; ++yI){
+	// 		Double_t BinVal = StationMap[0].GetBinContent(xI,yI) / nEv;
+	// 		BinVal = round(BinVal * 10.)/10.;
+	// 		StationMap[0].SetBinContent(xI, yI, BinVal);
+	// }}
+
+	// for (Int_t xI = 0; xI <= nBinXIn; ++xI){
+	// 	for (Int_t yI = 0; yI <= nBinYIn; ++yI){
+	// 		Double_t BinVal = StationMap[1].GetBinContent(xI,yI) / nEv;
+	// 		BinVal = round(BinVal * 10.)/10.;
+	// 		StationMap[1].SetBinContent(xI, yI, BinVal);
+	// }}
+
+	for (Int_t xI = 1; xI <= nBinXOut; ++xI){
+		for (Int_t yI = 1; yI <= nBinYOut; ++yI){
+			Double_t BinVal = CountMap[0].GetBinContent(xI,yI) / nEv ;
+			BinVal = round(BinVal * 1000.)/1000.;
+			CountMap[0].SetBinContent(xI, yI, BinVal);
+	}}
+
+	for (Int_t xI = 1; xI <= nBinXIn; ++xI){
+		for (Int_t yI = 1; yI <= nBinYIn; ++yI){
+			Double_t BinVal = CountMap[1].GetBinContent(xI,yI) / nEv ;
+			BinVal = round(BinVal * 1000.)/1000.;
+			CountMap[1].SetBinContent(xI, yI, BinVal);
+	}}
+
+
+
+
+	// for (Int_t i = 0; i < 2; ++i){
+	// 	StationMap[i].SetOption("COL TEXT");
+	// 	c->cd(i+1);
+	// 	StationMap[i].Draw();
+	// }
 
 	for (Int_t i = 0; i < 2; ++i){
-		StationMap[i].SetOption("COL TEXT");
-		c->cd(i+2);
-		StationMap[i].Draw();
+		CountMap[i].SetOption("COL TEXT");
+		c->cd(i+1);
+		CountMap[i].Draw();
 	}
-
 
 
 

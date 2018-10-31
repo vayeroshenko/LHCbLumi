@@ -52,6 +52,7 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 	G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
 	G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
     if (!aPostPoint->GetPhysicalVolume()) return false;
+
     G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
 	G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
 
@@ -79,8 +80,10 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 	newHit->myData.Py = aTrack->GetMomentum().y();
 	newHit->myData.Pz = aTrack->GetMomentum().z();
 
-    if (PreName == "L1Plane" && PostName == "World") newHit->myData.StationID = 0;
-    else if (PreName == "L2Plane" && PostName == "World") newHit->myData.StationID = 1;
+    if (PreName == "L1PlaneInner" && PostName == "World") newHit->myData.StationID = -1;
+    else if (PreName == "L1PlaneOuter" && PostName == "World") newHit->myData.StationID = 1;
+    else if (PreName == "L2PlaneInner" && PostName == "World") newHit->myData.StationID = -2;
+    else if (PreName == "L2PlaneOuter" && PostName == "World") newHit->myData.StationID = 2;
     else return false;
 
 

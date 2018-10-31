@@ -6,4 +6,4 @@ SoftQCD::all = on
 HardQCD:all = on
 
 Random:setSeed = on
-Random:seed = 125657
+!Random:seed = 125657
