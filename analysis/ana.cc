@@ -148,17 +148,17 @@
 
 
 
-	// for (Int_t i = 0; i < 2; ++i){
-	// 	StationMap[i].SetOption("COL TEXT");
-	// 	c->cd(i+1);
-	// 	StationMap[i].Draw();
-	// }
-
 	for (Int_t i = 0; i < 2; ++i){
-		CountMap[i].SetOption("COL TEXT");
+		StationMap[i].SetOption("COL TEXT");
 		c->cd(i+1);
-		CountMap[i].Draw();
+		StationMap[i].Draw();
 	}
+
+	// for (Int_t i = 0; i < 2; ++i){
+	// 	CountMap[i].SetOption("COL TEXT");
+	// 	c->cd(i+1);
+	// 	CountMap[i].Draw();
+	// }
 
 
 

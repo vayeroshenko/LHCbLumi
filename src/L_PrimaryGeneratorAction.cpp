@@ -65,9 +65,9 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
         X[particleID] = event[i].xProd();
         Y[particleID] = event[i].yProd();
         Z[particleID] = event[i].zProd();
-        pX[particleID] = event[i].px();
-        pY[particleID] = event[i].py();
-        pZ[particleID] = event[i].pz();
+        pX[particleID] = event[i].px()*GeV;
+        pY[particleID] = event[i].py()*GeV;
+        pZ[particleID] = event[i].pz()*GeV;
         particleID ++;
     }
     nParticles = particleID;
