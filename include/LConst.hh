@@ -15,8 +15,8 @@
 
 namespace LConst{
 
-	const G4double worldSizeX = 2*m;
-	const G4double worldSizeY = 2*m;
+    const G4double worldSizeX = 2*m;
+    const G4double worldSizeY = 2*m;
     const G4double worldSizeZ = 8*m;
 
 

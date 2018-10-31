@@ -25,6 +25,7 @@
 #include "TTree.h"
 #include "TFile.h"
 
+
 class L_RunAction: public G4UserRunAction {
 public:
     L_RunAction();
@@ -55,6 +56,8 @@ public:
     G4double _Py[_nPartMax];
     G4double _Pz[_nPartMax];
     G4double _Momentum[_nPartMax];
+
+
 
 
 private:

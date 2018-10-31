@@ -19,6 +19,7 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4RunManager.hh"
 
 #include "TROOT.h"
 #include "TFile.h"
@@ -26,9 +27,11 @@
 #include "TMath.h"
 #include "TChain.h"
 
+#include "Pythia8/Pythia.h"
 
 
 #include "Randomize.hh"
+
 
 //class G4Hep
 class G4HEPEvtInterface;
@@ -41,30 +44,31 @@ public:
     L_PrimaryGeneratorAction();
     virtual ~L_PrimaryGeneratorAction();
 public:
-	void GeneratePrimaries(G4Event* anEvent);
+    void GeneratePrimaries(G4Event* anEvent);
 
 private:
-	void ReadFile();
-	bool GetEvent(G4int evtID);
+    bool GetEvent(Pythia8::Event event);
 
 private:
-	G4ParticleGun *_particleGun = new G4ParticleGun();
+    G4ParticleGun *_particleGun = new G4ParticleGun();
 
-	TChain *tree;
-	G4int nEvents;
-	G4int nParticles;
-	G4int pdgID[20000];
-	G4float X[20000];
-	G4float Y[20000];
-	G4float Z[20000];
-	G4float pX[20000];
-	G4float pY[20000];
-	G4float pZ[20000];
+    TChain *tree;
+    G4int nEvents;
+    G4int nParticles;
+    G4int pdgID[20000];
+    G4float X[20000];
+    G4float Y[20000];
+    G4float Z[20000];
+    G4float pX[20000];
+    G4float pY[20000];
+    G4float pZ[20000];
 
-	G4int iEv;
+    G4int iEv;
 
-
-
+    Pythia8::Pythia pythia;
+    Pythia8::Event& PythiaEvent = pythia.event;
 };
+
+
 
 #endif /* SRC_L_PrimaryGeneratorAction_H_ */
