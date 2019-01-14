@@ -219,14 +219,14 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     L2PlaneLogOuter = new G4LogicalVolume(L2Solid,
                                      Vacuum,
                                      "L2PlaneOuter");
-    G4VPhysicalVolume *L2PlanePhysOuter =  new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0.,LConst::L2pozZ),
-                L2PlaneLogOuter,
-                "L2PlaneOuter",
-                worldLogical,
-                false,
-                0);
+//    G4VPhysicalVolume *L2PlanePhysOuter =  new G4PVPlacement(
+//                new G4RotationMatrix(),
+//                G4ThreeVector(0.,0.,LConst::L2pozZ),
+//                L2PlaneLogOuter,
+//                "L2PlaneOuter",
+//                worldLogical,
+//                false,
+//                0);
     ////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////
@@ -239,14 +239,14 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     L2PlaneLogInner = new G4LogicalVolume(L2SolidIn,
                                      Vacuum,
                                      "L2PlaneInner");
-    G4VPhysicalVolume *L2PlanePhysInner =  new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0.,LConst::L2pozZ),
-                L2PlaneLogInner,
-                "L2PlaneInner",
-                worldLogical,
-                false,
-                0);
+//    G4VPhysicalVolume *L2PlanePhysInner =  new G4PVPlacement(
+//                new G4RotationMatrix(),
+//                G4ThreeVector(0.,0.,LConst::L2pozZ),
+//                L2PlaneLogInner,
+//                "L2PlaneInner",
+//                worldLogical,
+//                false,
+//                0);
     ////////////////////////////////////////////////////////
 
 

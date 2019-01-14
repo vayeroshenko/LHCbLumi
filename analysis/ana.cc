@@ -1,6 +1,7 @@
 {
 	TChain *theChain = new TChain("T");
-	theChain->Add("data.root");
+	// theChain->Add("data.root");
+	theChain->Add("iii5_4.root");
 	TCanvas *c = new TCanvas("plots","plots", 1500,800);
 
 	c->Divide(2,1);
@@ -49,6 +50,9 @@
 	xMinOut = -100; xMaxOut = 100;
 	yMinOut = -100; yMaxOut = 100;
 
+	Double_t Rmin = 10.;
+	Double_t Rmax = 30.;
+
 
 	TH2D StationMap[2];
 	StationMap[0] =  TH2D("FarthestOut", "FarthestOut", 
@@ -69,6 +73,9 @@
 
 
 
+	Double_t nNoPartIn = 0;
+	Double_t nNoPartOut = 0;
+
 	Long_t nEv = theChain->GetEntries();
 
 	for (Long_t j = 0; j < nEv; ++j) {
@@ -83,6 +90,9 @@
 			nBinYIn, yMinIn, yMaxIn);
 
 
+		bool noPartIn = true;
+		bool noPartOut = true;
+
 
 		for (Int_t i = 0; i < nPart; ++i){
 			// if (X[i] < 8. && X[i] > -8 && Y[i] < 8. && Y[i] > -8) continue;
@@ -94,7 +104,17 @@
 				StationMap[1].Fill(X[i],Y[i]);
 				TempMap[1].Fill(X[i],Y[i]);
 			}
+
+			Double_t R = TMath::Sqrt(X[i]*X[i] + Y[i]*Y[i]);
+
+			if (R < Rmax && R > Rmin) noPartIn = false;
+			if (R > Rmax && 
+				X[i] > -100 && X[i] < 100 &&
+				Y[i] > -100 && Y[i] < 100) noPartOut = false;
 		}
+
+		if (noPartIn) nNoPartIn++; 
+		if (noPartOut) nNoPartOut++;
 
 		for (Int_t xI = 1; xI <= nBinXOut; ++xI){
 			for (Int_t yI = 1; yI <= nBinYOut; ++yI){
@@ -113,6 +133,9 @@
 
 
 	}
+
+	std::cout << "No signal inside " << nNoPartIn/nEv << " of events\n";
+	std::cout << "No signal outside " << nNoPartOut/nEv << " of events\n";
 
 
 

@@ -47,6 +47,9 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         _particleGun->SetParticleDefinition(particle);
         _particleGun->SetParticleMomentumDirection(dir);
         _particleGun->SetParticleEnergy(Ekin);
+
+//        Z[pId] += LConst::VeloLeft + (LConst::VeloRight - LConst::VeloLeft)/4. * 4;
+
         _particleGun->SetParticlePosition(G4ThreeVector(X[pId], Y[pId], Z[pId]));
         _particleGun->GeneratePrimaryVertex(anEvent);
 
@@ -62,9 +65,9 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
         if (!event[i].isFinal()) continue;
 
         pdgID[particleID] = event[i].id();
-        X[particleID] = event[i].xProd();
-        Y[particleID] = event[i].yProd();
-        Z[particleID] = event[i].zProd();
+        X[particleID] = event[i].xProd()*mm;
+        Y[particleID] = event[i].yProd()*mm;
+        Z[particleID] = event[i].zProd()*mm;
         pX[particleID] = event[i].px()*GeV;
         pY[particleID] = event[i].py()*GeV;
         pZ[particleID] = event[i].pz()*GeV;

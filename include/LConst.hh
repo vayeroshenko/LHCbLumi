@@ -24,7 +24,10 @@ namespace LConst{
     const G4double BPInnerRadius = 30*mm;
 
     const G4double L1pozZ = - 2172.*mm;
-    const G4double L2pozZ = - 2172.*mm + 800*mm;
+//    const G4double L1pozZ = - 2172.*mm + 400*mm;
+//    const G4double L1pozZ = - 2172.*mm + 800*mm;
+
+//    const G4double L2pozZ = - 2172.*mm + 800*mm;
 
 //    const G4double BeamStart = - 879.*mm;
 
@@ -42,7 +45,17 @@ namespace LConst{
 
     const G4double BeamStart = sphereStart - capHeight + 32.*mm;
 
+    const G4double VeloLeft = -175*mm;
+    const G4double VeloRight = 350*mm;
 
+    const G4double nSecOut = 10;
+    const G4double nSecIn = 10;
+
+    const G4double innerRadIn = 10*mm;
+    const G4double outerRadIn = BPInnerRadius;
+
+    const G4double innerRadOut = BPOuterRadius;
+    const G4double outerRadOut = 10*cm;
 
 
 
