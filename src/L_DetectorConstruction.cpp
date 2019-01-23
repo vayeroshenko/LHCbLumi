@@ -250,6 +250,47 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     ////////////////////////////////////////////////////////
 
 
+    G4ThreeVector Ta = G4ThreeVector(0.,0.,0.);
+    G4RotationMatrix Ra = G4RotationMatrix();
+
+    G4Trd *secIn = new G4Trd(
+      "sectorIn",
+      sectorIn.shortSide/2.,
+      sectorIn.longSide/2.,
+      sectorIn.thickness/2.,
+      sectorIn.thickness/2.,
+      sectorIn.height/2.
+      );
+
+    G4Trd *secOut = new G4Trd(
+      "sectorOut",
+      sectorOut.shortSide/2.,
+      sectorOut.longSide/2.,
+      sectorOut.thickness/2.,
+      sectorOut.thickness/2.,
+      sectorOut.height/2.
+      );
+
+    G4Trd *absIn = new G4Trd(
+      "absIn",
+      absorberIn.shortSide/2.,
+      absorberIn.longSide/2.,
+      absorberIn.thickness/2.,
+      absorberIn.thickness/2.,
+      absorberIn.height/2.
+      );
+
+    G4Trd *absOut = new G4Trd(
+      "absOut",
+      absorberOut.shortSide/2.,
+      absorberOut.longSide/2.,
+      absorberOut.thickness/2.,
+      absorberOut.thickness/2.,
+      absorberOut.height/2.
+      );
+
+
+
 
 
     G4cout << "_____________________________________________Volumes are made" << G4endl;

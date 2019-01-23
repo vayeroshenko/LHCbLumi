@@ -38,6 +38,7 @@
 #include "globals.hh"
 
 #include "LConst.hh"
+#include "L_VolumeStructures.h"
 
 class L_DetectorConstruction: public G4VUserDetectorConstruction {
 public:
@@ -58,7 +59,10 @@ public:
       G4LogicalVolume *L1PlaneLogOuter;
       G4LogicalVolume *L2PlaneLogOuter;
 
-
+      TrapezeSectorStructIn sectorIn;
+      TrapezeSectorStructOut sectorOut;
+      TrapezeAbsStructIn absorberIn;
+      TrapezeAbsStructOut absorberOut;
 
 
 private:
