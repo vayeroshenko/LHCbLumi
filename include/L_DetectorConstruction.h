@@ -46,31 +46,33 @@ public:
     virtual ~L_DetectorConstruction();
 
 public:
-	  G4VPhysicalVolume* Construct();
-	  void ConstructSDandField();
+    G4VPhysicalVolume* Construct();
+    void ConstructSDandField();
 
-	  void DefineMateials();
-	  G4VPhysicalVolume* DefineVolumes();
-      L_SensitiveDetector *LSD;
+    void DefineMateials();
+    G4VPhysicalVolume* DefineVolumes();
+    L_SensitiveDetector *LSD;
 
 
-      G4LogicalVolume *L1PlaneLogInner;
-      G4LogicalVolume *L2PlaneLogInner;
-      G4LogicalVolume *L1PlaneLogOuter;
-      G4LogicalVolume *L2PlaneLogOuter;
+    G4LogicalVolume *L1PlaneLogInner;
+    G4LogicalVolume *L2PlaneLogInner;
+    G4LogicalVolume *L1PlaneLogOuter;
+    G4LogicalVolume *L2PlaneLogOuter;
 
-      TrapezeSectorStructIn sectorIn;
-      TrapezeSectorStructOut sectorOut;
-      TrapezeAbsStructIn absorberIn;
-      TrapezeAbsStructOut absorberOut;
+    TrapezeSectorStructIn sectorIn;
+    TrapezeSectorStructOut sectorOut;
+    TrapezeAbsStructIn absorberIn;
+    TrapezeAbsStructOut absorberOut;
 
+    G4LogicalVolume *LSectorIn[LConst::nSecIn];
+    G4LogicalVolume *LSectorOut[LConst::nSecOut];
 
 private:
-	  G4Material *worldMaterial;
-	  G4Material *ScintMaterial;
-      G4Material *Vacuum;
-      G4Material *BPMaterial;
-      G4Material *INOX;
+    G4Material *worldMaterial;
+    G4Material *ScintMaterial;
+    G4Material *Vacuum;
+    G4Material *BPMaterial;
+    G4Material *INOX;
 
 
 

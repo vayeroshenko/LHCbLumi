@@ -18,18 +18,19 @@ L_DetectorConstruction::~L_DetectorConstruction() {
 }
 
 G4VPhysicalVolume* L_DetectorConstruction::Construct() {
+    LSD = new L_SensitiveDetector("LSD");
+    G4SDManager::GetSDMpointer()->AddNewDetector(LSD);
     DefineMateials();
     return DefineVolumes();
 }
 
 void L_DetectorConstruction::ConstructSDandField() {
-    LSD = new L_SensitiveDetector("LSD");
-    G4SDManager::GetSDMpointer()->AddNewDetector(LSD);
 
-    L1PlaneLogInner->SetSensitiveDetector(LSD);
-    L2PlaneLogInner->SetSensitiveDetector(LSD);
-    L1PlaneLogOuter->SetSensitiveDetector(LSD);
-    L2PlaneLogOuter->SetSensitiveDetector(LSD);
+
+//    L1PlaneLogInner->SetSensitiveDetector(LSD);
+//    L2PlaneLogInner->SetSensitiveDetector(LSD);
+//    L1PlaneLogOuter->SetSensitiveDetector(LSD);
+//    L2PlaneLogOuter->SetSensitiveDetector(LSD);
 
 
     //    G4cout << "_____________________________________________Detectors are made" << G4endl;
@@ -176,16 +177,16 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                                          L1SolidPlane,
                                                          ExtSolid);
     L1PlaneLogOuter = new G4LogicalVolume(L1Solid,
-                                     Vacuum,
-                                     "L1PlaneOuter");
-    G4VPhysicalVolume *L1PlanePhysOuter =  new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0.,LConst::L1pozZ),
-                L1PlaneLogOuter,
-                "L1PlaneOuter",
-                worldLogical,
-                false,
-                0);
+                                          Vacuum,
+                                          "L1PlaneOuter");
+    //    G4VPhysicalVolume *L1PlanePhysOuter =  new G4PVPlacement(
+    //                new G4RotationMatrix(),
+    //                G4ThreeVector(0.,0.,LConst::L1pozZ),
+    //                L1PlaneLogOuter,
+    //                "L1PlaneOuter",
+    //                worldLogical,
+    //                false,
+    //                0);
     ///////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////
@@ -196,16 +197,16 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                     0,
                                     twopi);
     L1PlaneLogInner = new G4LogicalVolume(L1SolidIn,
-                                     Vacuum,
-                                     "L1PlaneInner");
-    G4VPhysicalVolume *L1PlanePhysInner =  new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0.,LConst::L1pozZ),
-                L1PlaneLogInner,
-                "L1PlaneInner",
-                worldLogical,
-                false,
-                0);
+                                          Vacuum,
+                                          "L1PlaneInner");
+    //        G4VPhysicalVolume *L1PlanePhysInner =  new G4PVPlacement(
+    //                    new G4RotationMatrix(),
+    //                    G4ThreeVector(0.,0.,LConst::L1pozZ),
+    //                    L1PlaneLogInner,
+    //                    "L1PlaneInner",
+    //                    worldLogical,
+    //                    false,
+    //                    0);
     ////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////
@@ -217,16 +218,16 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                                          L2SolidPlane,
                                                          ExtSolid);
     L2PlaneLogOuter = new G4LogicalVolume(L2Solid,
-                                     Vacuum,
-                                     "L2PlaneOuter");
-//    G4VPhysicalVolume *L2PlanePhysOuter =  new G4PVPlacement(
-//                new G4RotationMatrix(),
-//                G4ThreeVector(0.,0.,LConst::L2pozZ),
-//                L2PlaneLogOuter,
-//                "L2PlaneOuter",
-//                worldLogical,
-//                false,
-//                0);
+                                          Vacuum,
+                                          "L2PlaneOuter");
+//            G4VPhysicalVolume *L2PlanePhysOuter =  new G4PVPlacement(
+//                        new G4RotationMatrix(),
+//                        G4ThreeVector(0.,0.,LConst::L2pozZ),
+//                        L2PlaneLogOuter,
+//                        "L2PlaneOuter",
+//                        worldLogical,
+//                        false,
+//                        0);
     ////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////
@@ -237,60 +238,119 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                     0,
                                     twopi);
     L2PlaneLogInner = new G4LogicalVolume(L2SolidIn,
-                                     Vacuum,
-                                     "L2PlaneInner");
-//    G4VPhysicalVolume *L2PlanePhysInner =  new G4PVPlacement(
-//                new G4RotationMatrix(),
-//                G4ThreeVector(0.,0.,LConst::L2pozZ),
-//                L2PlaneLogInner,
-//                "L2PlaneInner",
-//                worldLogical,
-//                false,
-//                0);
+                                          Vacuum,
+                                          "L2PlaneInner");
+    //        G4VPhysicalVolume *L2PlanePhysInner =  new G4PVPlacement(
+    //                    new G4RotationMatrix(),
+    //                    G4ThreeVector(0.,0.,LConst::L2pozZ),
+    //                    L2PlaneLogInner,
+    //                    "L2PlaneInner",
+    //                    worldLogical,
+    //                    false,
+    //                    0);
     ////////////////////////////////////////////////////////
 
 
-    G4ThreeVector Ta = G4ThreeVector(0.,0.,0.);
-    G4RotationMatrix Ra = G4RotationMatrix();
+    G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
+    G4RotationMatrix *Ra = new G4RotationMatrix();
 
     G4Trd *secIn = new G4Trd(
-      "sectorIn",
-      sectorIn.shortSide/2.,
-      sectorIn.longSide/2.,
-      sectorIn.thickness/2.,
-      sectorIn.thickness/2.,
-      sectorIn.height/2.
-      );
+                "sectorIn",
+                sectorIn.shortSide/2.,
+                sectorIn.longSide/2.,
+                sectorIn.thickness/2.,
+                sectorIn.thickness/2.,
+                sectorIn.height/2.
+                );
 
     G4Trd *secOut = new G4Trd(
-      "sectorOut",
-      sectorOut.shortSide/2.,
-      sectorOut.longSide/2.,
-      sectorOut.thickness/2.,
-      sectorOut.thickness/2.,
-      sectorOut.height/2.
-      );
+                "sectorOut",
+                sectorOut.shortSide/2.,
+                sectorOut.longSide/2.,
+                sectorOut.thickness/2.,
+                sectorOut.thickness/2.,
+                sectorOut.height/2.
+                );
 
     G4Trd *absIn = new G4Trd(
-      "absIn",
-      absorberIn.shortSide/2.,
-      absorberIn.longSide/2.,
-      absorberIn.thickness/2.,
-      absorberIn.thickness/2.,
-      absorberIn.height/2.
-      );
+                "absIn",
+                absorberIn.shortSide/2.,
+                absorberIn.longSide/2.,
+                absorberIn.thickness/2.,
+                absorberIn.thickness/2.,
+                absorberIn.height/2.
+                );
 
     G4Trd *absOut = new G4Trd(
-      "absOut",
-      absorberOut.shortSide/2.,
-      absorberOut.longSide/2.,
-      absorberOut.thickness/2.,
-      absorberOut.thickness/2.,
-      absorberOut.height/2.
-      );
+                "absOut",
+                absorberOut.shortSide/2.,
+                absorberOut.longSide/2.,
+                absorberOut.thickness/2.,
+                absorberOut.thickness/2.,
+                absorberOut.height/2.
+                );
+
+    G4VisAttributes *sectorVisAtt = new G4VisAttributes;
+    sectorVisAtt->SetColor(G4Color(0,0,1.));
+
+    for (int j = 0; j < LConst::nSecIn; ++j) {
+        /////////// sector /////////////
+        G4String name = "sector in ";
+        name += std::to_string(j);
+        LSectorIn[j] = new G4LogicalVolume(secIn,
+                                           Vacuum,
+                                           name);
+        LSectorIn[j]->SetSensitiveDetector(LSD);
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateX(-90.*deg);
+        Ra->rotateY(- 360./LConst::nSecIn*j *deg - 90.*deg);
+        Ta->setX(LConst::centerRadIn * TMath::Cos(360./LConst::nSecIn*j *deg));
+        Ta->setZ(LConst::L1pozZ);
+        Ta->setY(LConst::centerRadIn * TMath::Sin(360./LConst::nSecIn*j *deg));
 
 
+        G4VPhysicalVolume *PSecIn =  new G4PVPlacement(
+                    Ra,
+                    *Ta,
+                    LSectorIn[j],
+                    name,
+                    worldLogical,
+                    false,
+                    0);
+        LSectorIn[j]->SetVisAttributes(sectorVisAtt);
+    }
 
+
+    for (int j = 0; j < LConst::nSecOut; ++j) {
+        /////////// sector /////////////
+        G4String name = "sector out ";
+        name += std::to_string(j);
+        LSectorOut[j] = new G4LogicalVolume(secOut,
+                                            Vacuum,
+                                            name);
+        LSectorOut[j]->SetSensitiveDetector(LSD);
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateX(-90.*deg);
+        Ra->rotateY(- 360./LConst::nSecOut*j *deg - 90*deg);
+        Ta->setX(LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg));
+        Ta->setZ(LConst::L1pozZ);
+        Ta->setY(LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
+
+        G4VPhysicalVolume *PSecOut =  new G4PVPlacement(
+                    Ra,
+                    *Ta,
+                    LSectorOut[j],
+                    name,
+                    worldLogical,
+                    false,
+                    0);
+        LSectorOut[j]->SetVisAttributes(sectorVisAtt);
+
+    }
 
 
     G4cout << "_____________________________________________Volumes are made" << G4endl;

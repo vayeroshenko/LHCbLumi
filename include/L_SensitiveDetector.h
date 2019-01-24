@@ -37,4 +37,13 @@ private:
 
 };
 
+template <class Container>
+void splitName(const std::string& str, Container& cont)
+{
+    std::istringstream iss(str);
+    std::copy(std::istream_iterator<std::string>(iss),
+         std::istream_iterator<std::string>(),
+         std::back_inserter(cont));
+}
+
 #endif /* INCLUDE_L_SensitiveDetector_H_ */

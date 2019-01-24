@@ -52,42 +52,38 @@ const G4double VeloRight = 350*mm;
 
 
 
-// Detector inside beampipe
-const G4double sectorThicknessIn = 1.5*cm;
+///////////////////////// Detector inside beampipe ///////////////////////////////////////////////////
+const G4double sectorThicknessIn = 0.1*cm;
 
 const G4double innerRadIn = 10*mm;
 const G4double outerRadIn = BPInnerRadius;
-const G4double nSecIn = 10;
+const G4int nSecIn = 12;
+
 const G4double centerRadIn = (innerRadIn * TMath::Cos(TMath::Pi() / nSecIn) +
                               outerRadIn * TMath::Cos(TMath::Pi() / nSecIn)) / 2.;
-
 const G4double absInnerSideIn = 0.1*mm;
 const G4double absOuterSideIn = absInnerSideIn * outerRadIn / innerRadIn;
-
 const G4double VertHeightIn = outerRadIn - innerRadIn;
-
 const G4double innerSideIn = 2. * innerRadIn * TMath::Sin(TMath::Pi() / nSecIn) - absInnerSideIn;
 const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) - absOuterSideIn;
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-// Detoctor outside beampipe
-const G4double sectorThicknessOut = 1.5*cm;
+/////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
+const G4double sectorThicknessOut = 0.1*cm;
 
 const G4double innerRadOut = BPOuterRadius;
-const G4double outerRadOut = 10*cm;
-const G4double nSecOut = 10;
+const G4double outerRadOut = 100*cm;
+const G4int nSecOut = 12;
+
 const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
                                outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
-
 const G4double absInnerSideOut = 0.1*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut;
-
 const G4double VertHeightOut = outerRadOut - innerRadOut;
-
 const G4double innerSideOut = 2. * innerRadOut * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut;
 const G4double outerSideOut = 2. * outerRadOut * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut;
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
