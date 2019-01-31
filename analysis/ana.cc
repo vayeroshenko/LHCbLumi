@@ -1,7 +1,7 @@
 {
 	TChain *theChain = new TChain("T");
-	// theChain->Add("data.root");
-	theChain->Add("iii5_4.root");
+	theChain->Add("data.root");
+	// theChain->Add("iii5_4.root");
 	TCanvas *c = new TCanvas("plots","plots", 1500,800);
 
 	c->Divide(2,1);
@@ -50,8 +50,11 @@
 	xMinOut = -100; xMaxOut = 100;
 	yMinOut = -100; yMaxOut = 100;
 
-	Double_t Rmin = 10.;
-	Double_t Rmax = 30.;
+	// Double_t Rmin = 10.;
+	// Double_t Rmax = 30.;
+	Double_t Rmin = 31.;
+	Double_t Rmax = 200.;
+
 
 
 	TH2D StationMap[2];

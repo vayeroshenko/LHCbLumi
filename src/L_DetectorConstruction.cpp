@@ -296,7 +296,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     for (int j = 0; j < LConst::nSecIn; ++j) {
         /////////// sector /////////////
         G4String name = "sector in ";
-        name += std::to_string(j);
+        name += std::to_string(j+1);
         LSectorIn[j] = new G4LogicalVolume(secIn,
                                            Vacuum,
                                            name);
@@ -326,7 +326,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     for (int j = 0; j < LConst::nSecOut; ++j) {
         /////////// sector /////////////
         G4String name = "sector out ";
-        name += std::to_string(j);
+        name += std::to_string(j+1);
         LSectorOut[j] = new G4LogicalVolume(secOut,
                                             Vacuum,
                                             name);
