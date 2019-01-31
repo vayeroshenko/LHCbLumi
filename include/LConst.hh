@@ -53,7 +53,7 @@ const G4double VeloRight = 350*mm;
 
 
 ///////////////////////// Detector inside beampipe ///////////////////////////////////////////////////
-const G4double sectorThicknessIn = 0.1*cm;
+const G4double sectorThicknessIn = 1*cm;
 
 const G4double innerRadIn = 10*mm;
 const G4double outerRadIn = BPInnerRadius;
@@ -70,7 +70,7 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 
 
 /////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
-const G4double sectorThicknessOut = 0.1*cm;
+const G4double sectorThicknessOut = 1*cm;
 
 const G4double innerRadOut = BPOuterRadius;
 const G4double outerRadOut = 10*cm;

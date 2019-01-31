@@ -73,7 +73,7 @@ private:
     G4Material *Vacuum;
     G4Material *BPMaterial;
     G4Material *INOX;
-
+    G4Material *SiO2;
 
 
 

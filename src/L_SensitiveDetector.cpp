@@ -63,7 +63,6 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
 
-
     if (aParticle->GetCharge() == 0) return false;
 
     L_Hit* newHit = new L_Hit();
