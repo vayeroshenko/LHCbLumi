@@ -65,6 +65,7 @@ private:
     G4float pX[20000];
     G4float pY[20000];
     G4float pZ[20000];
+    G4float T[20000];
 
     G4int iEv;
 

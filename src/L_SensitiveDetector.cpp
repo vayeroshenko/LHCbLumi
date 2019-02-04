@@ -63,7 +63,10 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
 
-    if (aParticle->GetCharge() == 0) return false;
+//    if (aParticle->GetCharge() == 0) return false;
+
+    if (aParticle->GetDefinition()->GetParticleName() != "opticalphoton")
+        return false;
 
     L_Hit* newHit = new L_Hit();
 
@@ -86,18 +89,26 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     //    else if (PreName == "L2PlaneOuter" && PostName == "World") newHit->myData.StationID = 2;
     //    else return false;
 
-    std::vector<G4String> nameWords;
+    std::vector<G4String> sectorWords;
+    std::vector<G4String> detectorWords;
 
-    splitName(PreName, nameWords);
+    splitName(PreName, sectorWords);
+    splitName(PostName, detectorWords);
 
-    if (nameWords[0] == "sector" && PostName == "World") {
-        if (nameWords[1] == "in"){
-            newHit->myData.StationID = - atoi(nameWords[2]);
-        } else if (nameWords[1] == "out"){
-            newHit->myData.StationID = atoi(nameWords[2]);
-        }
+
+    //    if (nameWords[0] == "sector" && PostName == "World") {
+    //        if (nameWords[1] == "in"){
+    //            newHit->myData.StationID = - atoi(nameWords[2]);
+    //        } else if (nameWords[1] == "out"){
+    //            newHit->myData.StationID = atoi(nameWords[2]);
+    //        }
+    //    }
+
+
+    if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
+        newHit->myData.StationID = atoi(detectorWords[2]);
     }
-
+    else return false;
 
     // Insert this hit
     _Collection->insert(newHit);

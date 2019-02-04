@@ -47,6 +47,7 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         _particleGun->SetParticleDefinition(particle);
         _particleGun->SetParticleMomentumDirection(dir);
         _particleGun->SetParticleEnergy(Ekin);
+        _particleGun->SetParticleTime(T[pId]);
 
 //        Z[pId] += LConst::VeloLeft + (LConst::VeloRight - LConst::VeloLeft)/4. * 4;
 
@@ -71,6 +72,7 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
         pX[particleID] = event[i].px()*GeV;
         pY[particleID] = event[i].py()*GeV;
         pZ[particleID] = event[i].pz()*GeV;
+        T[particleID] = event[i].tProd()*mm / c_light;
         particleID ++;
     }
     nParticles = particleID;

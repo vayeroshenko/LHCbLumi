@@ -36,6 +36,7 @@
 #include "G4TwoVector.hh"
 #include "G4SDManager.hh"
 #include "globals.hh"
+#include "G4LogicalBorderSurface.hh"
 
 #include "LConst.hh"
 #include "L_VolumeStructures.h"
@@ -48,6 +49,8 @@ public:
 public:
     G4VPhysicalVolume* Construct();
     void ConstructSDandField();
+    void DefineOpticalBorders();
+    void SetVisAttributes();
 
     void DefineMateials();
     G4VPhysicalVolume* DefineVolumes();
@@ -66,6 +69,11 @@ public:
 
     G4LogicalVolume *LSectorIn[LConst::nSecIn];
     G4LogicalVolume *LSectorOut[LConst::nSecOut];
+
+    G4LogicalVolume *LAbsOut[LConst::nSecOut];
+    G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+
+    G4LogicalVolume *worldLogical;
 
 private:
     G4Material *worldMaterial;
