@@ -1,4 +1,5 @@
 from ROOT import TH1D, TCanvas
+from alarm import *
 
 inFile = open("log.txt")
 lines = inFile.readlines()
@@ -21,6 +22,9 @@ c.cd(1)
 histIn.Draw()
 c.cd(2)
 histOut.Draw()
+
+alarm = Alarm()
+alarm.send_message("Finished!")
 
 try:
 	input()

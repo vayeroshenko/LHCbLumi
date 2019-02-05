@@ -21,4 +21,6 @@ date | tee -a time.txt
 
 mv time.txt timelog.txt
 
+
+
 python2 draw.py
