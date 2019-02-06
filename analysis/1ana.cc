@@ -34,7 +34,7 @@
 
 
 
-	TH1D *hTime = new TH1D("Time","Time", 10000, 7, 8);
+	TH1D *hTime = new TH1D("Time","Time", 10000, 7, 13);
 	TH1D *hMom = new TH1D("Momentum","Momentum", 10000, 0, 10000);
 
 	TH2D *hTimeAngle = new TH2D("Corr","Corr", 	1000, 0, 0.07,

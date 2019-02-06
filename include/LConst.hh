@@ -15,8 +15,8 @@
 
 namespace LConst{
 
-const G4double worldSizeX = 2*m;
-const G4double worldSizeY = 2*m;
+const G4double worldSizeX = 3*m;
+const G4double worldSizeY = 3*m;
 const G4double worldSizeZ = 8*m;
 
 
@@ -72,11 +72,14 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 /////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
 const G4double sectorThicknessOut = 1*cm;
 
-const G4double innerRadOut = BPOuterRadius;
-const G4double outerRadOut = 10*cm;
+// const G4double innerRadOut = BPOuterRadius;
+// const G4double outerRadOut = 10*cm;
+const G4double innerRadOut = 100*cm;
+const G4double outerRadOut = 110*cm;
+
 const G4int nSecOut = 100;
 
-const G4double angleOut = 45*deg;
+const G4double angleOut = 0*deg;
 
 const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
                                outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
