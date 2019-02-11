@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 {
 
 	G4UIExecutive* ui = 0;
-	if ( argc == 1 ) {
+    if ( argc == 1 ) {
 		ui = new G4UIExecutive(argc, argv);
 	}
 	G4long myseed = 345354;
@@ -56,7 +56,8 @@ int main(int argc, char** argv)
 
 
     L_RunAction* runAction = new L_RunAction;
-	runManager->SetUserAction(runAction);
+    if (argc == 3) runAction->SetOutputFileName(G4String(argv[2]));
+    runManager->SetUserAction(runAction);
 
     L_PrimaryGeneratorAction* genAction = new L_PrimaryGeneratorAction();
 	runManager->SetUserAction(genAction);

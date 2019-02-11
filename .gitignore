@@ -55,3 +55,8 @@ CMakeLists.txt.user*
 # User
 *.root
 build
+*.pyc
+alarm.py
+screenlog*
+log*
+time*
