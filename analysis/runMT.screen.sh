@@ -35,7 +35,7 @@ do
 	cat "temp_$i/log.txt">>log.txt
 done
 
-rm -rf temp*
+# rm -rf temp*
 
 python2 draw.py
 

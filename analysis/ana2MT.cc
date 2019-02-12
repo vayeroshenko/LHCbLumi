@@ -75,7 +75,7 @@ void ana2MT(int num)
 	Double_t meanOut = - log(nNoPartOut);
 
 	ofstream file;
-	file.open("log.txt", ios::out & ios::app);
+	file.open("log.txt", ios::app);
 	file << meanIn << endl;
 	file << meanOut << endl;
 	file.close();
