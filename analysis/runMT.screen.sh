@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm dataNew_*
+
 rm log.txt
 cd ../build
 cmake ../ > /dev/null
@@ -28,14 +30,24 @@ do
 	sleep 1
 done
 
+cd temp_1
+nFile=$(ls | grep data_ | wc -l)
+cd -
+
 touch log.txt
 
 for i in {1..8}
 do
 	cat "temp_$i/log.txt">>log.txt
+	cp "temp_$i/"dataNew_* ./
 done
 
-# rm -rf temp*
 
-python2 draw.py
+root -l -b -q "mergeMT.cc+(8,$nFile)" > /dev/null
+
+rm -rf temp*
+
+rm *.d *.so *.pcm
+
+# python2 draw.py
 
