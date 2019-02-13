@@ -73,10 +73,10 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 const G4double sectorThicknessOut = 1*cm;
 
 
-// const G4double innerRadOut = BPOuterRadius;
-// const G4double outerRadOut = 10*cm;
-const G4double innerRadOut = 100*cm;
-const G4double outerRadOut = 110*cm;
+ const G4double innerRadOut = BPOuterRadius;
+ const G4double outerRadOut = 10*cm;
+//const G4double innerRadOut = 100*cm;
+//const G4double outerRadOut = 110*cm;
 
 
 const G4int nSecOut = 100;

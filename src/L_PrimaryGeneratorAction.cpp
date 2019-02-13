@@ -52,6 +52,10 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 //        Z[pId] += LConst::VeloLeft + (LConst::VeloRight - LConst::VeloLeft)/4. * 4;
 
         _particleGun->SetParticlePosition(G4ThreeVector(X[pId], Y[pId], Z[pId]));
+
+
+        if (momentum < 20.) continue; //////////////////////// Momentum cut ////////////////////////////
+
         _particleGun->GeneratePrimaryVertex(anEvent);
 
         //			G4cout << "Particle name = " << particle->GetParticleName() << G4endl;

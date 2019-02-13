@@ -12,7 +12,7 @@ rm dataNew*
 rm data*
 
 
-for i in {1..8}
+for i in {1..7}
 do
 	mkdir "temp_$i"
 	cp groupMT.cc "temp_$i"

@@ -6,7 +6,7 @@ lines = inFile.readlines()
 
 
 histIn = TH1D("mean inside", "meanInside", 60, 0, 10)
-histOut = TH1D("mean outside", "meanOutside", 60, 0, 10)
+histOut = TH1D("mean outside", "meanOutside", 300, 0, 6)
 
 for i in lines[0::2]:
 	histIn.Fill(float(i))

@@ -57,7 +57,7 @@ void ana2MT(int num)
 		Bool_t noPartOut = true;
 
 		for (Int_t i = 0; i < nPart; ++i){
-			if (Momentum[i] < 20.) continue;
+			// if (Momentum[i] < 20.) continue;
 			if (StationID[i] < 0) noPartIn = false;
 			if (StationID[i] > 0) noPartOut = false;
 		}
