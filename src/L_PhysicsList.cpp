@@ -34,7 +34,7 @@ void L_PhysicsList::ConstructOp()
 {
 
 
-    auto *theParticleIterator = GetParticleIterator();
+    G4ParticleTable::G4PTblDicIterator *theParticleIterator = GetParticleIterator();
 
     G4cout<<" 000 "<<G4endl;
 

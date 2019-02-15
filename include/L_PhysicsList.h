@@ -11,6 +11,7 @@
 #include "G4OpBoundaryProcess.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4ParticleTableIterator.hh"
 
 class G4Cerenkov;
 class G4OpAbsorption;
