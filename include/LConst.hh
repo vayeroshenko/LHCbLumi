@@ -75,6 +75,8 @@ const G4double sectorThicknessOut = 1*cm;
 
  const G4double innerRadOut = BPOuterRadius;
  const G4double outerRadOut = 10*cm;
+//const G4double innerRadOut = 160*mm;
+//const G4double outerRadOut = 100*cm;
 //const G4double innerRadOut = 100*cm;
 //const G4double outerRadOut = 110*cm;
 

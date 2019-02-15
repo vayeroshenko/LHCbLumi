@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-for i in {1..8}
+for i in {1..25}
 do
 	cd ../../build
 	name="data_$1$i.root"

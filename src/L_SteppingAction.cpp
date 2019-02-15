@@ -27,7 +27,7 @@ L_SteppingAction::~L_SteppingAction() {
 
 void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     //	G4cout << "_____________________________ step" << G4endl;
-    const G4Track* aTrack = aStep->GetTrack();
+    G4Track* aTrack = aStep->GetTrack();
     // G4Track *aTrack = aStep->GetTrack();
     G4int trackID = aTrack->GetTrackID();
     //G4cout<<"trackID = "<<trackID<<G4endl;
@@ -46,6 +46,10 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     //
     if (!aPostPV) return;
     if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+
+
+    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
+
 
     if (_particleID != trackID) {
         Reset();
@@ -78,9 +82,6 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     if (aPostPoint->GetStepStatus() == fGeomBoundary) {
         G4String sdName = "LSD";
-//        G4SDManager* SDman = G4SDManager::GetSDMpointer();
-//        L_SensitiveDetector* sd =
-//                (L_SensitiveDetector*)SDman->FindSensitiveDetector(sdName);
         G4double flat = G4UniformRand();
         switch(boundaryStatus) {
         case Absorption:
@@ -89,11 +90,6 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             // Reflections of surfaces of different media
             break;
         case TotalInternalReflection:
-            // Add reflection probability...
-//            if(aTrack->GetTrackLength()>20000.0){
-//                G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
-//                aNonConstTrack->SetTrackStatus(fStopAndKill);
-//            }
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
