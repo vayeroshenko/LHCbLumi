@@ -12,7 +12,7 @@ rm dataNew*
 rm data*
 
 
-for i in {1..2}
+for i in {1..4}
 do
 	mkdir "temp_$i"
 	cp groupMT.cc "temp_$i"
@@ -36,14 +36,14 @@ cd -
 
 touch log.txt
 
-for i in {1..2}
+for i in {1..4}
 do
 	cat "temp_$i/log.txt">>log.txt
 	cp "temp_$i/"data_* ./
 done
 
 
-root -l -b -q "mergeMT.cc+(2,$nFile)" > /dev/null
+root -l -b -q "mergeMT.cc+(4,$nFile)" > /dev/null
 
 rm -rf temp*
 

@@ -1,11 +1,11 @@
 {
-	Double_t MEAN = 5.25;
+	Double_t MEAN = 5.;
 
 
 	TFile *inputFile = new TFile("data.root");
 	TTree *input = (TTree*)inputFile->Get("T");
 
-	TFile *output = new TFile("dataNew.root", "UPDATE");
+	TFile *output = new TFile("dataNew.root", "RECREATE");
 
 	TTree *outTree = new TTree("T", "T");
 

@@ -1,9 +1,11 @@
 {
 	TChain *theChain1 = new TChain("T");
-	theChain1->Add("dataNew5.root");
+	// theChain1->Add("dataNew5.root");
+	theChain1->Add("newData_5.root");
 
 	theChain2 = new TChain("T");
-	theChain2->Add("dataNew5+.root");
+	// theChain2->Add("dataNew5+.root");
+	theChain2->Add("newData_10.root");
 
 	TCanvas *c = new TCanvas();
 	c->Divide(4,2);
@@ -145,7 +147,9 @@
 	Long_t nEv1 = theChain1->GetEntries();
 	Long_t nEv2 = theChain2->GetEntries();
 
-	for (Long_t j = 0; j < nEv2; ++j) {
+
+	////////// Loop 1 //////////
+	for (Long_t j = 0; j < min(nEv2, nEv1); ++j) {
 		theChain1->GetEntry(j);
 		h1nColl->Fill(nColl1);
 
@@ -179,7 +183,10 @@
 		else if (nColl1 == 8) h1Hnum8->Fill(numOfHits);
 	}
 
-	for (Long_t j = 0; j < nEv2; ++j) {
+
+	////////// Loop 2 //////////
+
+	for (Long_t j = 0; j < min(nEv2, nEv1); ++j) {
 		theChain2->GetEntry(j);
 		h2nColl->Fill(nColl2);
 
@@ -187,8 +194,8 @@
 		Bool_t isChecked[nSec] = {false};
 
 		for (Int_t i = 0; i < nPart2; ++i){
-			if (StationID1[i] < 0) continue;
-			if (isChecked[StationID1[i]]) continue;
+			if (StationID2[i] < 0) continue;
+			if (isChecked[StationID2[i]]) continue;
 
 			nPhot[StationID2[i]] ++;
 			if (nPhot[StationID2[i]] > 20.){
@@ -233,34 +240,45 @@
 	// h2Hnum8->Scale(1./h2nColl->GetBinContent(9));
 
 
+	Double_t chi2 = 0;
 
-	h1Hnum->Draw();
-	h2Hnum->Draw("SAME");
+	for (Int_t i = 1; i < 21; ++i){
+		if (h1Hnum->GetBinContent(i) == 0) continue;
+		chi2 +=	(h1Hnum->GetBinContent(i) - h2Hnum->GetBinContent(i))*
+				(h1Hnum->GetBinContent(i) - h2Hnum->GetBinContent(i))
+				/ (h1Hnum->GetBinError(i) *h1Hnum->GetBinError(i) +
+					h2Hnum->GetBinError(i) *h2Hnum->GetBinError(i));
+	}
+
+	std::cout << "chi2 = " << chi2 << std::endl;
+
+	h1Hnum->Draw("E1");
+	h2Hnum->Draw("E1 SAME");
 
 	// c->cd(1);
-	// h1Hnum1->Draw();
-	// h2Hnum1->Draw("SAME");
+	// h1Hnum1->Draw("E1");
+	// h2Hnum1->Draw("E1 SAME");
 	// c->cd(2);
-	// h1Hnum2->Draw();
-	// h2Hnum2->Draw("SAME");
+	// h1Hnum2->Draw("E1");
+	// h2Hnum2->Draw("E1 SAME");
 	// c->cd(3);
-	// h1Hnum3->Draw();
-	// h2Hnum3->Draw("SAME");
+	// h1Hnum3->Draw("E1");
+	// h2Hnum3->Draw("E1 SAME");
 	// c->cd(4);
-	// h1Hnum4->Draw();
-	// h2Hnum4->Draw("SAME");
+	// h1Hnum4->Draw("E1");
+	// h2Hnum4->Draw("E1 SAME");
 	// c->cd(5);
-	// h1Hnum5->Draw();
-	// h2Hnum5->Draw("SAME");
+	// h1Hnum5->Draw("E1");
+	// h2Hnum5->Draw("E1 SAME");
 	// c->cd(6);
-	// h2Hnum6->Draw();
-	// h1Hnum6->Draw("SAME");
+	// h2Hnum6->Draw("E1");
+	// h1Hnum6->Draw("E1 SAME");
 	// c->cd(7);
-	// h2Hnum7->Draw();
-	// h1Hnum7->Draw("SAME");
+	// h2Hnum7->Draw("E1");
+	// h1Hnum7->Draw("E1 SAME");
 	// c->cd(8);
-	// h2Hnum8->Draw();
-	// h1Hnum8->Draw("SAME");
+	// h2Hnum8->Draw("E1");
+	// h1Hnum8->Draw("E1 SAME");
 
 	// hTime->Draw();
 	// hTimeAngle->Draw();
