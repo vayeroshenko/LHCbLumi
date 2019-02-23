@@ -1,11 +1,11 @@
 {
 	TChain *theChain1 = new TChain("T");
 	// theChain1->Add("dataNew5.root");
-	theChain1->Add("newData_5.root");
+	theChain1->Add("newData_1.root");
 
 	theChain2 = new TChain("T");
 	// theChain2->Add("dataNew5+.root");
-	theChain2->Add("newData_10.root");
+	theChain2->Add("newData_1.root");
 
 	TCanvas *c = new TCanvas();
 	c->Divide(4,2);

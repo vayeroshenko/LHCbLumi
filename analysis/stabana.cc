@@ -147,45 +147,75 @@ int main(int argc, char** argv){
 
 	Double_t maxChi2 = 0;
 
-	for (Int_t histI = 0; histI < NHIST; ++histI){
-		for (Int_t histJ = 0; histJ < histI; ++histJ){
-			Double_t chi2 = 0;
+	const Int_t nBins = 20;
 
-			for (Int_t binK = 0; binK < 20; ++binK){
-				Double_t binContentI = array[histI]->GetBinContent(binK);
-				Double_t binErrorI = array[histI]->GetBinError(binK);
-				Double_t binContentJ = array[histJ]->GetBinContent(binK);
-				Double_t binErrorJ = array[histJ]->GetBinError(binK);
+	Double_t average[nBins] = {0};
+	Double_t rms[nBins] = {0};
 
-				if (binContentI == 0 || binContentJ == 0) continue;
-				if (binErrorI * binErrorJ == 0) continue;
+	for (Int_t binK = 0; binK < nBins; ++binK){
+		for (Int_t histI = 0; histI < NHIST; ++histI){
+			average[binK] += array[histI]->GetBinContent(binK+1);
+		}
+		average[binK] /= NHIST;
+		if (average[binK] == 0) continue;
 
-				chi2 += (binContentI - binContentJ)*(binContentI - binContentJ) / 
-				(binErrorI*binErrorI + binErrorJ*binErrorI);
+		for (Int_t histI = 0; histI < NHIST; ++histI){
+			rms[binK] += 
+			(array[histI]->GetBinContent(binK+1) - average[binK])*
+			(array[histI]->GetBinContent(binK+1) - average[binK]);
+		}
 
-			}
-			// cout << "current chi2 = " << chi2 << endl;
-			if (chi2 > maxChi2) {
-				maxChi2 = chi2;
-				maxI = histI;
-				maxJ = histJ;
-			}
-		} 
 
-	}
+		rms[binK] = sqrt(rms[binK]/(NHIST)/(NHIST-1));
+		cout << "average: " <<  average[binK] << " \t rms: " << rms[binK]
+		<< "\t sqrt: "<< sqrt(average[binK]) << endl;
+		maxChi2 += 	(rms[binK] / sqrt(average[binK]))*
+					(rms[binK] / sqrt(average[binK]));
+	} 
+
+
+
+	// for (Int_t histI = 0; histI < NHIST; ++histI){
+	// 	for (Int_t histJ = 0; histJ < histI; ++histJ){
+	// 		Double_t chi2 = 0;
+
+	// 		for (Int_t binK = 0; binK < 20; ++binK){
+	// 			Double_t binContentI = array[histI]->GetBinContent(binK);
+	// 			Double_t binErrorI = array[histI]->GetBinError(binK);
+	// 			Double_t binContentJ = array[histJ]->GetBinContent(binK);
+	// 			Double_t binErrorJ = array[histJ]->GetBinError(bin);
+
+	// 			if (binContentI == 0 || binContentJ == 0) continue;
+	// 			if (binErrorI * binErrorJ == 0) continue;
+
+	// 			chi2 += (binContentI - binContentJ)*(binContentI - binContentJ) / 
+	// 			(binErrorI*binErrorI + binErrorJ*binErrorI);
+
+	// 		}
+	// 		// cout << "current chi2 = " << chi2 << endl;
+	// 		if (chi2 > maxChi2) {
+	// 			maxChi2 = chi2;
+	// 			maxI = histI;
+	// 			maxJ = histJ;
+	// 		}
+	// 	} 
+
+	// }
 
 	cout << maxChi2 << endl;
 
-	array[maxI]->SetLineColor(kBlue);
-	array[maxJ]->SetLineColor(kRed);	
+	
 
-	array[maxI]->Draw("E1");
-	array[maxJ]->Draw("E1 SAME");
-	// array[0]->Draw("E1");
+	// array[maxI]->SetLineColor(kBlue);
+	// array[maxJ]->SetLineColor(kRed);	
 
-	// for (Int_t i = 1; i < NHIST; ++i) {
-	// 	array[i]->Draw("E1 SAME");
-	// }
+	// array[maxI]->Draw("E1");
+	// array[maxJ]->Draw("E1 SAME");
+	// // array[0]->Draw("E1");
+
+	// // for (Int_t i = 1; i < NHIST; ++i) {
+	// // 	array[i]->Draw("E1 SAME");
+	// // }
 
 	c->Show();
 	app->Run();
