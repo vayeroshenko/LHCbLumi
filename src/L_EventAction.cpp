@@ -31,6 +31,8 @@ L_EventAction::~L_EventAction() {
 
 void L_EventAction::BeginOfEventAction(const G4Event* event)
 {
+
+    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
 	if (eventNum%printModulo == 0) {
@@ -53,6 +55,7 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 void L_EventAction::EndOfEventAction(const G4Event* event)
 {
 
+    G4cout << "End of event" << G4endl;
 	// Print info about end of the event
 	G4int eventNum = event->GetEventID();
 

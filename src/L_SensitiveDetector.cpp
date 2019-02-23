@@ -19,6 +19,8 @@ L_SensitiveDetector::L_SensitiveDetector(G4String name) : // @suppress("Class me
     //  G4RunManager* runManager = G4RunManager::GetRunManager();
     G4String HCname = "Collection";
     collectionName.insert(HCname);
+
+    G4cout << "Sensitive detector created" << G4endl;
 }
 
 L_SensitiveDetector::~L_SensitiveDetector() {
@@ -45,6 +47,10 @@ G4bool L_SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist
 G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
                                         G4TouchableHistory*)
 {
+
+
+    G4cout << "Hit!" << G4endl;
+
 
     G4Track* aTrack = aStep->GetTrack();
     G4ThreeVector globalPosition = aStep->GetPostStepPoint()->GetPosition();

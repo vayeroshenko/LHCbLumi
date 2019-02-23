@@ -11,7 +11,11 @@
 L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     iEv = 0;
 
+
+    G4cout << "Start creating primary generator" << G4endl;
+
     Int_t pythiaSeed = time(NULL)%10000000;
+
 
     G4RunManager *runManager = G4RunManager::GetRunManager();
     G4int evToGen = runManager->GetNumberOfEventsToBeProcessed();
@@ -19,6 +23,9 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.readString("Main:numberOfEvents = " + std::to_string(evToGen));
     pythia.readString("Random:seed = " + std::to_string(pythiaSeed));
     pythia.init();
+
+
+    G4cout << "Primary generator created" << G4endl;
 }
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
@@ -26,6 +33,9 @@ L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 }
 
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
+
+
+    G4cout << "Generate primaries" << G4endl;
 
     G4LogicalVolume* worldLV
             = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
@@ -60,6 +70,9 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
         //			G4cout << "Particle name = " << particle->GetParticleName() << G4endl;
     }
+
+
+    G4cout << "Primaries generated" << G4endl;
 }
 
 

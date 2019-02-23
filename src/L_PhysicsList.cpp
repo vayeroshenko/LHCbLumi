@@ -7,6 +7,8 @@ L_PhysicsList::L_PhysicsList() : QGSP_BERT()
     theCerenkovProcess = 0;
     defaultCutValue = 1.0*mm;
     SetVerboseLevel(0);
+
+    G4cout << "Physics list constructor" << G4endl;
 }
 
 L_PhysicsList::~L_PhysicsList()
@@ -66,6 +68,9 @@ void L_PhysicsList::ConstructOp()
             pmanager->AddDiscreteProcess(new G4OpBoundaryProcess());
         }
     }
+
+
+    G4cout << "Optics constructed" << G4endl;
 }
 
 

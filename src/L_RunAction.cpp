@@ -12,6 +12,9 @@ L_RunAction::L_RunAction() { // @suppress("Class members should be properly init
     // TODO Auto-generated constructor stub
     //	_outputFileName = "data.root";
     timer = new G4Timer();
+
+
+    G4cout << "Run action constructor" << G4endl;
 }
 
 L_RunAction::~L_RunAction() {
@@ -27,10 +30,15 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     //inform the runManager to save random number seed
     //	G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
+    G4cout << "BeginOfRunAction" << G4endl;
+
     timer->Start();
 
     // Histogramming
+
     hfile = new TFile(_outputFileName, "RECREATE", "LHCb Luminometer Simulation Data", 1);
+
+    G4cout << "Output file created" << G4endl;
     if (hfile->IsZombie()) exit(-1);
     tree = new TTree("T", "LHCb Luminometer Data Tree");
     //	tree->SetAutoSave(1000000);
@@ -56,6 +64,9 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     tree->Branch("Px", _Px, "Px[nPart]/D");
     tree->Branch("Py", _Py, "Py[nPart]/D");
     tree->Branch("Pz", _Pz, "Pz[nPart]/D");
+
+
+    G4cout << "BeginOfRunAction end" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -63,6 +74,8 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 void L_RunAction::EndOfRunAction(const G4Run* )
 {
     //	hfile = tree->GetCurrentFile();
+
+    G4cout << "End of run action" << G4endl;
     tree->Write();
     hfile->Write();
     tree->Print();
