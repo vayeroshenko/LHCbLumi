@@ -98,7 +98,7 @@ void getHist(TString filename, TH1D* h1Hnum)
 	}
 
 	
-
+	file->Close();
 
 	delete TrackID1, ParentID1, StationID1, X1, Y1, Z1, Momentum1, Px1, Py1, Pz1, Time1, PdgID1; 
 	// h1Hnum->Draw("E1");
@@ -111,12 +111,11 @@ int main(int argc, char** argv){
 
 	TH1D *array[NHIST];
 
-<<<<<<< HEAD
-=======
 	TH1D *hChi2 = new TH1D ("chi2", "chi2", 1000, 0, 100);
 
->>>>>>> 55b09ab... setup for simulations and some analysis features
 	
+	TFile *out = new TFile("histos.root","RECREATE");
+
 	// printHello();
 	// getHist(filename);
 
@@ -131,6 +130,9 @@ int main(int argc, char** argv){
 		
 		
 		getHist(filename, array[i]);
+
+		out->cd();
+		array[i]->Write();
 
 		
 		array[i]->SetLineColor(i);
@@ -179,49 +181,6 @@ int main(int argc, char** argv){
 	} 
 
 
-
-	// for (Int_t histI = 0; histI < NHIST; ++histI){
-	// 	for (Int_t histJ = 0; histJ < histI; ++histJ){
-	// 		Double_t chi2 = 0;
-
-	// 		for (Int_t binK = 0; binK < 20; ++binK){
-	// 			Double_t binContentI = array[histI]->GetBinContent(binK);
-	// 			Double_t binErrorI = array[histI]->GetBinError(binK);
-	// 			Double_t binContentJ = array[histJ]->GetBinContent(binK);
-	// 			Double_t binErrorJ = array[histJ]->GetBinError(bin);
-
-	// 			if (binContentI == 0 || binContentJ == 0) continue;
-	// 			if (binErrorI * binErrorJ == 0) continue;
-
-	// 			chi2 += (binContentI - binContentJ)*(binContentI - binContentJ) / 
-	// 			(binErrorI*binErrorI + binErrorJ*binErrorI);
-
-	// 		}
-	// 		// cout << "current chi2 = " << chi2 << endl;
-	// 		if (chi2 > maxChi2) {
-	// 			maxChi2 = chi2;
-	// 			maxI = histI;
-	// 			maxJ = histJ;
-	// 		}
-	// 	} 
-
-	// }
-
-	cout << maxChi2 << endl;
-
-	
-
-	//hChi2->SaveAs("hist.pdf", "pdf");
-	// array[maxI]->SetLineColor(kBlue);
-	// array[maxJ]->SetLineColor(kRed);	
-
-	// array[maxI]->Draw("E1");
-	// array[maxJ]->Draw("E1 SAME");
-	// // array[0]->Draw("E1");
-
-	// // for (Int_t i = 1; i < NHIST; ++i) {
-	// // 	array[i]->Draw("E1 SAME");
-	// // }
 
 	c->Show();
 	app->Run();
