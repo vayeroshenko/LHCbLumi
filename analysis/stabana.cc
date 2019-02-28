@@ -16,7 +16,7 @@ using namespace std;
 
 // TH1D getHist(TString);
 
-#define NHIST 10
+#define NHIST 20
 
 
 void getHist(TString filename, TH1D* h1Hnum)
@@ -111,6 +111,11 @@ int main(int argc, char** argv){
 
 	TH1D *array[NHIST];
 
+<<<<<<< HEAD
+=======
+	TH1D *hChi2 = new TH1D ("chi2", "chi2", 1000, 0, 100);
+
+>>>>>>> 55b09ab... setup for simulations and some analysis features
 	
 	// printHello();
 	// getHist(filename);
@@ -206,6 +211,7 @@ int main(int argc, char** argv){
 
 	
 
+	//hChi2->SaveAs("hist.pdf", "pdf");
 	// array[maxI]->SetLineColor(kBlue);
 	// array[maxJ]->SetLineColor(kRed);	
 

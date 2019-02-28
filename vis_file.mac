@@ -48,4 +48,5 @@
 
 /tracking/verbose 0
 
-/run/beamOn 5000
+
+/run/beamOn 2500

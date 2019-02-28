@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for k in {1..10}
+date | tee timelog.txt
+
+for k in {1..20}
 do
 	. runMT.screen.sh
 	root -q group.cc
@@ -9,3 +11,5 @@ do
 	mv -v data.root $filename
 	mv -v dataNew.root $filenameNew
 done
+
+date | tee -a timelog.txt

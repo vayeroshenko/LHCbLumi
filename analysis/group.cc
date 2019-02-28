@@ -1,5 +1,5 @@
 {
-	Double_t MEAN = 5.;
+	Double_t MEAN = 5.25;
 
 
 	TFile *inputFile = new TFile("data.root");
