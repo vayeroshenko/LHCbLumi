@@ -7,7 +7,7 @@
 #include "TTree.h"
 #include <vector>
 
-#define nSec 110
+#define nSec 220
 
 // TH1D* getHist(TString);
 
@@ -73,13 +73,15 @@ void getHist(TString filename, TH1D* h1Hnum)
 		theChain1->GetEntry(j);
 		// h1nColl->Fill(nColl1);
 		// 
+	       
 		Int_t nPhot[nSec] = {0};
 		Bool_t isChecked[nSec] = {false};
 
 		// 
 		for (Int_t i = 0; i < nPart1; ++i){
 			// (StationID1[i] < 0) continue;
-			if (isChecked[StationID1[i]]) continue;
+		  StationID1[i] += 100;
+		  if (isChecked[StationID1[i]]) continue;
 
 			nPhot[StationID1[i]] ++;
 			if (nPhot[StationID1[i]] > 20.){
