@@ -30,7 +30,7 @@ OUTBIN = ./bin/
 
 #----------------------------------------------------#
 
-all: makedir stabana
+all: makedir stabana reco
 
 makedir: 
 	mkdir -p $(OUTLIB)
@@ -38,6 +38,9 @@ makedir:
 
 stabana: makedir 
 	$(CXX) -o $(OUTBIN)stabana stabana.cc $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+reco: makedir 
+	$(CXX) -o $(OUTBIN)reco reco.cc $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 # obj/stabana.o: stabana.cc 
 	# $(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)stabana.o $<
