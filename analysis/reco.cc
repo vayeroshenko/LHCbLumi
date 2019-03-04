@@ -7,12 +7,15 @@
 #include "TTree.h"
 #include "TMath.h"
 #include <vector>
+#include "TLegend.h"
 
-#define NHIST 20
-#define NBINS 30
+#define NHIST 10
+#define NBINS 9
 
 #define TOLERANCE 1e-8
 #define MAX_ITER 50
+
+using namespace std;
 
 Double_t solve(Int_t, Double_t, Double_t);
 
@@ -20,6 +23,14 @@ int main(int argc, char *argv[])
 {
 	TFile *file = new TFile("histos.root");
 	TH1D* array = new TH1D[NHIST];
+
+	TH1D *recoBin[NBINS];
+
+	for (Int_t i = 0; i < NBINS; ++i)
+	{
+		recoBin[i]= new TH1D(TString("reco")+to_string(i), " ", 200, 0, 3);
+		recoBin[i]->SetLineColor(i+1);
+	}
 
 	for (Int_t i = 1; i <= NHIST; ++i){
 		array[i-1] = *(TH1D*)file->Get( TString("Hit Number") + TString(std::to_string(i-1)));
@@ -33,14 +44,17 @@ int main(int argc, char *argv[])
 	{
 		Int_t nEntries = array[histI].GetEntries();
 		Double_t p0 = array[histI].GetBinContent(1) / nEntries;
-		reco0->Fill(-TMath::Log(p0));
+		// reco0->Fill(-TMath::Log(p0));
+		recoBin[0]->Fill(-TMath::Log(p0));
 
 		for (Int_t binJ = 1; binJ < NBINS; ++binJ)
 		{
 			Double_t binContent = array[histI].GetBinContent(binJ + 1);
 			if (binContent == 0) continue;
 
-			reco->Fill(solve(binJ, binContent/nEntries, p0));
+			// reco->Fill(solve(binJ, binContent/nEntries, p0));
+			recoBin[binJ]->Fill(solve(binJ, binContent/nEntries, p0));
+
 		}
 		
 	}
@@ -52,8 +66,23 @@ int main(int argc, char *argv[])
 	TApplication *app = new TApplication("name", &argc, argv);
 	TCanvas *c = new TCanvas();
 
-	reco->Draw();
-	reco0->Draw("SAME");
+	// reco->Draw();
+	// reco0->Draw("SAME");
+
+	TLegend *legend = new TLegend();
+	legend->SetHeader("Number of hits","C");
+
+	recoBin[0]->Draw();
+	legend->AddEntry("reco0", "0");
+
+	for (int i = 1; i < NBINS; ++i)
+	{
+		recoBin[i]->Draw("SAME");
+		legend->AddEntry(TString("reco")+to_string(i), TString(to_string(i)));
+
+	}
+
+	legend->Draw();
 
 	c->Show();
 	app->Run();
@@ -63,24 +92,35 @@ int main(int argc, char *argv[])
 
 Double_t solve(Int_t n, Double_t p, Double_t p0)
 {
-	Double_t coef[50] = {1, 1.41421, 1.81712, 2.21336, 
-		2.60517, 2.9938, 3.38002, 3.76435, 4.14717, 4.52873, 
-		4.90924, 5.28885, 5.66769, 6.04586, 6.42342, 6.80047, 
-		7.17704, 7.55318, 7.92895, 8.30436, 8.67946, 9.05426, 
-		9.4288, 9.80308, 10.1771, 10.551, 10.9246, 11.2981, 
-		11.6714, 12.0445, 12.4175, 12.7903, 13.163, 13.5355, 
-		13.908, 14.2803, 14.6525, 15.0246, 15.3966, 15.7685, 
-		16.1403, 16.5121, 16.8837, 17.2553, 17.6268, 17.9982, 
-		18.3696, 18.7409, 19.1121, 19.4833};
+	Double_t coef[50] = {1.0000000000000000000, 1.4142135623730950488, 
+		1.8171205928321396589, 2.2133638394006431848, 2.6051710846973518923,
+		2.9937951655239089549, 3.3800151591412964499, 3.7643505995031286001, 
+		4.1471662743969128805, 4.5287286881167647622, 4.9092387795843953590, 
+		5.2888519941024478656, 5.6676911762517604347, 6.0458551714185018476, 
+		6.4234247497797610972, 6.8004667982676424411, 7.1770373570247743956, 
+		7.5531838641068058062, 7.9289468448651502701, 8.3043612037393433042, 
+		8.6794572261328690841, 9.0542613653979386513, 9.4287968681752428600, 
+		9.8030842765090768641, 10.177141834880184885, 10.550985823054150716, 
+		10.924630830459004882, 11.298089984044201968, 11.671375138808850192, 
+		12.044497038131643916, 12.417465449489871776, 12.790289279981639568, 
+		13.162976675166152035, 13.535535104041503661, 13.907971432437271719, 
+		14.280291986673251982, 14.652502608998593483, 15.024608706057010584, 
+		15.396615291408378016, 15.768527022963257301, 16.140348236045913571, 
+		16.512082972686357272, 16.883735007647618741, 17.255307871616730578, 
+		17.626804871923534775, 17.998229111097910142, 18.369583503531317068, 
+		18.740870790471075383, 19.112093553544240005, 19.483254226981281425};
+
 
 
     Double_t x = - TMath::Log(p0); 
     Double_t x_old;
 
-    int i = 0;      
+    int i = 0;  
+
+
     do {
         x_old = x;
-        x = coef[n - 1] * TMath::Power(p * TMath::Exp(-x), 1./n); 
+        x = coef[n - 1] * TMath::Power(p * TMath::Exp(x), 1./n); 
         i++;
     } while (fabs(x - x_old) / x > TOLERANCE && i < MAX_ITER);
 
