@@ -23,9 +23,9 @@ const G4double worldSizeZ = 8*m;
 const G4double BPOuterRadius = 31*mm;
 const G4double BPInnerRadius = 30*mm;
 
-const G4double L1pozZ = - 2172.*mm;
+  //const G4double L1pozZ = - 2172.*mm;
 //    const G4double L1pozZ = - 2172.*mm + 400*mm;
-//    const G4double L1pozZ = - 2172.*mm + 800*mm;
+const G4double L1pozZ = - 2172.*mm + 800*mm;
 
 //    const G4double L2pozZ = - 2172.*mm + 800*mm;
 
@@ -83,7 +83,7 @@ const G4double sectorThicknessOut = 1*cm;
 
 const G4int nSecOut = 100;
 
-const G4double angleOut = 0*deg;
+const G4double angleOut = 45*deg;
 
 const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
                                outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;

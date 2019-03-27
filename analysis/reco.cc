@@ -9,8 +9,8 @@
 #include <vector>
 #include "TLegend.h"
 
-#define NHIST 10
-#define NBINS 9
+#define NHIST 20
+#define NBINS 10
 
 #define TOLERANCE 1e-8
 #define MAX_ITER 50
@@ -21,7 +21,7 @@ Double_t solve(Int_t, Double_t, Double_t);
 
 int main(int argc, char *argv[])
 {
-	TFile *file = new TFile("histos.root");
+	TFile *file = new TFile("histos-5-25.root");
 	TH1D* array = new TH1D[NHIST];
 
 	TH1D *recoBin[NBINS];
@@ -30,15 +30,20 @@ int main(int argc, char *argv[])
 	{
 		recoBin[i]= new TH1D(TString("reco")+to_string(i), " ", 200, 0, 3);
 		recoBin[i]->SetLineColor(i+1);
+		if (i == 9)
+		  recoBin[i]->SetLineColor(40);
+
+		recoBin[i]->SetAxisRange(0,20,"Y");
+
 	}
 
-	for (Int_t i = 1; i <= NHIST; ++i){
-		array[i-1] = *(TH1D*)file->Get( TString("Hit Number") + TString(std::to_string(i-1)));
+	for (Int_t i = 0; i < NHIST; ++i){
+		array[i] = *(TH1D*)file->Get( TString("Hit Number") + TString(std::to_string(i)));
 	}
 
 
 	TH1D *reco = new TH1D("reco", "reco", 100, 0, 5.);
-	TH1D *reco0 = new TH1D("reco0", "reco0", 100, 0, 5.);
+	//	TH1D *reco0 = new TH1D("reco0", "reco0", 100, 0, 5.);
 
 	for (Int_t histI = 0; histI < NHIST; ++histI)
 	{
@@ -60,7 +65,7 @@ int main(int argc, char *argv[])
 	}
 
 	reco->SetLineColor(kBlue);
-	reco0->SetLineColor(kRed);
+	//	reco0->SetLineColor(kRed);
 
 
 	TApplication *app = new TApplication("name", &argc, argv);
@@ -73,17 +78,22 @@ int main(int argc, char *argv[])
 	legend->SetHeader("Number of hits","C");
 
 	recoBin[0]->Draw();
-	legend->AddEntry("reco0", "0");
+	legend->AddEntry(TString("reco")+to_string(0), 
+			 TString(to_string(0)) + " nEntries ~ " + to_string((int)array[0].GetBinContent(0+1)) +
+			 TString(" (sqrt = ") + to_string(TMath::Sqrt(array[0].GetBinContent(0+1))) + ")");
+
 
 	for (int i = 1; i < NBINS; ++i)
-	{
-		recoBin[i]->Draw("SAME");
-		legend->AddEntry(TString("reco")+to_string(i), TString(to_string(i)));
-
-	}
-
+	  {
+	    recoBin[i]->Draw("SAME");
+	    legend->AddEntry(TString("reco")+to_string(i), 
+			     TString(to_string(i)) + " nEntries ~ " + to_string((int)array[0].GetBinContent(i+1)) +
+			     TString(" (sqrt = ") + to_string(TMath::Sqrt(array[0].GetBinContent(i+1))) + ")");
+	    
+	  }
+	
 	legend->Draw();
-
+	
 	c->Show();
 	app->Run();
 	
@@ -115,12 +125,12 @@ Double_t solve(Int_t n, Double_t p, Double_t p0)
     Double_t x = - TMath::Log(p0); 
     Double_t x_old;
 
-    int i = 0;  
+    Int_t i = 0;  
 
 
     do {
         x_old = x;
-        x = coef[n - 1] * TMath::Power(p * TMath::Exp(x), 1./n); 
+        x = coef[n - 1] * TMath::Power(p, 1./n) * TMath::Exp(x/n); 
         i++;
     } while (fabs(x - x_old) / x > TOLERANCE && i < MAX_ITER);
 
