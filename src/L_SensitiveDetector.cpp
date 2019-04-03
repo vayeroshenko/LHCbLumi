@@ -49,7 +49,7 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 {
 
 
-    G4cout << "Hit!" << G4endl;
+//    G4cout << "Hit!" << G4endl;
 
 
     G4Track* aTrack = aStep->GetTrack();
