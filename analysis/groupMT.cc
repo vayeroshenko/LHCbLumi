@@ -7,7 +7,7 @@
 void groupMT(int num)
 {
 	std::cout << "Hi!\n";
-	Double_t MEAN = 5.;
+	Double_t MEAN = 5.25;
 
 	TFile *inputFile = new TFile(TString("data_"+std::to_string(num)+".root"));
 	TTree *input = (TTree*)inputFile->Get("T");

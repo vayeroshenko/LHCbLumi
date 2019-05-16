@@ -82,7 +82,8 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
 
     //G4double shift = LConst::VeloLeft + (LConst::VeloRight - LConst::VeloLeft)/0. * 4;
     //G4double shift = - 175.*mm;
-    G4double shift =  350.*mm;
+    //G4double shift =  350.*mm;
+    G4double shift =  0.*mm;
 
     for (G4int i = 3; i < event.size(); ++i){
         if (!event[i].isFinal()) continue;
