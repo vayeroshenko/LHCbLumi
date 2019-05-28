@@ -94,7 +94,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
             }
-//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
+            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;

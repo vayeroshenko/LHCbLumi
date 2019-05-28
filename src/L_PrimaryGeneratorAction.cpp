@@ -12,7 +12,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     iEv = 0;
 
 
-    G4cout << "Start creating primary generator" << G4endl;
+//    G4cout << "Start creating primary generator" << G4endl;
 
     Int_t pythiaSeed = time(NULL)%10000000;
 
@@ -25,7 +25,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.init();
 
 
-    G4cout << "Primary generator created" << G4endl;
+//    G4cout << "Primary generator created" << G4endl;
 }
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
@@ -35,7 +35,7 @@ L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 
-    G4cout << "Generate primaries" << G4endl;
+//    G4cout << "Generate primaries" << G4endl;
 
     G4LogicalVolume* worldLV
             = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
@@ -72,7 +72,7 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     }
 
 
-    G4cout << "Primaries generated" << G4endl;
+//    G4cout << "Primaries generated" << G4endl;
 }
 
 

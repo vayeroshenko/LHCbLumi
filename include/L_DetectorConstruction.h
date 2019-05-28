@@ -83,6 +83,8 @@ private:
     G4Material *INOX;
     G4Material *SiO2;
 
+    G4Material *Air;
+
 
 
 };

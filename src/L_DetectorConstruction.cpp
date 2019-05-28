@@ -53,7 +53,7 @@ void L_DetectorConstruction::DefineMateials() {
             new G4Element("Oxygen", symbol = "O", z = 8., a = 16.00*g/mole);
     G4Element* Si =
             new G4Element("Silicon", symbol = "Si", z = 14., a = 28.09*g/mole);
-    G4Material* Air =
+    Air =
             new G4Material("Air", density = 0.000290*mg/cm3, ncomponents = 2);
     Air->AddElement(N, fractionmass = 0.7);
     Air->AddElement(O, fractionmass = 0.3);
@@ -148,7 +148,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                      LConst::worldSizeZ/2);
 
     worldLogical = new G4LogicalVolume(worldSolid,
-                                       Vacuum, // worldMaterial,
+                                       /*Vacuum*/ Air, // worldMaterial,
                                        "World");
 
     G4VPhysicalVolume *worldPhysical = new G4PVPlacement(0,
@@ -497,7 +497,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                          name);
 
 
-//        assembly->AddPlacedVolume(LAbsOut[j], Tr);
+        assembly->AddPlacedVolume(LAbsOut[j], Tr);
 
         /////////// outer detector ///////
 
