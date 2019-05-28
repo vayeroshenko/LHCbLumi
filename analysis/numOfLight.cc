@@ -3,7 +3,9 @@
 	TFile *file = new TFile("fix5/newData_1.root");
 	TTree *tree = (TTree*)file->Get("T");
 
-	Int_t StationID[100000];
+	Int_t nBin = 1000;
+
+	Int_t StationID[1000000];
 	Int_t nPart;
 
 	tree->SetBranchAddress("StationID", StationID);
@@ -11,16 +13,17 @@
 
 	Long_t nEn = tree->GetEntries();
 
-	std::vector<Int_t> N (100,0);
 
 
-	std::vector<TH1D> h(100, TH1D("nPhot", "nPhot", 1000, 0, 1000));
+
+	std::vector<TH1D> h(100, TH1D("nPhot", "nPhot", nBin, 0, nBin-1));
 	
-	TH1D* h1 = new TH1D("nPhot", "nPhot", 1000, 0, 1000);
+	TH1D* h1 = new TH1D("nPhot", "nPhot", nBin, 0, nBin-1);
 
 
 	for (Long_t i = 0; i < nEn; ++i) {
 		tree->GetEntry(i);
+		std::vector<Int_t> N (100,0);
 
 		for (Int_t j = 0; j < nPart; ++j){
 			N[StationID[j]-1] = N[StationID[j]-1] + 1;
@@ -34,7 +37,7 @@
 		}
 	}
 
-	for (Int_t j = 1; j <= 1000; ++j) {
+	for (Int_t j = 1; j <= nBin; ++j) {
 		Int_t binContent = 0;
 		for (Int_t i = 0; i < 100; ++i)
 			binContent += h[i].GetBinContent(j);
