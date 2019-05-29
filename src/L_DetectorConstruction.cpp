@@ -121,6 +121,7 @@ void L_DetectorConstruction::DefineMateials() {
      1.476891,1.478651,1.480592,1.482739,1.485127,1.487793};
 
 
+
     // Assign absorption and refraction to materials
 
     // Quartz
@@ -137,7 +138,7 @@ void L_DetectorConstruction::DefineMateials() {
 
     // Assign these properties to the world volume
     Air->SetMaterialPropertiesTable(AirMPT);
-
+    Vacuum->SetMaterialPropertiesTable(AirMPT);
 }
 
 G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
@@ -148,7 +149,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                      LConst::worldSizeZ/2);
 
     worldLogical = new G4LogicalVolume(worldSolid,
-                                       /*Vacuum*/ Air, // worldMaterial,
+                                       Vacuum /*Air*/, // worldMaterial,
                                        "World");
 
     G4VPhysicalVolume *worldPhysical = new G4PVPlacement(0,
@@ -449,8 +450,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ta->setZ(LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
 
         Tr = G4Transform3D(*Ra, *Ta);
-
-        assembly->AddPlacedVolume(LSectorOut[j], Tr);
+//        if (j == 0)
+            assembly->AddPlacedVolume(LSectorOut[j], Tr);
 
 
         //        G4VPhysicalVolume *PSecOut =  new G4PVPlacement(
@@ -497,7 +498,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                          name);
 
 
-        assembly->AddPlacedVolume(LAbsOut[j], Tr);
+//        if (j == 0 || j == LConst::nSecOut - 1)
+            assembly->AddPlacedVolume(LAbsOut[j], Tr);
 
         /////////// outer detector ///////
 
@@ -530,8 +532,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         LDetectorOut[j] = new G4LogicalVolume(detectorOut,
                                               /*Vacuum*/SiO2,
                                               name);
-
-        assembly->AddPlacedVolume(LDetectorOut[j],Tr);
+//        if (j == 0)
+            assembly->AddPlacedVolume(LDetectorOut[j],Tr);
 
 
 

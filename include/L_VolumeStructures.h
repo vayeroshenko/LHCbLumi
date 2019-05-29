@@ -100,7 +100,7 @@ struct TrapezeAbsStructOut: VolumeStruct {
   TrapezeAbsStructOut():
     shortSide(LConst::absInnerSideOut),
     longSide(LConst::absOuterSideOut),
-    thickness(LConst::sectorThicknessOut),
+    thickness(LConst::sectorThicknessOut * 1.2),
     height(LConst::outerRadOut -
            LConst::innerRadOut),
     angle(atan((longSide-shortSide)/2./height)),

@@ -1,9 +1,9 @@
 {
 	// TFile *file = new TFile("../../pc_instr/Lumi/results_str/dc_vc_5/results/newDataMerged.root");
-	TFile *file = new TFile("fix5/newData_1.root");
+	TFile *file = new TFile("data_abs_double.root");
 	TTree *tree = (TTree*)file->Get("T");
 
-	Int_t nBin = 1000;
+	Int_t nBin = 2000;
 
 	Int_t StationID[1000000];
 	Int_t nPart;
