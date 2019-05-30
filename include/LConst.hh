@@ -84,7 +84,7 @@ const G4double sectorThicknessOut = 1*cm;
  const G4int nSecOut = 100;
 // const G4int nSecOut = 50;
 
-const G4double angleOut = 45*deg;
+const G4double angleOut = 0.*deg;
 
 const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
                                outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
@@ -93,6 +93,12 @@ const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0
 const G4double VertHeightOut = outerRadOut - innerRadOut;
 const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
 const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
+
+
+const G4double lmLength = 40.*cm;
+const G4double lmPixelSize = 5.*mm;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

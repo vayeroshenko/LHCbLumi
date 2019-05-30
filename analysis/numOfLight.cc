@@ -1,6 +1,6 @@
 {
 	// TFile *file = new TFile("../../pc_instr/Lumi/results_str/dc_vc_5/results/newDataMerged.root");
-	TFile *file = new TFile("data_abs_double.root");
+	TFile *file = new TFile("custom.root");
 	TTree *tree = (TTree*)file->Get("T");
 
 	Int_t nBin = 2000;

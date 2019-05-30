@@ -67,11 +67,16 @@ public:
     TrapezeAbsStructIn absorberIn;
     TrapezeAbsStructOut absorberOut;
 
+    PiramideLMStruct piramideLMOut;
+
     G4LogicalVolume *LSectorIn[LConst::nSecIn];
     G4LogicalVolume *LSectorOut[LConst::nSecOut];
 
     G4LogicalVolume *LAbsOut[LConst::nSecOut];
     G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+
+
+    G4LogicalVolume *LLMOut[LConst::nSecOut];
 
     G4LogicalVolume *worldLogical;
 

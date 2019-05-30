@@ -337,7 +337,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 sectorIn.height/2.
                 );
 
-    G4Trd *secOut = new G4Trd(
+    G4VSolid *secOut = new G4Trd(
                 "sectorOut",
                 sectorOut.shortSide/2.,
                 sectorOut.longSide/2.,
@@ -361,14 +361,29 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 absorberOut.longSide/2.*1.3,
                 absorberOut.thickness/2.,
                 absorberOut.thickness/2.,
-                absorberOut.height/2.
+                (absorberOut.height + piramideLMOut.height)/2.
+                );
+
+    G4Trd *lmOut = new G4Trd(
+                "lmOut",
+                piramideLMOut.shortSide/2.,
+                piramideLMOut.pixelSize/2.,
+                piramideLMOut.longSide/2.,
+                piramideLMOut.pixelSize/2.,
+                piramideLMOut.height/2.
                 );
 
     G4VSolid *detectorOut = new G4Box("detector",
-                                      sectorOut.longSide/2.,
-                                      sectorOut.thickness/2.,
+                                      piramideLMOut.pixelSize/2.,
+                                      piramideLMOut.pixelSize/2.,
                                       1*mm
                                       );
+
+
+    G4RotationMatrix *unionMatrix = new G4RotationMatrix;
+    G4ThreeVector unionVector(0,0, +sectorOut.height/2. + piramideLMOut.height/2. );
+
+    secOut = new G4UnionSolid("sectorOut", secOut, lmOut, unionMatrix, unionVector);
 
 
 
@@ -450,8 +465,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ta->setZ(LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
 
         Tr = G4Transform3D(*Ra, *Ta);
-//        if (j == 0)
-            assembly->AddPlacedVolume(LSectorOut[j], Tr);
+//                if (j == 0)
+        assembly->AddPlacedVolume(LSectorOut[j], Tr);
 
 
         //        G4VPhysicalVolume *PSecOut =  new G4PVPlacement(
@@ -475,10 +490,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ra->rotateY(- 360./LConst::nSecOut*(j+0.5) *deg + 90.*deg);
 
         *Ra = *Ra * RTilt;
-        Ta->setX((LConst::innerRadOut + LConst::outerRadOut)/2.
+        Ta->setX((LConst::innerRadOut + LConst::outerRadOut+ LConst::lmLength)/2.
                  * TMath::Cos(360./LConst::nSecOut*(j+0.5) *deg));
         Ta->setY(LConst::L1pozZ);
-        Ta->setZ((LConst::innerRadOut + LConst::outerRadOut)/2.
+        Ta->setZ((LConst::innerRadOut + LConst::outerRadOut+ LConst::lmLength)/2.
                  * TMath::Sin(360./LConst::nSecOut*(j+0.5) *deg));
 
         *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
@@ -498,8 +513,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                          name);
 
 
-//        if (j == 0 || j == LConst::nSecOut - 1)
-            assembly->AddPlacedVolume(LAbsOut[j], Tr);
+//                if (j == 0 || j == LConst::nSecOut - 1)
+        assembly->AddPlacedVolume(LAbsOut[j], Tr);
+
+
 
         /////////// outer detector ///////
 
@@ -512,9 +529,9 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ra->rotateY(- 360./LConst::nSecOut*j *deg + 90.*deg);
 
 
-        Ta->setX((LConst::outerRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Cos(360./LConst::nSecOut*j *deg));
+        Ta->setX(((LConst::outerRadOut + LConst::lmLength)*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Cos(360./LConst::nSecOut*j *deg));
         Ta->setY(LConst::L1pozZ);
-        Ta->setZ((LConst::outerRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Sin(360./LConst::nSecOut*j *deg));
+        Ta->setZ(((LConst::outerRadOut + LConst::lmLength)*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Sin(360./LConst::nSecOut*j *deg));
 
         *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
                               LConst::L1pozZ,
@@ -532,8 +549,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         LDetectorOut[j] = new G4LogicalVolume(detectorOut,
                                               /*Vacuum*/SiO2,
                                               name);
-//        if (j == 0)
-            assembly->AddPlacedVolume(LDetectorOut[j],Tr);
+//                if (j == 0)
+        assembly->AddPlacedVolume(LDetectorOut[j],Tr);
 
 
 

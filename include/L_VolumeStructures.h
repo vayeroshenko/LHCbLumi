@@ -109,6 +109,21 @@ struct TrapezeAbsStructOut: VolumeStruct {
   {;}
 };
 
+struct PiramideLMStruct: VolumeStruct {
+  const G4double shortSide;
+  const G4double longSide;
+  const G4double pixelSize;
+  const G4double height;
+  const G4double middleLine;
+  PiramideLMStruct():
+    shortSide(LConst::outerSideOut),
+    longSide(LConst::sectorThicknessOut),
+    pixelSize(LConst::lmPixelSize),
+    height(LConst::lmLength),
+    middleLine((longSide+shortSide)/2.)
+  {;}
+};
+
 
 
 
