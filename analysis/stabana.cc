@@ -8,7 +8,7 @@
 #include "TRandom3.h"
 #include <vector>
 
-#define nSec 220
+#define nSec 100
 
 // TH1D* getHist(TString);
 
@@ -127,7 +127,7 @@ void getHist(TString filename, TH1D* h1Hnum)
 			// StationID1[i] += 100;
 			// if (isChecked[StationID1[i]]) continue;
 
-			nPhot[StationID1[i] + 100] ++;
+			nPhot[StationID1[i] -1] ++;
 
 			// if (nPhot[StationID1[i]] > 20.){
 			// {
@@ -141,9 +141,30 @@ void getHist(TString filename, TH1D* h1Hnum)
 		
 		// 
 		Double_t numOfHits = 0;
-		for (int i = 0; i < nSec; ++i)
-			if (isFired(eff, nPhot[i])) numOfHits++;
-			// if (isChecked[i]) numOfHits++;
+		// for (int i = 0; i < nSec/2; ++i){
+
+		// 	bool thisSec = isFired(eff, nPhot[2*i]);
+		// 	bool lSec = isFired(eff, nPhot[2*i+1]);
+
+		// 	if (thisSec && lSec) {
+		// 		numOfHits += 1;	
+		// 		++i;
+		// 	}
+		// 	// if (thisSec && oppSec) numOfHits += 2;	
+		// }
+
+
+
+		for (int i = 0; i < nSec; ++i){
+
+			bool thisSec = isFired(eff, nPhot[i]);
+
+			if (thisSec) {
+				numOfHits += 1;	
+				++i;
+			}
+			// if (thisSec && oppSec) numOfHits += 2;	
+		}
 		
 
 		h1Hnum->Fill( numOfHits );

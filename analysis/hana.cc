@@ -1,6 +1,6 @@
 {
 
-	#define NBINS 20
+	#define NBINS 100
 	#define MAXCHI2 25
 
 	TCanvas *c = new TCanvas("plot", "plot", 0, 0, 1920,1080);
@@ -10,17 +10,17 @@
 	TString outname;
 
 
-	filename1 = "simple5";
+	filename1 = "fixLarge5";
 	// filename1 = "heavyIon";
 
 
 	// filename2 = "vfar_5";
-	filename2 = "simple505";
+	filename2 = "fixLarge525";
 
-	TFile *file1 = new TFile(filename1+"/histos.root");
+	TFile *file1 = new TFile(filename1+"/histos1m.root");
 	TH1D* hist1 = (TH1D*)file1->Get( TString("Hit Number0"));
 
-	TFile *file2 = new TFile(filename2+"/histos.root");	
+	TFile *file2 = new TFile(filename2+"/histos1m.root");	
 	file2->cd();
 	TH1D* hist2 = (TH1D*)file2->Get( TString("Hit Number0"));
 
@@ -49,7 +49,7 @@
 
 	// hist2->Draw("SAME E1");
 
-	TF1 *poisson = new TF1("f1", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, 20);
+	TF1 *poisson = new TF1("f1", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, NBINS);
 	poisson->SetParameter(0, 1);
 	poisson->SetParameter(1, 1);
 	// poisson->SetParameter(1, 0.0001);
@@ -59,12 +59,12 @@
 
 	// poisson->SetLineColor(kRed);
 
-	hist1->GetXaxis()->SetRange(1,20.);
-	hist2->GetXaxis()->SetRange(1,20.);
+	hist1->GetXaxis()->SetRange(1,NBINS);
+	hist2->GetXaxis()->SetRange(1,NBINS);
 
-	TF1 *poisson2 = new TF1("f2", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, 20);
+	TF1 *poisson2 = new TF1("f2", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, NBINS);
 
-	poisson2->SetParameter(0, 1);
+	poisson2->SetParameter(0, 1e3);
 	poisson2->SetParameter(1, 1);
 
 	poisson2->SetParName(0, "Area");
@@ -74,8 +74,8 @@
 
 
 
-	hist1->Fit("f1", "N" , "E0", 0, 20);
-	hist2->Fit("f2", "N", "",0, 20);
+	hist1->Fit("f1", "N" , "E0", 0, NBINS);
+	hist2->Fit("f2", "N", "",0, NBINS);
 
 
 	hist1->Draw("E1");
