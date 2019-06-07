@@ -139,35 +139,41 @@ void getHist(TString filename, TH1D* h1Hnum)
 
 		// if (j % 10000 == 0) cout << j << endl;
 		
-		// 
-		Double_t numOfHits = 0;
-		// for (int i = 0; i < nSec/2; ++i){
+		//
 
-		// 	bool thisSec = isFired(eff, nPhot[2*i]);
-		// 	bool lSec = isFired(eff, nPhot[2*i+1]);
+		const Int_t nRebin = 100;
 
-		// 	if (thisSec && lSec) {
+
+		for (Int_t i = 0; i < nSec/nRebin; ++i){
+			Double_t numOfHits = 0;			
+
+			for (Int_t j = 0; j < nRebin; ++j){
+				bool fired = false;
+				if (isFired(eff, nPhot[nRebin*i+j])) {
+					fired = true;
+					// break;
+				}
+				if (fired) {
+					numOfHits += 1;	
+				}
+			}
+
+			h1Hnum->Fill( numOfHits );	
+		}
+
+
+
+		// for (int i = 0; i < nSec; ++i){
+
+		// 	bool thisSec = isFired(eff, nPhot[i]);
+
+		// 	if (thisSec) {
 		// 		numOfHits += 1;	
 		// 		++i;
 		// 	}
 		// 	// if (thisSec && oppSec) numOfHits += 2;	
 		// }
-
-
-
-		for (int i = 0; i < nSec; ++i){
-
-			bool thisSec = isFired(eff, nPhot[i]);
-
-			if (thisSec) {
-				numOfHits += 1;	
-				++i;
-			}
-			// if (thisSec && oppSec) numOfHits += 2;	
-		}
 		
-
-		h1Hnum->Fill( numOfHits );
 
 	}
 

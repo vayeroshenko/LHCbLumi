@@ -175,7 +175,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
     G4VSolid *BPSolid = new G4Tubs("BeamPipe",			// name
                                    LConst::BPInnerRadius,						// inner radius
-                                   LConst::BPOuterRadius,						// outer radius
+                                   LConst::BPOuterRadius - 0.1*mm,						// outer radius
                                    (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,  // dZ/2
                                    0,											// theta start
                                    twopi);										// theta of sector

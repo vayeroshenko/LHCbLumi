@@ -10,17 +10,17 @@
 	TString outname;
 
 
-	filename1 = "fixLarge5";
+	filename1 = "fix5";
 	// filename1 = "heavyIon";
 
 
 	// filename2 = "vfar_5";
-	filename2 = "fixLarge525";
+	filename2 = "fix525";
 
-	TFile *file1 = new TFile(filename1+"/histos1m.root");
+	TFile *file1 = new TFile(filename1+"/histos5.root");
 	TH1D* hist1 = (TH1D*)file1->Get( TString("Hit Number0"));
 
-	TFile *file2 = new TFile(filename2+"/histos1m.root");	
+	TFile *file2 = new TFile(filename2+"/histos5.root");	
 	file2->cd();
 	TH1D* hist2 = (TH1D*)file2->Get( TString("Hit Number0"));
 
@@ -41,8 +41,8 @@
 
 	// hist1->Scale(hist2->GetEntries()/hist1->GetEntries());
 
-	hist1->Scale(1e6/hist1->GetEntries());
-	hist2->Scale(1e6/hist2->GetEntries());
+	hist1->Scale(6e4/hist1->GetEntries());
+	hist2->Scale(6e4/hist2->GetEntries());
 
 
 	hist2->SetLineColor(kRed);
