@@ -45,6 +45,10 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
 	//	}
 
+    for (G4int i = 0; i < LConst::nSecOut; ++i) {
+        runAction->_nPhot[i] = 0;
+    }
+
 	_steppingAction->Reset();
 	_steppingAction->ResetPerEvent();
 
@@ -62,37 +66,42 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	//	  if (theCollectionID < 0) return;
 
 	// Get the Hit Collection
-	G4HCofThisEvent* HCE = event->GetHCofThisEvent();
+    G4HCofThisEvent* HCE = event->GetHCofThisEvent();
     L_HitsCollection * THC = 0;
 
-	G4int nHit = 0;
+    G4int nHit = 0;
 
-	if (HCE){
+    if (HCE){
         THC = (L_HitsCollection*)(HCE->GetHC(theCollectionID));
-	}
+    }
 
-	if (0 == THC) return;
+    if (0 == THC) return;
 
-	nHit = THC->entries();
+    nHit = THC->entries();
 
-	for (G4int i = 0; i < nHit; i++) {
-		runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
-		runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
-		runAction->_Energy[i] = (*THC)[i]->myData.Energy;
-		runAction->_Time[i] = (*THC)[i]->myData.Time;
-		runAction->_PdgID[i] = (*THC)[i]->myData.PdgID;
-		runAction->_StationID[i] = (*THC)[i]->myData.StationID;
-		runAction->_X[i] = (*THC)[i]->myData.X;
-		runAction->_Y[i] = (*THC)[i]->myData.Y;
-		runAction->_Z[i] = (*THC)[i]->myData.Z;
-		runAction->_Px[i] = (*THC)[i]->myData.Px;
-		runAction->_Py[i] = (*THC)[i]->myData.Py;
-		runAction->_Pz[i] = (*THC)[i]->myData.Pz;
-        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
-	}
+
+    runAction->_nSec = LConst::nSecOut;
+
+    for (G4int i = 0; i < nHit; i++) {
+        runAction->_nPhot[(*THC)[i]->myData.StationID] ++;
+
+//        runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
+//        runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
+//        runAction->_Energy[i] = (*THC)[i]->myData.Energy;
+//        runAction->_Time[i] = (*THC)[i]->myData.Time;
+//        runAction->_PdgID[i] = (*THC)[i]->myData.PdgID;
+//        runAction->_StationID[i] = (*THC)[i]->myData.StationID;
+//        runAction->_X[i] = (*THC)[i]->myData.X;
+//        runAction->_Y[i] = (*THC)[i]->myData.Y;
+//        runAction->_Z[i] = (*THC)[i]->myData.Z;
+//        runAction->_Px[i] = (*THC)[i]->myData.Px;
+//        runAction->_Py[i] = (*THC)[i]->myData.Py;
+//        runAction->_Pz[i] = (*THC)[i]->myData.Pz;
+//        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
+    }
 
 	runAction->_EventID = eventNum;
-	runAction->_nPart = nHit;
+//    runAction->_nPart = nHit;
 
 	runAction->tree->Fill();
 

@@ -76,18 +76,18 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     L_Hit* newHit = new L_Hit();
 
-    newHit->myData.TrackID = aTrack->GetTrackID();
-    newHit->myData.ParentID = aTrack->GetParentID();
-    newHit->myData.Energy = aTrack->GetKineticEnergy();
-    newHit->myData.PdgID = aTrack->GetParticleDefinition()->GetPDGEncoding();
-    newHit->myData.Time = aTrack->GetGlobalTime();
-    newHit->myData.X = globalPosition.x();
-    newHit->myData.Y = globalPosition.y();
-    newHit->myData.Z = globalPosition.z();
-    newHit->myData.Momentum= aTrack->GetMomentum().mag();
-    newHit->myData.Px = aTrack->GetMomentum().x();
-    newHit->myData.Py = aTrack->GetMomentum().y();
-    newHit->myData.Pz = aTrack->GetMomentum().z();
+//    newHit->myData.TrackID = aTrack->GetTrackID();
+//    newHit->myData.ParentID = aTrack->GetParentID();
+//    newHit->myData.Energy = aTrack->GetKineticEnergy();
+//    newHit->myData.PdgID = aTrack->GetParticleDefinition()->GetPDGEncoding();
+//    newHit->myData.Time = aTrack->GetGlobalTime();
+//    newHit->myData.X = globalPosition.x();
+//    newHit->myData.Y = globalPosition.y();
+//    newHit->myData.Z = globalPosition.z();
+//    newHit->myData.Momentum= aTrack->GetMomentum().mag();
+//    newHit->myData.Px = aTrack->GetMomentum().x();
+//    newHit->myData.Py = aTrack->GetMomentum().y();
+//    newHit->myData.Pz = aTrack->GetMomentum().z();
 
     //    if (PreName == "L1PlaneInner" && PostName == "World") newHit->myData.StationID = -1;
     //    else if (PreName == "L1PlaneOuter" && PostName == "World") newHit->myData.StationID = 1;
