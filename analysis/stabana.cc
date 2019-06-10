@@ -21,6 +21,8 @@ using namespace std;
 
 TRandom3 *rnd = new TRandom3(0);
 
+Int_t NREBIN = 100;
+
 
 Bool_t isFired(Double_t *eff, Int_t nPhot){
 
@@ -90,7 +92,8 @@ void getHist(TString filename, TH1D* h1Hnum)
 		Bool_t isChecked[nSec] = {false};
 		
 
-		const Int_t nRebin = 100;
+		const Int_t nRebin = NREBIN;
+		// const Int_t nRebin = 100;
 
 
 		for (Int_t i = 0; i < nSec/nRebin; ++i){
@@ -126,19 +129,19 @@ void getHist(TString filename, TH1D* h1Hnum)
 
 
 
-		for (int i = 0; i < nSec; ++i){
+		// for (int i = 0; i < nSec; ++i){
 
-			bool thisSec = isFired(eff, nPhot[i]);
+		// 	bool thisSec = isFired(eff, nPhot[i]);
 
-			if (thisSec) {
-				numOfHits += 1;	
-				++i;
-			}
-			// if (thisSec && oppSec) numOfHits += 2;	
-		}
+		// 	if (thisSec) {
+		// 		numOfHits += 1;	
+		// 		++i;
+		// 	}
+		// 	// if (thisSec && oppSec) numOfHits += 2;	
+		// }
 		
 
-		h1Hnum->Fill( numOfHits );
+		// h1Hnum->Fill( numOfHits );
 
 	}
 
@@ -154,6 +157,7 @@ void getHist(TString filename, TH1D* h1Hnum)
 
 int main(int argc, char** argv){
 
+	if (argc != 1) NREBIN = atoi(argv[1]);
 
 	TH1D *array[NHIST];
 
@@ -168,7 +172,7 @@ int main(int argc, char** argv){
 
 	for (Int_t i = 0; i < NHIST; ++i) {
 	  //TString filename = "newData_";
-	  TString filename = "newDataMerged.root";
+	  TString filename = "newDataMergedOpt.root";
 	  //filename += TString (std::to_string(i+1));
 	  //filename += TString(".root");
 	  

@@ -10,17 +10,17 @@
 	TString outname;
 
 
-	filename1 = "fixLarge5";
+	filename1 = "opt5";
 	// filename1 = "heavyIon";
 
 
 	// filename2 = "vfar_5";
-	filename2 = "fixLarge525";
+	filename2 = "opt525";
 
-	TFile *file1 = new TFile(filename1+"/histos1m.root");
+	TFile *file1 = new TFile(filename1+"/histos50.root");
 	TH1D* hist1 = (TH1D*)file1->Get( TString("Hit Number0"));
 
-	TFile *file2 = new TFile(filename2+"/histos1m.root");	
+	TFile *file2 = new TFile(filename2+"/histos50.root");	
 	file2->cd();
 	TH1D* hist2 = (TH1D*)file2->Get( TString("Hit Number0"));
 
@@ -41,8 +41,13 @@
 
 	// hist1->Scale(hist2->GetEntries()/hist1->GetEntries());
 
-	hist1->Scale(1e6/hist1->GetEntries());
-	hist2->Scale(1e6/hist2->GetEntries());
+	// hist1->Scale(1e6/hist1->GetEntries());
+	// hist2->Scale(1e6/hist2->GetEntries());
+
+	// hist1->Scale(1e6/hist1->GetEntries());
+	hist2->Scale(hist1->GetEntries()/hist2->GetEntries());
+
+	std::cout << "nEntries: " << hist1->GetEntries() << std::endl; 
 
 
 	hist2->SetLineColor(kRed);
@@ -62,6 +67,7 @@
 	hist1->GetXaxis()->SetRange(1,NBINS);
 	hist2->GetXaxis()->SetRange(1,NBINS);
 
+
 	TF1 *poisson2 = new TF1("f2", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, NBINS);
 
 	poisson2->SetParameter(0, 1e3);
@@ -74,8 +80,8 @@
 
 
 
-	hist1->Fit("f1", "N" , "E0", 0, NBINS);
-	hist2->Fit("f2", "N", "",0, NBINS);
+	// hist1->Fit("f1", "N" , "E0", 0, NBINS);
+	// hist2->Fit("f2", "N", "",0, NBINS);
 
 
 	hist1->Draw("E1");
