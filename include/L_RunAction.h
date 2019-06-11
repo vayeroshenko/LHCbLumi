@@ -24,6 +24,7 @@
 //root
 #include "TTree.h"
 #include "TFile.h"
+#include "TH1D.h"
 
 
 class L_RunAction: public G4UserRunAction {
@@ -42,20 +43,27 @@ public:
 
     G4int _nPart;
     G4int _EventID;
+    G4int _nSec;
+    G4int _nPhot[LConst::nSecOut];
+
+
     static const G4int _nPartMax = 200000;
-    G4int _TrackID[_nPartMax];
-    G4int _ParentID[_nPartMax];
-    G4int _PdgID[_nPartMax];
-    G4int _StationID[_nPartMax];
-    G4double _Energy[_nPartMax];
-    G4double _Time[_nPartMax];
-    G4double _X[_nPartMax];
-    G4double _Y[_nPartMax];
-    G4double _Z[_nPartMax];
-    G4double _Px[_nPartMax];
-    G4double _Py[_nPartMax];
-    G4double _Pz[_nPartMax];
-    G4double _Momentum[_nPartMax];
+
+    G4int _nRefl[_nPartMax];
+
+//    G4int _TrackID[_nPartMax];
+//    G4int _ParentID[_nPartMax];
+//    G4int _PdgID[_nPartMax];
+//    G4int _StationID[_nPartMax];
+//    G4double _Energy[_nPartMax];
+//    G4double _Time[_nPartMax];
+//    G4double _X[_nPartMax];
+//    G4double _Y[_nPartMax];
+//    G4double _Z[_nPartMax];
+//    G4double _Px[_nPartMax];
+//    G4double _Py[_nPartMax];
+//    G4double _Pz[_nPartMax];
+//    G4double _Momentum[_nPartMax];
 
 
 

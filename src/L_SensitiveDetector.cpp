@@ -116,9 +116,13 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     }
     else return false;
 
+    newHit->myData.nRefl = _nOfReflections;
+
     // Insert this hit
     _Collection->insert(newHit);
     newHit->Draw();
+
+
     //  }
 
 

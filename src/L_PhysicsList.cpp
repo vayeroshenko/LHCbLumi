@@ -49,6 +49,7 @@ void L_PhysicsList::ConstructOp()
 
     theCerenkovProcess->SetMaxNumPhotonsPerStep(300);
     theCerenkovProcess->SetTrackSecondariesFirst(true);
+
     G4cout<<" 111 "<<G4endl;
 
     theParticleIterator->reset();
