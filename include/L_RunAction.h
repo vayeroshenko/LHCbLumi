@@ -15,6 +15,7 @@
 
 //my
 #include "HitDataStructure.hh"
+#include "LConst.hh"
 
 //G4
 #include "G4Timer.hh"
