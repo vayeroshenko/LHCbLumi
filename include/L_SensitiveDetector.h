@@ -31,7 +31,7 @@ public:
 
 	void EndOfEvent(G4HCofThisEvent*);
 
-    G4int _nOfReflections = -999;
+    G4int _nOfReflections = 0;
 
 
 private:
