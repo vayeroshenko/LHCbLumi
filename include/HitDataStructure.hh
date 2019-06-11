@@ -14,6 +14,8 @@ struct HitData
   G4double X;
   G4double Y;
   G4double Z;
+
+  G4int nRefl;
 //  G4double Px;
 //  G4double Py;
 //  G4double Pz;

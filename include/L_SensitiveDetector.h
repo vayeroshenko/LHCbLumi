@@ -30,6 +30,10 @@ public:
     G4bool ProcessHitsL(G4Step*, G4TouchableHistory*);
 
 	void EndOfEvent(G4HCofThisEvent*);
+
+    G4int _nOfReflections = -999;
+
+
 private:
 
     L_HitsCollection* _Collection;

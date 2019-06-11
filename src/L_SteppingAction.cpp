@@ -1,9 +1,9 @@
 /*
- * L_SteppingAction.cpp
- *
- *  Created on: Oct 2, 2018
- *      Author: vsevolod
- */
+                                 * L_SteppingAction.cpp
+                                 *
+                                 *  Created on: Oct 2, 2018
+                                 *      Author: vsevolod
+                                 */
 
 #include "L_SteppingAction.h"
 #include "L_SensitiveDetector.h"
@@ -45,7 +45,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
         return;
     //
     if (!aPostPV) return;
-    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
 
 
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
@@ -80,8 +80,15 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     boundaryStatus = boundary->GetStatus();
 
+
+    //    G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
+
     if (aPostPoint->GetStepStatus() == fGeomBoundary) {
         G4String sdName = "LSD";
+        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+        L_SensitiveDetector* sd =
+                (L_SensitiveDetector*)SDman->FindSensitiveDetector(sdName);
+
         G4double flat = G4UniformRand();
         switch(boundaryStatus) {
         case Absorption:
@@ -93,8 +100,19 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
+            } else {
+
+                if (trackID == _currentPhotonID) {
+                    _numberOfReflections += 1;
+                    sd->_nOfReflections = _numberOfReflections;
+
+                } else {
+                    _currentPhotonID = trackID;
+                    _numberOfReflections = 1;
+                    sd->_nOfReflections = _numberOfReflections;
+
+                }
             }
-            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;
@@ -109,7 +127,8 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     return;
 }
 void L_SteppingAction::ResetPerEvent(){
-
+    _numberOfReflections = -1;
+    _currentPhotonID = 0;
 }
 
 void L_SteppingAction::Reset()
@@ -124,10 +143,10 @@ void L_SteppingAction::InternalReflectionProbability(G4double energy,
     probability = 1.0;
 
     /* this function simulate the internal reflection probability per one
-     bounce - each time photon bounced this function is called
-     and the reflection is tested if photon reflects or disappear -
-     this function estimates loss of photons during imperfections
-     of bar */
+                                     bounce - each time photon bounced this function is called
+                                     and the reflection is tested if photon reflects or disappear -
+                                     this function estimates loss of photons during imperfections
+                                     of bar */
 
     G4double opticalPhotonEnergy[36] = {
         1.90744901082931,1.93725290162352,1.96800294768103,1.99974493070815,
@@ -161,8 +180,8 @@ void L_SteppingAction::InternalReflectionProbability(G4double energy,
             internalReflectivity[i-1];
 
     /* because the ratio between peak1 and peak2 did not correspond,
-     the reflection probability was change to get the same
-     ration 2.1:1 => the original probability is multiplied by .9992 */
+                                     the reflection probability was change to get the same
+                                     ration 2.1:1 => the original probability is multiplied by .9992 */
     probability = probability*.9992;
 
 

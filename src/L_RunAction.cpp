@@ -14,6 +14,7 @@ L_RunAction::L_RunAction() { // @suppress("Class members should be properly init
     timer = new G4Timer();
 
 
+
     G4cout << "Run action constructor" << G4endl;
 }
 
@@ -55,7 +56,9 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 
     //Hits
 
-//    tree->Branch("nPart", &_nPart, "nPart/I");
+    tree->Branch("nPart", &_nPart, "nPart/I");
+    tree->Branch("nRefl", _nRefl, "nRefl[nPart]/I");
+
 //    tree->Branch("TrackID", _TrackID, "TrackID[nPart]/I");
 //    tree->Branch("ParentID", _ParentID, "ParentID[nPart]/I");
 //    tree->Branch("Energy", _Energy, "Energy[nPart]/D");
@@ -81,6 +84,7 @@ void L_RunAction::EndOfRunAction(const G4Run* )
     //	hfile = tree->GetCurrentFile();
 
     G4cout << "End of run action" << G4endl;
+
     tree->Write();
     hfile->Write();
     tree->Print();

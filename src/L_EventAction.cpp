@@ -82,8 +82,16 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
     runAction->_nSec = LConst::nSecOut;
 
+    runAction->_nPart = nHit;
+
     for (G4int i = 0; i < nHit; i++) {
         runAction->_nPhot[(*THC)[i]->myData.StationID] ++;
+
+        G4int nrefl = (*THC)[i]->myData.nRefl;
+
+//        G4cout << nrefl << G4endl;
+        runAction->_nRefl[i] = nrefl;
+
 
 //        runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
 //        runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
