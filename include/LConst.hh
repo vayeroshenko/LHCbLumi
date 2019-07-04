@@ -15,21 +15,26 @@
 
 namespace LConst{
 
+// World size
 const G4double worldSizeX = 3*m;
 const G4double worldSizeY = 3*m;
 const G4double worldSizeZ = 8*m;
 
 
+// Outer and inner radius of the beampipe
 const G4double BPOuterRadius = 31*mm;
 const G4double BPInnerRadius = 30*mm;
 
-  //const G4double L1pozZ = - 2172.*mm;
-//    const G4double L1pozZ = - 2172.*mm + 400*mm;
-const G4double L1pozZ = - 2172.*mm + 800*mm;
 
-//    const G4double L2pozZ = - 2172.*mm + 800*mm;
+// Detector pozition along Z-axis
 
-//    const G4double BeamStart = - 879.*mm;
+//const G4double L1pozZ = - 2172.*mm;           // The closest option
+//const G4double L1pozZ = - 2172.*mm + 400*mm;  // An intermediate option
+const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
+
+// The same for the second detector
+//const G4double L2pozZ = - 2172.*mm + 800*mm;
+
 
 // VELO Sphere
 const G4double capHeight = 280.*mm;
@@ -53,6 +58,8 @@ const G4double VeloRight = 350*mm;
 
 
 ///////////////////////// Detector inside beampipe ///////////////////////////////////////////////////
+// The old configuration
+
 const G4double sectorThicknessIn = 1*cm;
 
 const G4double innerRadIn = 10*mm;
@@ -73,15 +80,15 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 const G4double sectorThicknessOut = 1*cm;
 
 
- const G4double innerRadOut = BPOuterRadius;
- const G4double outerRadOut = 10*cm;
+const G4double innerRadOut = BPOuterRadius;
+const G4double outerRadOut = 10*cm;
 //const G4double innerRadOut = 160*mm;
 //const G4double outerRadOut = 100*cm;
 //const G4double innerRadOut = 100*cm;
 //const G4double outerRadOut = 110*cm;
 
 
- const G4int nSecOut = 100;
+const G4int nSecOut = 100;
 // const G4int nSecOut = 50;
 
 const G4double angleOut = 45*deg;

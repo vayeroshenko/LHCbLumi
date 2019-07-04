@@ -1,7 +1,7 @@
 #include "L_PhysicsList.h"
 
 
-
+// Physics list constructor inherited from QGSP_BERT
 L_PhysicsList::L_PhysicsList() : QGSP_BERT()
 {
     theCerenkovProcess = 0;
@@ -16,9 +16,11 @@ L_PhysicsList::~L_PhysicsList()
     delete theCerenkovProcess;
 }
 
-// Construct particle and physics process
 void L_PhysicsList::ConstructParticle()
 {
+    //  Constructing HEP particles from base physics list
+    //  and adding OpticalPhoton to them
+
     QGSP_BERT::ConstructParticle();
     G4OpticalPhoton::OpticalPhotonDefinition();
 }
@@ -26,6 +28,9 @@ void L_PhysicsList::ConstructParticle()
 
 void L_PhysicsList::ConstructProcess()
 {
+    //  Constructing processes from base physics list and adding
+    //  Cherenkov process and optical processes
+
     QGSP_BERT::ConstructProcess();
     ConstructOp();
 }

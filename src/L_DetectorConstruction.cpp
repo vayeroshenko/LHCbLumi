@@ -36,7 +36,7 @@ void L_DetectorConstruction::ConstructSDandField() {
 
     //    G4cout << "_____________________________________________Detectors are made" << G4endl;
 }
-
+// Defining materials
 void L_DetectorConstruction::DefineMateials() {
     G4String symbol;
     G4double a, z, density;
@@ -101,7 +101,7 @@ void L_DetectorConstruction::DefineMateials() {
         WaveLength[i] = (300 + i*10)*nanometer;
         Absorption[i] = 100*m;      // Fake number for no absorption
         AirAbsorption[i] = 10.*cm;   // If photon hits air, kill it
-        AirRefractiveIndex[i] = 1.;
+        AirRefractiveIndex[i] = 1.; // Rough air refraction
         PhotonEnergy[num - (i+1)] = twopi*hbarc/WaveLength[i];
         /* Absorption is given per length and G4 needs mean free path
          length, calculate it here
@@ -138,11 +138,13 @@ void L_DetectorConstruction::DefineMateials() {
 
     // Assign these properties to the world volume
     Air->SetMaterialPropertiesTable(AirMPT);
+    // In our rough assumption
     Vacuum->SetMaterialPropertiesTable(AirMPT);
 }
 
 G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
+    //////////////////////// World /////////////////////////////
     G4VSolid *worldSolid = new G4Box("World",
                                      LConst::worldSizeX/2,
                                      LConst::worldSizeY/2,
@@ -159,7 +161,11 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                                          0,
                                                          false,
                                                          0);
+    ///////////////////////////////////////////////////////////
 
+
+    // The solid to be extracted from VELO vessel upstream cap
+    // in order to avoid overlap with beampipe
     G4VSolid *ExtSolid = new G4Tubs("ExtTube",	// name
                                     0.,											// inner radius
                                     LConst::BPOuterRadius,						// outer radius
@@ -168,18 +174,13 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                     twopi);										// theta of sector
 
 
-    //    G4Transform3D Tr(G4RotationMatrix(), G4ThreeVector(0,0,0));
-
-
-
-
+    ////////////////////// Beampipe ////////////////////////////
     G4VSolid *BPSolid = new G4Tubs("BeamPipe",			// name
                                    LConst::BPInnerRadius,						// inner radius
                                    LConst::BPOuterRadius,						// outer radius
                                    (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,  // dZ/2
                                    0,											// theta start
                                    twopi);										// theta of sector
-
     G4LogicalVolume *BPLogical = new G4LogicalVolume(BPSolid,
                                                      BPMaterial,
                                                      "BeamPipe");
@@ -191,7 +192,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 worldLogical,
                 false,
                 0);
+    ////////////////////////////////////////////////////////////
 
+
+    ////////////////////// VELO cap ////////////////////////////
     G4VSolid *VELOsphere = new G4Sphere("VELOsphere",
                                         LConst::sphereInnerR,
                                         LConst::sphereOuterR,
@@ -200,14 +204,11 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                         0,
                                         LConst::sphereTheta);
     G4SubtractionSolid *VELOsphereSolid = new G4SubtractionSolid("VELOsphere", VELOsphere, ExtSolid);
-
     G4LogicalVolume *VELOsphereLog = new G4LogicalVolume(VELOsphereSolid,
                                                          INOX,
                                                          "VELOsphere");
-
     G4RotationMatrix *Rm = new G4RotationMatrix();
     Rm->rotateX(pi);
-
     G4VPhysicalVolume *VELOspherePhys =  new G4PVPlacement(
                 Rm,
                 G4ThreeVector(0.,0., (LConst::sphereCenter)),
@@ -216,6 +217,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 worldLogical,
                 false,
                 0);
+    ////////////////////////////////////////////////////////////
 
 
 
@@ -239,6 +241,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     //            false,
     //            0);
 
+
+    ////////////////////// OLD CONFIGURATION ////////////////////////////
 
     ///////////////////////////////////////////////////////
     G4VSolid *L1SolidPlane= new G4Box("L1Plane",
@@ -323,11 +327,13 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     ////////////////////////////////////////////////////////
 
 
+    /////////////////// END OF OLD CONFIGURATION ///////////////////////
 
 
     G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
     G4RotationMatrix *Ra = new G4RotationMatrix();
 
+    ////////////// Trapeze sectors and absorbers ///////////////
     G4Trd *secIn = new G4Trd(
                 "sectorIn",
                 sectorIn.shortSide/2.,
@@ -363,15 +369,19 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 absorberOut.thickness/2.,
                 absorberOut.height/2.
                 );
+    ////////////////////////////////////////////////////////////
 
+    ///////////// Photon detector at the surface ///////////////
     G4VSolid *detectorOut = new G4Box("detector",
                                       sectorOut.longSide/2.,
                                       sectorOut.thickness/2.,
                                       1*mm
                                       );
+    ////////////////////////////////////////////////////////////
 
 
-
+    // Loop for sectors in order to place them with detectors and absorbers
+    // IN THE OLD CONFIGURATION (placing is commented)
     for (int j = 0; j < LConst::nSecIn; ++j) {
         /////////// sector /////////////
         G4String name = "sector in ";
@@ -409,9 +419,12 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
     G4Transform3D Tr;
 
+    // Assembly
     G4AssemblyVolume *assembly = new G4AssemblyVolume();
     G4String name;
 
+
+    // Loop for sectors in order to place them with detectors and absorbers
     for (int j = 0; j < LConst::nSecOut; ++j) {
         /////////// sector /////////////
         name = "sector out ";
@@ -545,9 +558,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     Ta = new G4ThreeVector();
 
 
+    // Managing the final position of the assembly
 
     Ra->rotateY(270.0*deg);
-    Ra->rotateX(90.0*deg/*+fTOFConst::angle*/);
+    Ra->rotateX(90.0*deg);
 
     Ta->setX(0.);
     Ta->setY(0.);
@@ -571,6 +585,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     return worldPhysical;
 }
 
+
+// Definition of absorbtion surfaces
 void L_DetectorConstruction::DefineOpticalBorders()
 {
     const G4int num1 = 2;
@@ -607,6 +623,7 @@ void L_DetectorConstruction::DefineOpticalBorders()
 
 }
 
+// Visual attributes
 void L_DetectorConstruction::SetVisAttributes()
 {
     G4Color blue        = G4Color(0., 0., 1.);

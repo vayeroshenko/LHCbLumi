@@ -15,6 +15,7 @@
 //My
 #include "LConst.hh"
 
+// Base structure
 struct VolumeStruct {
     G4Material*        material;
     G4VSolid*          solid;
@@ -29,6 +30,7 @@ struct VolumeStruct {
     ~VolumeStruct() {;}
 };
 
+// Sector structure (inside beampipe)
 struct TrapezeSectorStructIn: VolumeStruct {
     const G4double thickness;
     const G4double height;
@@ -49,6 +51,7 @@ struct TrapezeSectorStructIn: VolumeStruct {
     {;}
 };
 
+// Sector structure (outside beampipe)
 struct TrapezeSectorStructOut: VolumeStruct {
     const G4double thickness;
     const G4double height;
@@ -69,6 +72,7 @@ struct TrapezeSectorStructOut: VolumeStruct {
     {;}
 };
 
+// Optical insulation between sectors (inside beampipe)
 struct TrapezeAbsStructIn: VolumeStruct {
   const G4double shortSide;
   const G4double longSide;
@@ -89,6 +93,7 @@ struct TrapezeAbsStructIn: VolumeStruct {
   {;}
 };
 
+// Optical insulation between sectors (outside beampipe)
 struct TrapezeAbsStructOut: VolumeStruct {
   const G4double shortSide;
   const G4double longSide;

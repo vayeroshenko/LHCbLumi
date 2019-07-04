@@ -19,7 +19,7 @@
 #include "G4SDManager.hh"
 #include "globals.hh"
 
-L_EventAction::L_EventAction(L_RunAction* runact, // @suppress("Class members should be properly initialized")
+L_EventAction::L_EventAction(L_RunAction* runact,
         L_SteppingAction* steppingAction) :
 		runAction(runact), _steppingAction(steppingAction), printModulo(100)
 {
@@ -35,15 +35,15 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 //    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
+    // Printing an event number
 	if (eventNum%printModulo == 0) {
 		G4cout << "\n---> Begin of Event: " << eventNum << G4endl;
 	}
 
-	//	if (theCollectionID < 0) {
+    // Setting uo the hit collection to be get in the end of event
 	G4String colName;
 	theCollectionID =
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
-	//	}
 
 	_steppingAction->Reset();
 	_steppingAction->ResetPerEvent();
