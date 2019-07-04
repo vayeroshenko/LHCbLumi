@@ -33,24 +33,33 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     //G4cout<<"trackID = "<<trackID<<G4endl;
 
 
+    // Pre step point and physical volume
     G4StepPoint* aPrePoint = aStep->GetPreStepPoint();
     G4VPhysicalVolume* aPrePV = aPrePoint->GetPhysicalVolume();
 
+    // Post step point and physical volume
     G4StepPoint* aPostPoint = aStep->GetPostStepPoint();
     G4VPhysicalVolume* aPostPV = aPostPoint->GetPhysicalVolume();
 
 
+    // Further operations are only for optical photons
     G4ParticleDefinition* particleType = aTrack->GetDefinition();
     if (particleType != G4OpticalPhoton::OpticalPhotonDefinition())
         return;
-    //
+
+    // Check if particle trying to escape the World
     if (!aPostPV) return;
+
+    // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
     if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    ////////////////////////////////////////////////////////////////////////
 
-
+    // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
+    ////////////////////////////////////////////////////////////////////////
 
 
+    // Getting probability of internal reflection
     if (_particleID != trackID) {
         Reset();
         _particleID = trackID;
@@ -58,7 +67,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
                                       _probOfReflection);
     }
 
-
+    // Declaring boundary
     G4OpBoundaryProcessStatus boundaryStatus = Undefined;
     static G4OpBoundaryProcess* boundary = NULL;
 
@@ -76,6 +85,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
         }
     }
 
+    // Only boundary processes are handling further
     if (!boundary) return;
 
     boundaryStatus = boundary->GetStatus();
@@ -90,6 +100,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             // Reflections of surfaces of different media
             break;
         case TotalInternalReflection:
+            // Actually check if particle is reflected
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
@@ -118,6 +129,7 @@ void L_SteppingAction::Reset()
     _particleID = 0.;
 }
 
+// This metod is stolen from Leonid's code
 void L_SteppingAction::InternalReflectionProbability(G4double energy,
                                                      G4double& probability)
 {

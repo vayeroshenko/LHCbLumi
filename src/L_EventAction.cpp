@@ -19,7 +19,7 @@
 #include "G4SDManager.hh"
 #include "globals.hh"
 
-L_EventAction::L_EventAction(L_RunAction* runact, // @suppress("Class members should be properly initialized")
+L_EventAction::L_EventAction(L_RunAction* runact,
         L_SteppingAction* steppingAction) :
 		runAction(runact), _steppingAction(steppingAction), printModulo(100)
 {
@@ -35,20 +35,22 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 //    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
+    // Printing an event number
 	if (eventNum%printModulo == 0) {
 		G4cout << "\n---> Begin of Event: " << eventNum << G4endl;
 	}
 
-	//	if (theCollectionID < 0) {
+    // Setting uo the hit collection to be get in the end of event
 	G4String colName;
 	theCollectionID =
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
-	//	}
 
+    // Setting the number of photons in each sector to 0 for further counting
     for (G4int i = 0; i < LConst::nSecOut; ++i) {
         runAction->_nPhot[i] = 0;
     }
 
+    // Reset stepping
 	_steppingAction->Reset();
 	_steppingAction->ResetPerEvent();
 
@@ -69,19 +71,24 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
     G4HCofThisEvent* HCE = event->GetHCofThisEvent();
     L_HitsCollection * THC = 0;
 
+    // Declare the number of hits to be get
     G4int nHit = 0;
 
+
+    // Checking the validity of the hit collection
     if (HCE){
         THC = (L_HitsCollection*)(HCE->GetHC(theCollectionID));
     }
-
     if (0 == THC) return;
 
+    // Get the number of hits
     nHit = THC->entries();
 
-
+    // Getting the number of sectors from the constant collection
     runAction->_nSec = LConst::nSecOut;
 
+    // Counting each photon dependently on the sector ID
+    // Individual photon tracking is commented
     for (G4int i = 0; i < nHit; i++) {
         runAction->_nPhot[(*THC)[i]->myData.StationID] ++;
 

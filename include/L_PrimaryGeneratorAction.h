@@ -55,7 +55,9 @@ private:
 private:
     G4ParticleGun *_particleGun = new G4ParticleGun();
 
-    TChain *tree;
+//    TChain *tree;
+
+    // Data to be transported from pythia to gun
     G4int nEvents;
     G4int nParticles;
     G4int pdgID[20000];
@@ -69,7 +71,9 @@ private:
 
     G4int iEv;
 
+    // Pythia generator declaration
     Pythia8::Pythia pythia;
+    // Pythia event declaration
     Pythia8::Event& PythiaEvent = pythia.event;
 };
 

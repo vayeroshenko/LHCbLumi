@@ -8,8 +8,7 @@
 #include "L_RunAction.h"
 
 
-L_RunAction::L_RunAction() { // @suppress("Class members should be properly initialized")
-    // TODO Auto-generated constructor stub
+L_RunAction::L_RunAction() {
     //	_outputFileName = "data.root";
     timer = new G4Timer();
 
@@ -18,17 +17,12 @@ L_RunAction::L_RunAction() { // @suppress("Class members should be properly init
 }
 
 L_RunAction::~L_RunAction() {
-    // TODO Auto-generated destructor stub
-
-
     delete tree;
     delete hfile;
 }
 
 void L_RunAction::BeginOfRunAction(const G4Run* run)
 {
-    //inform the runManager to save random number seed
-    //	G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
     G4cout << "BeginOfRunAction" << G4endl;
 
@@ -45,15 +39,17 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 
     // Create new event
     TTree::SetBranchStyle(0);
-    //Event
+
+    // Branches filled for each EVENT
+
+    // Event ID
     tree->Branch("EventID",  &_EventID,  "EventID/I");
-
-
+    // Number of sectors (constant every event, just for array length)
     tree->Branch("nSec", &_nSec, "nSec/I");
-
+    // Number of photons detected in each sector
     tree->Branch("nPhot", _nPhot, "nPhot[nSec]/I");
 
-    //Hits
+    // Branches filled for each HIT (commented due to "optimization")
 
 //    tree->Branch("nPart", &_nPart, "nPart/I");
 //    tree->Branch("TrackID", _TrackID, "TrackID[nPart]/I");

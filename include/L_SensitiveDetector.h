@@ -37,6 +37,8 @@ private:
 
 };
 
+// The method stolen from internet for separation words inside the string
+// and returning a vector containig string of words
 template <class Container>
 void splitName(const std::string& str, Container& cont)
 {

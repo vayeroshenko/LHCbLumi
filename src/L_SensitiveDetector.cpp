@@ -14,9 +14,11 @@
 #include "G4PhysicalConstants.hh"
 
 
-L_SensitiveDetector::L_SensitiveDetector(G4String name) : // @suppress("Class members should be properly initialized")
+L_SensitiveDetector::L_SensitiveDetector(G4String name) :
     G4VSensitiveDetector(name){
     //  G4RunManager* runManager = G4RunManager::GetRunManager();
+
+    // Setting up the hit collection
     G4String HCname = "Collection";
     collectionName.insert(HCname);
 
@@ -28,6 +30,7 @@ L_SensitiveDetector::~L_SensitiveDetector() {
 
 void L_SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 {
+    // Getting a hit collection
     _Collection =
             new L_HitsCollection(SensitiveDetectorName, collectionName[0]);
     static G4int HCID = -1;
@@ -52,9 +55,12 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 //    G4cout << "Hit!" << G4endl;
 
 
+    // Getting a track from hit
     G4Track* aTrack = aStep->GetTrack();
+    // Getting the hit position
     G4ThreeVector globalPosition = aStep->GetPostStepPoint()->GetPosition();
     //	newHit->myData;
+
 
     G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
     G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
@@ -64,16 +70,20 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
 
 
+    // Names of previous and next volume
     G4String PreName = PrevVolume->GetName();
     G4String PostName = PostVolume->GetName();
 
+    // For simplicity of using long lines
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
 
 //    if (aParticle->GetCharge() == 0) return false;
 
+    // Handling only optical photons
     if (aParticle->GetDefinition()->GetParticleName() != "opticalphoton")
         return false;
 
+    // New hit instance
     L_Hit* newHit = new L_Hit();
 
 //    newHit->myData.TrackID = aTrack->GetTrackID();
@@ -95,9 +105,12 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     //    else if (PreName == "L2PlaneOuter" && PostName == "World") newHit->myData.StationID = 2;
     //    else return false;
 
+
+    // Vectors of sector's and detector's names splitted into words
     std::vector<G4String> sectorWords;
     std::vector<G4String> detectorWords;
 
+    // Splitting a string into words
     splitName(PreName, sectorWords);
     splitName(PostName, detectorWords);
 
@@ -111,6 +124,7 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     //    }
 
 
+    // Sector ID discrimination for the hit
     if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
         newHit->myData.StationID = atoi(detectorWords[2]);
     }
