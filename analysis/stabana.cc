@@ -159,25 +159,34 @@ int main(int argc, char** argv){
 
 	if (argc != 1) NREBIN = atoi(argv[1]);
 
+	TString filename;
+	if (argc == 3) filename = TString(argv[2]);
+
 	TH1D *array[NHIST];
 
 	TH1D *hChi2 = new TH1D ("chi2", "chi2", 1000, 0, 100);
 
 	
-	TFile *out = new TFile("histos.root","RECREATE");
+	//TFile *out = new TFile("histos.root","RECREATE");
 
+	TFile *out = new TFile(TString("h_")+filename,"RECREATE");
+
+	
+	
 	// printHello();
 	// getHist(filename);
 
 
 	for (Int_t i = 0; i < NHIST; ++i) {
 	  //TString filename = "newData_";
-	  TString filename = "newDataMergedOpt.root";
+
+	  //TString filename = "newDataMergedOpt.root";
+
 	  //filename += TString (std::to_string(i+1));
 	  //filename += TString(".root");
 	  
 	  //	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, -0.5, nSec-0.5);
-	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
+	  array[i] = new TH1D(TString("HitNumber"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
 
 	  
 	  
