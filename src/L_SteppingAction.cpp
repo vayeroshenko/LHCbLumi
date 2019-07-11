@@ -101,16 +101,15 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
             } else {
+                sd->_incidenceAngles.push_back(GetIncidenceAngle(aPrePoint, aPostPoint) / deg);
 
                 if (trackID == _currentPhotonID) {
                     _numberOfReflections += 1;
                     sd->_nOfReflections = _numberOfReflections;
-
                 } else {
                     _currentPhotonID = trackID;
                     _numberOfReflections = 1;
                     sd->_nOfReflections = _numberOfReflections;
-
                 }
             }
             break;
@@ -129,6 +128,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 void L_SteppingAction::ResetPerEvent(){
     _numberOfReflections = -1;
     _currentPhotonID = 0;
+    _currentPhotonAngles = std::vector<G4double>();
 }
 
 void L_SteppingAction::Reset()
@@ -186,5 +186,17 @@ void L_SteppingAction::InternalReflectionProbability(G4double energy,
 
 
     // probability = 0;
+}
+
+
+G4double L_SteppingAction::GetIncidenceAngle(G4StepPoint *preStep, G4StepPoint *postStep)
+{
+    G4ThreeVector preMomentum = preStep->GetMomentum();
+    G4ThreeVector postMomentum = postStep->GetMomentum();
+
+    preMomentum /= preMomentum.mag();
+    postMomentum /= postMomentum.mag();
+
+    return acos( - preMomentum.dot(postMomentum) ) / 2.;
 }
 

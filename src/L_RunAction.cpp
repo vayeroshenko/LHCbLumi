@@ -31,6 +31,9 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     //inform the runManager to save random number seed
     //	G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
+
+    _incidenceAngles = new std::vector<std::vector<G4double> >(0);
+
     G4cout << "BeginOfRunAction" << G4endl;
 
     timer->Start();
@@ -58,6 +61,8 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 
     tree->Branch("nPart", &_nPart, "nPart/I");
     tree->Branch("nRefl", _nRefl, "nRefl[nPart]/I");
+
+    tree->Bronch("incidenceAngles", "std::vector<std::vector<double> >", &_incidenceAngles);
 
 //    tree->Branch("TrackID", _TrackID, "TrackID[nPart]/I");
 //    tree->Branch("ParentID", _ParentID, "ParentID[nPart]/I");

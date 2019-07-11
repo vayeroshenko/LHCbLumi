@@ -2,6 +2,7 @@
 #define HitDataStructure_h 1
 
 #include "globals.hh"
+#include <vector>
 
 struct HitData
 {
@@ -16,6 +17,7 @@ struct HitData
   G4double Z;
 
   G4int nRefl;
+  std::vector<G4double> incidenceAngles;
 //  G4double Px;
 //  G4double Py;
 //  G4double Pz;

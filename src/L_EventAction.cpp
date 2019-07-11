@@ -52,6 +52,8 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 	_steppingAction->Reset();
 	_steppingAction->ResetPerEvent();
 
+    runAction->_incidenceAngles = new std::vector<std::vector<G4double> >(0);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -91,6 +93,7 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
 //        G4cout << nrefl << G4endl;
         runAction->_nRefl[i] = nrefl;
+        runAction->_incidenceAngles->push_back((*THC)[i]->myData.incidenceAngles);
 
 
 //        runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;

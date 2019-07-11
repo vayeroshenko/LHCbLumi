@@ -52,6 +52,8 @@ public:
 
     G4int _nRefl[_nPartMax];
 
+    std::vector<std::vector<G4double> > *_incidenceAngles;
+
 //    G4int _TrackID[_nPartMax];
 //    G4int _ParentID[_nPartMax];
 //    G4int _PdgID[_nPartMax];

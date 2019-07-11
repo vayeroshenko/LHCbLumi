@@ -22,6 +22,9 @@ public:
 	void Reset();
 	void ResetPerEvent();
 
+    static G4double GetIncidenceAngle(G4StepPoint *preStep,
+                                      G4StepPoint *postStep);
+
 private:
     L_PrimaryGeneratorAction* _genAction;
 
@@ -31,8 +34,11 @@ private:
     G4int _currentPhotonID = 0;
     G4int _numberOfReflections = -1;
 
+    std::vector<G4double> _currentPhotonAngles;
+
     void InternalReflectionProbability(G4double energy,
                                        G4double& probability);
+
 };
 
 #endif /* SRC_L_SteppingAction_H_ */
