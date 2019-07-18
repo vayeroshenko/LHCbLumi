@@ -17,7 +17,10 @@ struct HitData
   G4double Z;
 
   G4int nRefl;
-  std::vector<G4double> incidenceAngles;
+  std::vector<G4double> angle_tir;
+  std::vector<G4double> angle_fr;
+  std::vector<G4double> angle_refr;
+//  std::vector<G4double> incidenceAngles;
 //  G4double Px;
 //  G4double Py;
 //  G4double Pz;

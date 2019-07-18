@@ -45,7 +45,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
         return;
     //
     if (!aPostPV) return;
-    //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    if(!aPrePV->GetLogicalVolume()->GetSensitiveDetector()) return;
 
 
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
@@ -93,15 +93,31 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
         switch(boundaryStatus) {
         case Absorption:
             break;
+        case FresnelRefraction:
+            sd->_angle_refr.push_back(GetIncidenceAngleRefr(aPrePoint, aPostPoint, aStep) / deg);
+            break;
+
         case FresnelReflection:
             // Reflections of surfaces of different media
+
+            sd->_angle_fr.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
+
+            if (trackID == _currentPhotonID) {
+                _numberOfReflections += 1;
+                sd->_nOfReflections = _numberOfReflections;
+            } else {
+                _currentPhotonID = trackID;
+                _numberOfReflections = 1;
+                sd->_nOfReflections = _numberOfReflections;
+            }
+
             break;
         case TotalInternalReflection:
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
             } else {
-                sd->_incidenceAngles.push_back(GetIncidenceAngle(aPrePoint, aPostPoint) / deg);
+                sd->_angle_tir.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
 
                 if (trackID == _currentPhotonID) {
                     _numberOfReflections += 1;
@@ -189,7 +205,7 @@ void L_SteppingAction::InternalReflectionProbability(G4double energy,
 }
 
 
-G4double L_SteppingAction::GetIncidenceAngle(G4StepPoint *preStep, G4StepPoint *postStep)
+G4double L_SteppingAction::GetIncidenceAngleRefl(G4StepPoint *preStep, G4StepPoint *postStep)
 {
     G4ThreeVector preMomentum = preStep->GetMomentum();
     G4ThreeVector postMomentum = postStep->GetMomentum();
@@ -197,6 +213,30 @@ G4double L_SteppingAction::GetIncidenceAngle(G4StepPoint *preStep, G4StepPoint *
     preMomentum /= preMomentum.mag();
     postMomentum /= postMomentum.mag();
 
-    return acos( - preMomentum.dot(postMomentum) ) / 2.;
+    return pi/2. - acos(preMomentum.dot(postMomentum)) / 2.;
+}
+
+G4double L_SteppingAction::GetIncidenceAngleRefr(G4StepPoint *preStep, G4StepPoint *postStep, const G4Step *aStep)
+{
+    G4Track *aTrack = aStep->GetTrack();
+
+
+
+    // get refractive index for exact photon energy
+    auto particle = aTrack->GetDynamicParticle();
+    auto r_index_vector = preStep->GetMaterial()->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+    G4double r_index = r_index_vector->Value(particle->GetTotalEnergy());
+
+    // angle between initial and final directions
+    G4ThreeVector preMomentum = preStep->GetMomentum();
+    G4ThreeVector postMomentum = postStep->GetMomentum();
+    preMomentum /= preMomentum.mag();
+    postMomentum /= postMomentum.mag();
+    G4double cos_theta = preMomentum.dot(postMomentum);
+
+    // angle of incidence
+    G4double tan_alpha = sqrt(1 - cos_theta*cos_theta) / (r_index - cos_theta);
+
+    return atan(tan_alpha);
 }
 

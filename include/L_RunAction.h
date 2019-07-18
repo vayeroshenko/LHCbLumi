@@ -52,7 +52,9 @@ public:
 
     G4int _nRefl[_nPartMax];
 
-    std::vector<std::vector<G4double> > *_incidenceAngles;
+    std::vector<std::vector<G4double> > *_angle_tir;
+    std::vector<std::vector<G4double> > *_angle_fr;
+    std::vector<std::vector<G4double> > *_angle_refr;
 
 //    G4int _TrackID[_nPartMax];
 //    G4int _ParentID[_nPartMax];

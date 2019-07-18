@@ -32,8 +32,10 @@ public:
 	void EndOfEvent(G4HCofThisEvent*);
 
     G4int _nOfReflections = 0;
-    std::vector<G4double> _incidenceAngles;
 
+    std::vector<G4double> _angle_tir;
+    std::vector<G4double> _angle_fr;
+    std::vector<G4double> _angle_refr;
 
 private:
 
