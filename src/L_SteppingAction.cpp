@@ -51,10 +51,9 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     if (!aPostPV) return;
 
     // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
-    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+//    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
     ////////////////////////////////////////////////////////////////////////
 
-    // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
     ////////////////////////////////////////////////////////////////////////
 
@@ -115,8 +114,8 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
+//                G4cout << "KILL THAT BASTARD \n";
             }
-            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
 //            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
