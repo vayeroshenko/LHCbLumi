@@ -495,10 +495,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ra->rotateY(- 360./LConst::nSecOut*(j+0.5) *deg + 90.*deg);
 
         *Ra = *Ra * RTilt;
-        Ta->setX((LConst::innerRadOut + LConst::outerRadOut)/2.
+        Ta->setX(LConst::centerRadOut
                  * TMath::Cos(360./LConst::nSecOut*(j+0.5) *deg));
         Ta->setY(LConst::L1pozZ);
-        Ta->setZ((LConst::innerRadOut + LConst::outerRadOut)/2.
+        Ta->setZ(LConst::centerRadOut
                  * TMath::Sin(360./LConst::nSecOut*(j+0.5) *deg));
 
         *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
@@ -532,9 +532,9 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         Ra->rotateY(- 360./LConst::nSecOut*j *deg + 90.*deg);
 
 
-        Ta->setX((LConst::outerRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Cos(360./LConst::nSecOut*j *deg));
+        Ta->setX((LConst::detectorRadOut *TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Cos(360./LConst::nSecOut*j *deg));
         Ta->setY(LConst::L1pozZ);
-        Ta->setZ((LConst::outerRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Sin(360./LConst::nSecOut*j *deg));
+        Ta->setZ((LConst::detectorRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Sin(360./LConst::nSecOut*j *deg));
 
         *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
                               LConst::L1pozZ,
