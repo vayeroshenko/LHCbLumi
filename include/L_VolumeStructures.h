@@ -59,54 +59,56 @@ struct TrapezeSectorStructOut: VolumeStruct {
     const G4double middleLine;
     TrapezeSectorStructOut():
         thickness(LConst::sectorThicknessOut),
-        height(LConst::outerRadOut * TMath::Cos(TMath::Pi() / LConst::nSecOut) -
-               LConst::innerRadOut * TMath::Cos(TMath::Pi() / LConst::nSecOut)),
+        height(LConst::lengthOut),
         shortSide(LConst::innerSideOut),
         longSide(LConst::outerSideOut),
+        angle(atan((longSide-shortSide)/2./height)),
+        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
+        middleLine((longSide+shortSide)/2.)
+    {
+        G4cout << "Short side: \t" << shortSide / mm << "\t mm" << G4endl;
+        G4cout << "Long side: \t\t" << longSide / mm << "\t mm" << G4endl;
+        G4cout << "Length: \t\t" << height / mm << "\t mm" << G4endl;
+    }
+};
+
+struct TrapezeAbsStructIn: VolumeStruct {
+    const G4double shortSide;
+    const G4double longSide;
+    const G4double thickness;
+    const G4double height;
+    const G4double angle;
+    const G4double sides;
+    const G4double middleLine;
+    TrapezeAbsStructIn():
+        shortSide(LConst::absInnerSideIn),
+        longSide(LConst::absOuterSideIn),
+        thickness(LConst::sectorThicknessIn),
+        height(LConst::outerRadIn -
+               LConst::innerRadIn),
         angle(atan((longSide-shortSide)/2./height)),
         sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
         middleLine((longSide+shortSide)/2.)
     {;}
 };
 
-struct TrapezeAbsStructIn: VolumeStruct {
-  const G4double shortSide;
-  const G4double longSide;
-  const G4double thickness;
-  const G4double height;
-  const G4double angle;
-  const G4double sides;
-  const G4double middleLine;
-  TrapezeAbsStructIn():
-    shortSide(LConst::absInnerSideIn),
-    longSide(LConst::absOuterSideIn),
-    thickness(LConst::sectorThicknessIn),
-    height(LConst::outerRadIn -
-           LConst::innerRadIn),
-    angle(atan((longSide-shortSide)/2./height)),
-    sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-    middleLine((longSide+shortSide)/2.)
-  {;}
-};
-
 struct TrapezeAbsStructOut: VolumeStruct {
-  const G4double shortSide;
-  const G4double longSide;
-  const G4double thickness;
-  const G4double height;
-  const G4double angle;
-  const G4double sides;
-  const G4double middleLine;
-  TrapezeAbsStructOut():
-    shortSide(LConst::absInnerSideOut),
-    longSide(LConst::absOuterSideOut),
-    thickness(LConst::sectorThicknessOut * 1.2),
-    height(LConst::outerRadOut -
-           LConst::innerRadOut),
-    angle(atan((longSide-shortSide)/2./height)),
-    sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-    middleLine((longSide+shortSide)/2.)
-  {;}
+    const G4double shortSide;
+    const G4double longSide;
+    const G4double thickness;
+    const G4double height;
+    const G4double angle;
+    const G4double sides;
+    const G4double middleLine;
+    TrapezeAbsStructOut():
+        shortSide(LConst::absInnerSideOut),
+        longSide(LConst::absOuterSideOut),
+        thickness(LConst::sectorThicknessOut * 1.2),
+        height(LConst::lengthOut),
+        angle(atan((longSide-shortSide)/2./height)),
+        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
+        middleLine((longSide+shortSide)/2.)
+    {;}
 };
 
 struct PiramideLMStruct: VolumeStruct {
