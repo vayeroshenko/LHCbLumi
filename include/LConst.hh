@@ -79,25 +79,37 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 /////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
 const G4double sectorThicknessOut = 1*cm;
 
+const G4double innerRadOut = BPOuterRadius + 1.*cm;
 
-const G4double innerRadOut = BPOuterRadius;
-const G4double outerRadOut = 10*cm;
-//const G4double innerRadOut = 160*mm;
-//const G4double outerRadOut = 100*cm;
-//const G4double innerRadOut = 100*cm;
-//const G4double outerRadOut = 110*cm;
-
+const G4double lengthOut = 60*mm;
+//const G4double outerRadOut = 10*cm;
 
 const G4int nSecOut = 100;
-// const G4int nSecOut = 50;
 
-const G4double angleOut = 45*deg;
+/*
+ * Saturated track angles in quartz:    46.64 - 47.77
+ * Green light saturated track angle:   46.95
+ *
+ * Lower angle is the angle of the inner radius of detector
+*/
 
-const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
-                               outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
+const G4double saturatedAngle = 46.95*deg;
+const G4double lowerAngle = atan( - innerRadOut / L1pozZ);
+
+const G4double angleOut = saturatedAngle + lowerAngle;
+
+const G4double centerRadOut = innerRadOut + lengthOut * cos(angleOut) / 2.;
+const G4double outerRadOut = innerRadOut + lengthOut;
+
+const G4double detectorRadOut = centerRadOut + lengthOut / 2.;
+
+//const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
+//                               outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
+
 const G4double absInnerSideOut = 0.01*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0.8;
 const G4double VertHeightOut = outerRadOut - innerRadOut;
+
 const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
 const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
