@@ -80,6 +80,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     boundaryStatus = boundary->GetStatus();
 
+    G4double incidenceAngle = GetIncidenceAngle(aStep);
 
     //    G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
 
@@ -94,13 +95,16 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
         case Absorption:
             break;
         case FresnelRefraction:
-            sd->_angle_refr.push_back(GetIncidenceAngleRefr(aPrePoint, aPostPoint, aStep) / deg);
+//            sd->_angle_refr.push_back(GetIncidenceAngleRefr(aPrePoint, aPostPoint, aStep) / deg);
+            sd->_angle_refr.push_back(incidenceAngle);
             break;
 
         case FresnelReflection:
             // Reflections of surfaces of different media
 
-            sd->_angle_fr.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
+            //            sd->_angle_fr.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
+
+            sd->_angle_fr.push_back(incidenceAngle);
 
             if (trackID == _currentPhotonID) {
                 _numberOfReflections += 1;
@@ -117,7 +121,9 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
             } else {
-                sd->_angle_tir.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
+                //                sd->_angle_tir.push_back(GetIncidenceAngleRefl(aPrePoint, aPostPoint) / deg);
+                sd->_angle_tir.push_back(incidenceAngle);
+
 
                 if (trackID == _currentPhotonID) {
                     _numberOfReflections += 1;
@@ -240,3 +246,29 @@ G4double L_SteppingAction::GetIncidenceAngleRefr(G4StepPoint *preStep, G4StepPoi
     return atan(tan_alpha);
 }
 
+G4double L_SteppingAction::GetIncidenceAngle(const G4Step *aStep)
+{
+    G4StepPoint *preStep = aStep->GetPreStepPoint();
+    G4ThreeVector photonDirection = preStep->GetMomentum() / preStep->GetMomentum().mag();
+    G4ThreeVector stepPos = preStep->GetPosition();
+
+    const G4VTouchable *touchable = preStep->GetTouchable();
+
+    const G4RotationMatrix *rotation = touchable->GetRotation();
+    G4RotationMatrix rotation_inv = rotation->inverse();
+    G4ThreeVector translation = touchable->GetTranslation();
+    G4VSolid *sector = touchable->GetSolid();
+
+    G4ThreeVector posLocal = *rotation * (stepPos - translation);
+    G4ThreeVector normal =  sector->SurfaceNormal(posLocal);
+
+//    G4cout << normal.getX() << " " << normal.getY() << " " << normal.getZ() << G4endl;
+//    G4cout << posLocal.getX() << " " << posLocal.getY() << " " << posLocal.getZ() << G4endl;
+
+    G4ThreeVector photonDirectionLocal = *rotation * photonDirection;
+
+    G4double incidenceAngle = acos( normal.dot(photonDirectionLocal) );
+
+    return incidenceAngle / deg;
+
+}

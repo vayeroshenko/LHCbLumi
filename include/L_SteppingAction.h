@@ -22,12 +22,14 @@ public:
     void Reset();
     void ResetPerEvent();
 
-    static G4double GetIncidenceAngleRefl(G4StepPoint   *preStep,
+    G4double GetIncidenceAngleRefl(G4StepPoint   *preStep,
                                           G4StepPoint   *postStep);
 
-    static G4double GetIncidenceAngleRefr(G4StepPoint   *preStep,
+    G4double GetIncidenceAngleRefr(G4StepPoint   *preStep,
                                           G4StepPoint   *postStep,
                                           const G4Step  *aStep);
+
+    G4double GetIncidenceAngle(const G4Step *aStep);
 
 private:
     L_PrimaryGeneratorAction* _genAction;

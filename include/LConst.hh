@@ -84,7 +84,7 @@ const G4double outerRadOut = 10*cm;
 const G4int nSecOut = 100;
 // const G4int nSecOut = 50;
 
-const G4double angleOut = -45.*deg;
+const G4double angleOut = 0.*deg;
 
 const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
                                outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;

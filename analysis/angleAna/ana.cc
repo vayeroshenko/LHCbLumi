@@ -12,7 +12,7 @@ int ana()
 {
 	gInterpreter->GenerateDictionary("vector<vector<double>>", "vector");
 
-	TString filename = "data0";
+	TString filename = "data2";
 	TFile *file = new TFile(filename+".root");
 	TTree *t = (TTree*) file->Get("T");
 
@@ -85,27 +85,32 @@ int ana()
 
 	// hSingle->Draw();
 
-	for (Int_t i = 1; i < 101; ++i){
-		hTotal_tir->SetBinContent(i, hTotal_tir->GetBinContent(i) / hTotal->GetBinContent(i));
-		hTotal_fr->SetBinContent(i, hTotal_fr->GetBinContent(i) / hTotal->GetBinContent(i));
-		hTotal_refr->SetBinContent(i, hTotal_refr->GetBinContent(i) / hTotal->GetBinContent(i));
-	}
+	// for (Int_t i = 1; i < 101; ++i){
+	// 	hTotal_tir->SetBinContent(i, hTotal_tir->GetBinContent(i) / hTotal->GetBinContent(i));
+	// 	hTotal_fr->SetBinContent(i, hTotal_fr->GetBinContent(i) / hTotal->GetBinContent(i));
+	// 	hTotal_refr->SetBinContent(i, hTotal_refr->GetBinContent(i) / hTotal->GetBinContent(i));
+	// }
 
 	hTotal->SetLineColor(kBlack);
 	hTotal->SetLineWidth(2);
 	
-	hTotal_tir->SetLineColor(kBlue);
+	hTotal_refr->SetLineColor(kBlue);
 	hTotal_fr->SetLineColor(kGreen);
 	hTotal_tir->SetLineColor(kRed);
 
-	// hTotal->Draw();
+	hTotal->Draw();
 
-	hTotal_tir->Draw();
+	hTotal_tir->Draw("same");
 	hTotal_fr->Draw("same");
 	hTotal_refr->Draw("same");
 	
 
-
+	TLegend *l = new TLegend();
+	l->AddEntry(hTotal_tir,"Total internal reflection", "l");
+	l->AddEntry(hTotal_fr,"Fresnel reflection", "l");
+	l->AddEntry(hTotal_refr,"Fresnel refraction", "l");
+	l->AddEntry(hTotal,"Total", "l");
+	l->Draw();
 
 
 	return 0;
