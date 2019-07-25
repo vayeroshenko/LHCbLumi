@@ -55,8 +55,6 @@ const G4double VeloRight = 350*mm;
 
 
 
-
-
 ///////////////////////// Detector inside beampipe ///////////////////////////////////////////////////
 // The old configuration
 
@@ -113,6 +111,20 @@ const G4double VertHeightOut = outerRadOut - innerRadOut;
 const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
 const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////// Vertex /////////////////////////////////////////////////////////
+const G4double VertexX = 0.;
+const G4double VertexY = 0.;
+const G4double VertexZ = 0.;
+
+
+const G4double VertexSigmaX = 0.;
+const G4double VertexSigmaY = 0.;
+const G4double VertexSigmaZ = 1.*cm;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
