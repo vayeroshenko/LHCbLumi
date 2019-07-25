@@ -5,15 +5,15 @@
 #include <iostream>
 
 #define NSEC 100
-#define MEAN 5
+#define MEAN 8
 
 
 void groupMTopt(int num)
 {
-	TFile *inputFile = new TFile(TString("rawDataOpt_"+std::to_string(num)+".root"));
+	TFile *inputFile = new TFile(TString("rawData_"+std::to_string(num)+".root"));
 	TTree *input = (TTree*)inputFile->Get("T");
 
-	TFile *output = new TFile(TString("newDataOpt_"+std::to_string(num)+".root"), "UPDATE");
+	TFile *output = new TFile(TString("newData_"+std::to_string(num)+".root"), "UPDATE");
 	TTree *outTree = new TTree("T", "T");
 
 	Int_t nPhot[NSEC];
