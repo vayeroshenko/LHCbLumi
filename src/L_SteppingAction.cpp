@@ -54,7 +54,10 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
     ////////////////////////////////////////////////////////////////////////
 
-    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
+    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
+        aTrack->SetTrackStatus(fStopAndKill);
+        return;
+    }
 
     // Getting probability of internal reflection
     if (_particleID != trackID) {

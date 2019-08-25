@@ -22,15 +22,17 @@ const G4double worldSizeZ = 8*m;
 
 
 // Outer and inner radius of the beampipe
-const G4double BPOuterRadius = 31*mm;
-const G4double BPInnerRadius = 30*mm;
+//const G4double BPOuterRadius = 31*mm;
+//const G4double BPInnerRadius = 30*mm;
+const G4double BPOuterRadius = 41*mm;
+const G4double BPInnerRadius = 40*mm;
 
 
 // Detector pozition along Z-axis
 
-//const G4double L1pozZ = - 2172.*mm;           // The closest option
+const G4double L1pozZ = - 2172.*mm;           // The closest option
 //const G4double L1pozZ = - 2172.*mm + 400*mm;  // An intermediate option
-const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
+//const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
 
 // The same for the second detector
 //const G4double L2pozZ = - 2172.*mm + 800*mm;
@@ -88,11 +90,11 @@ const G4int nSecOut = 100;
  * Saturated track angles in quartz:    46.64 - 47.77
  * Green light saturated track angle:   46.95
  *
- * Lower angle is the angle of the inner radius of detector
+ * Lower angle is the angle of the detector inner radius
 */
 
 const G4double saturatedAngle = 46.95*deg;
-const G4double lowerAngle = atan( - innerRadOut / L1pozZ);
+const G4double lowerAngle = atan( - (innerRadOut + lengthOut / sqrt(2) * 0.1) / L1pozZ);
 
 const G4double angleOut = saturatedAngle + lowerAngle;
 

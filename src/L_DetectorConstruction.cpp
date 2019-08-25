@@ -62,8 +62,12 @@ void L_DetectorConstruction::DefineMateials() {
     G4Material* Scint = man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     ScintMaterial = Scint;
 
-    BPMaterial = man->FindOrBuildMaterial("G4_Be");
+//    BPMaterial = man->FindOrBuildMaterial("G4_Be");
     INOX = man->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+
+    Copper = man->FindOrBuildMaterial("G4_Cu");
+
+    BPMaterial = Copper;
 
     Vacuum = new G4Material( "Galactic", z=1., a=1.01*g/mole, density= universe_mean_density,
                              kStateGas, 2.73*kelvin, 3.e-18*pascal );

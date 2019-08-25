@@ -10,17 +10,17 @@
 	TString outname;
 
 
-	filename1 = "opt5";
+	filename1 = "new8";
 	// filename1 = "heavyIon";
 
 
 	// filename2 = "vfar_5";
-	filename2 = "opt525";
+	filename2 = "new_eff8";
 
-	TFile *file1 = new TFile(filename1+"/histos50.root");
+	TFile *file1 = new TFile(filename1+"/histos.root");
 	TH1D* hist1 = (TH1D*)file1->Get( TString("Hit Number0"));
 
-	TFile *file2 = new TFile(filename2+"/histos50.root");	
+	TFile *file2 = new TFile(filename2+"/histos.root");	
 	file2->cd();
 	TH1D* hist2 = (TH1D*)file2->Get( TString("Hit Number0"));
 
@@ -156,6 +156,12 @@
 	gStyle->SetOptStat(0);
 	gStyle->SetOptFit();
 
+	TLegend *l = new TLegend();
+	l->SetHeader("VELO vessel thickness", "c");
+	l->AddEntry(hist1, "5 mm","l");
+	l->AddEntry(hist2, "25 mm","l");
+
+	l->Draw();
 	// gPad->SetLogy();
 	gPad->Modified();
 
