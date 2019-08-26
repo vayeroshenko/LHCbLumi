@@ -16,9 +16,9 @@
 namespace LConst{
 
 // World size
-const G4double worldSizeX = 3*m;
-const G4double worldSizeY = 3*m;
-const G4double worldSizeZ = 8*m;
+const G4double worldSizeX = 1*m;
+const G4double worldSizeY = 1*m;
+const G4double worldSizeZ = 4.6*m;
 
 
 // Outer and inner radius of the beampipe
@@ -99,7 +99,9 @@ const G4double absInnerSideOut = 0.01*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0.8;
 const G4double VertHeightOut = outerRadOut - innerRadOut;
 const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
-const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
+//const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
+
+const G4double outerSideOut = innerSideOut;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
