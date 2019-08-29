@@ -41,11 +41,14 @@ Bool_t isFired(Double_t *eff, Int_t nPhot){
 
 	// Double_t dice = 43;
 
-	if (nPhot == 0) return false;
-	if (nPhot > 99) return true;
+	// if (nPhot == 0) return false;
+	// if (nPhot > 99) return true;
 
-	if (dice < eff[nPhot-1]) return true;
-	else return false;
+	if (nPhot < 200.) return false;
+	else return true;
+
+	// if (dice < eff[nPhot-1]) return true;
+	// else return false;
 
 	// delete rnd;
 
