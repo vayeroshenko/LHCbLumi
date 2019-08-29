@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_Hit_H_
-#define SRC_L_Hit_H_
+#pragma once
 
 #include <G4VHit.hh>
 //G4
@@ -56,5 +55,3 @@ inline void L_Hit::operator delete(void *aHit)
 {
     L_HitAllocator.FreeSingle((L_Hit*) aHit);
 }
-
-#endif

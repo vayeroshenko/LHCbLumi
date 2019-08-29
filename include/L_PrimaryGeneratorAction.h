@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_PRIMARYGENERATORACTION_H_
-#define SRC_L_PRIMARYGENERATORACTION_H_
+#pragma once
 
 #include <G4VUserPrimaryGeneratorAction.hh>
 #include "globals.hh"
@@ -77,6 +76,3 @@ private:
     Pythia8::Event& PythiaEvent = pythia.event;
 };
 
-
-
-#endif /* SRC_L_PrimaryGeneratorAction_H_ */

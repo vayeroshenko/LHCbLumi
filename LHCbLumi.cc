@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 	// Run manager initialization
 	G4RunManager* runManager = new G4RunManager;
 
-    G4VUserDetectorConstruction* detector = new L_DetectorConstruction;
+    L_DetectorConstruction* detector = new L_DetectorConstruction;
 	runManager->SetUserInitialization(detector);
 
 
@@ -67,6 +67,7 @@ int main(int argc, char** argv)
 
     L_EventAction* eventAction = new L_EventAction(runAction, stepAction);
 	runManager->SetUserAction(eventAction);
+    detector->SetEventAction(eventAction);
 
 
 

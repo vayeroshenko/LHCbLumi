@@ -51,21 +51,6 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 
     // Branches filled for each HIT (commented due to "optimization")
 
-//    tree->Branch("nPart", &_nPart, "nPart/I");
-//    tree->Branch("TrackID", _TrackID, "TrackID[nPart]/I");
-//    tree->Branch("ParentID", _ParentID, "ParentID[nPart]/I");
-//    tree->Branch("Energy", _Energy, "Energy[nPart]/D");
-//    tree->Branch("Time", _Time, "Time[nPart]/D");
-//    tree->Branch("PdgID",_PdgID, "PdgID[nPart]/I");
-//    tree->Branch("StationID", _StationID, "StationID[nPart]/I");
-//    tree->Branch("X", _X, "X[nPart]/D");
-//    tree->Branch("Y", _Y, "Y[nPart]/D");
-//    tree->Branch("Z", _Z, "Z[nPart]/D");
-//    tree->Branch("Momentum", _Momentum, "Momentum[nPart]/D");
-//    tree->Branch("Px", _Px, "Px[nPart]/D");
-//    tree->Branch("Py", _Py, "Py[nPart]/D");
-//    tree->Branch("Pz", _Pz, "Pz[nPart]/D");
-
 
     G4cout << "BeginOfRunAction end" << G4endl;
 }

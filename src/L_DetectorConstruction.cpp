@@ -18,7 +18,7 @@ L_DetectorConstruction::~L_DetectorConstruction() {
 }
 
 G4VPhysicalVolume* L_DetectorConstruction::Construct() {
-    LSD = new L_SensitiveDetector("LSD");
+    LSD = new L_SensitiveDetector("LSD", _eventAction);
     G4SDManager::GetSDMpointer()->AddNewDetector(LSD);
     DefineMateials();
 
@@ -62,12 +62,14 @@ void L_DetectorConstruction::DefineMateials() {
     G4Material* Scint = man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     ScintMaterial = Scint;
 
-//    BPMaterial = man->FindOrBuildMaterial("G4_Be");
     INOX = man->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
+    Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
 
     BPMaterial = Copper;
+    BPMaterial = Beryllium;
+
 
     Vacuum = new G4Material( "Galactic", z=1., a=1.01*g/mole, density= universe_mean_density,
                              kStateGas, 2.73*kelvin, 3.e-18*pascal );

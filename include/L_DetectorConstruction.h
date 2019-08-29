@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef L_DETECTORCONSTRUCTION_H_
-#define L_DETECTORCONSTRUCTION_H_
+#pragma once
 
 #include <G4VUserDetectorConstruction.hh>
 #include "L_SensitiveDetector.h"
@@ -40,6 +39,7 @@
 
 #include "LConst.hh"
 #include "L_VolumeStructures.h"
+#include "L_EventAction.h"
 
 class L_DetectorConstruction: public G4VUserDetectorConstruction {
 public:
@@ -75,6 +75,8 @@ public:
 
     G4LogicalVolume *worldLogical;
 
+    inline void SetEventAction(L_EventAction* evAct){ _eventAction = evAct; };
+
 private:
     G4Material *worldMaterial;
     G4Material *ScintMaterial;
@@ -83,11 +85,12 @@ private:
     G4Material *INOX;
     G4Material *SiO2;
     G4Material *Copper;
+    G4Material *Beryllium;
 
     G4Material *Air;
+
+    L_EventAction *_eventAction;
 
 
 
 };
-
-#endif /* L_DETECTORCONSTRUCTION_H_ */

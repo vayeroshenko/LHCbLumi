@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef INCLUDE_LCONST_HH_
-#define INCLUDE_LCONST_HH_
+#pragma once
 
 #include "TMath.h"
 #include "G4SystemOfUnits.hh"
@@ -134,13 +133,3 @@ const G4double VertexSigmaZ = 1.*cm;
 
 }
 
-
-
-
-
-
-
-
-
-
-#endif /* INCLUDE_LCONST_HH_ */

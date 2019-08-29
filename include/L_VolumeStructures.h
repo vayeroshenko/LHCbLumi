@@ -1,5 +1,4 @@
-#ifndef L_VOLUMESTRUCTURES_H
-#define L_VOLUMESTRUCTURES_H
+#pragma once
 
 //G4
 #include "G4Material.hh"
@@ -119,6 +118,3 @@ struct TrapezeAbsStructOut: VolumeStruct {
 };
 
 
-
-
-#endif // L_VOLUMESTRUCTURES_H

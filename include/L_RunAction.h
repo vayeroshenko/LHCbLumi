@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_RUNACTION_H_
-#define SRC_L_RUNACTION_H_
+#pragma once
 
 #include <G4UserRunAction.hh>
 
@@ -69,5 +68,3 @@ private:
     TFile* hfile;
     G4String _outputFileName = "data.root";
 };
-
-#endif /* SRC_L_RUNACTION_H_ */
