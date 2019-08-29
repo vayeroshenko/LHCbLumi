@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_SteppingAction_H_
-#define SRC_L_SteppingAction_H_
+#pragma once
 
 #include <G4UserSteppingAction.hh>
 #include "L_PrimaryGeneratorAction.h"
@@ -32,4 +31,3 @@ private:
                                        G4double& probability);
 };
 
-#endif /* SRC_L_SteppingAction_H_ */

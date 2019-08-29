@@ -1,5 +1,4 @@
-#ifndef L_PHYSICSLIST_H
-#define L_PHYSICSLIST_H
+#pragma once
 
 #include "G4VModularPhysicsList.hh"
 #include "QGSP_BERT.hh"
@@ -42,5 +41,3 @@ private:
 
 
 };
-
-#endif // L_PHYSICSLIST_H

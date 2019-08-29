@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_EVENTACTION_H_
-#define SRC_L_EVENTACTION_H_
+#pragma once
 
 #include <G4UserEventAction.hh>
 #include "globals.hh"
@@ -28,14 +27,16 @@ public:
     virtual void  BeginOfEventAction(const G4Event* );
     virtual void    EndOfEventAction(const G4Event* );
 
-    void SetPrimGenerator(L_PrimaryGeneratorAction *gen){_primGenerator = gen;};
+    void SetPrimGenerator(L_PrimaryGeneratorAction *gen){_primGenerator = gen;}
+    inline void InsertPhoton(G4int secID){ _nPhot[secID - 1] ++; }
+
 private:
     L_RunAction* runAction;
     L_SteppingAction* _steppingAction;
     G4int printModulo;
     G4int theCollectionID;
 
+    G4int _nPhot[LConst::nSecOut];
+
     L_PrimaryGeneratorAction* _primGenerator;
 };
-
-#endif /* SRC_L_EVENTACTION_H_ */

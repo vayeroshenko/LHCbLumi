@@ -1,5 +1,4 @@
-#ifndef HitDataStructure_h
-#define HitDataStructure_h 1
+#pragma once
 
 #include "globals.hh"
 
@@ -20,4 +19,3 @@ struct HitData
 //  G4double Momentum;
 };
 
-#endif
