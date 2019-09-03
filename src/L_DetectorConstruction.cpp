@@ -68,7 +68,7 @@ void L_DetectorConstruction::DefineMateials() {
     Copper = man->FindOrBuildMaterial("G4_Cu");
 
     BPMaterial = Copper;
-    BPMaterial = Beryllium;
+//    BPMaterial = Beryllium;
 
 
     Vacuum = new G4Material( "Galactic", z=1., a=1.01*g/mole, density= universe_mean_density,
