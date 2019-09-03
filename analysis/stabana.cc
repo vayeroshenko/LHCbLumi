@@ -39,9 +39,13 @@ Bool_t isFired(Double_t *eff, Int_t nPhot){
 
 	// Double_t dice = 43;
 
-	if (nPhot == 0) return false;
-	if (nPhot > 99) return true;
+	//	if (nPhot == 0) return false;
+	//if (nPhot > 99) return true;
 
+	if (nPhot > 100) return true;
+	else return false;
+	    
+	
 	if (dice < eff[nPhot-1]) return true;
 	else return false;
 
@@ -202,7 +206,7 @@ int main(int argc, char** argv){
 	  //filename += TString(".root");
 	  
 	  //	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, -0.5, nSec-0.5);
-	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
+	  array[i] = new TH1D(TString("HitNumber"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
 
 	  
 	  
