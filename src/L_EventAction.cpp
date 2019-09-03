@@ -35,6 +35,9 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 //    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
+    // instanciating new event
+    MCTruthManager::GetInstance()->NewEvent();
+
     // Printing an event number
 	if (eventNum%printModulo == 0) {
 		G4cout << "\n---> Begin of Event: " << eventNum << G4endl;
@@ -45,6 +48,8 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 	theCollectionID =
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
 
+
+    // Reset stepping
 	_steppingAction->Reset();
 	_steppingAction->ResetPerEvent();
 
@@ -93,6 +98,8 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
 	runAction->_EventID = eventNum;
 	runAction->_nPart = nHit;
+
+    MCTruthManager::GetInstance()->PrintEvent();
 
 	runAction->tree->Fill();
 

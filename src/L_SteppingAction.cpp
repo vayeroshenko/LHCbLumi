@@ -58,17 +58,17 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
     ////////////////////////////////////////////////////////////////////////
 
-    // Killing downstream particles
-    if (aPrePoint->GetPosition().z() > 50.*cm) {
-        aTrack->SetTrackStatus(fStopAndKill);
-        return;
-    }
+//    // Killing downstream particles
+//    if (aPrePoint->GetPosition().z() > 50.*cm) {
+//        aTrack->SetTrackStatus(fStopAndKill);
+//        return;
+//    }
 
-    // Killing charged particles bellow 20 MeV
-    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
-        aTrack->SetTrackStatus(fStopAndKill);
-        return;
-    }
+//    // Killing charged particles bellow 20 MeV
+//    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
+//        aTrack->SetTrackStatus(fStopAndKill);
+//        return;
+//    }
 
     // Getting probability of internal reflection
     if (_particleID != trackID) {
@@ -117,6 +117,7 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
             }
             G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
+//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;

@@ -17,6 +17,7 @@ else()
     find_package(Geant4 REQUIRED)
 endif()
 
+
 #---------------------------------------------------------------------------
 # Find Pythia8
 #
@@ -99,7 +100,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${ROOT_INCLUDE_DIRS})
+include_directories(${HEPMC_INCLUDE_DIR})
 
+#----------------------------------------------------------------------------
+# Find HepMC (required package)
+#
+find_package(HepMC REQUIRED)
 
 
 
@@ -108,14 +114,14 @@ include_directories(${ROOT_INCLUDE_DIRS})
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.c*)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h*)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(LHCbLumi LHCbLumi.cc ${sources} ${headers})
-target_link_libraries(LHCbLumi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${PYTHIA8_LIBRARIES})
+target_link_libraries(LHCbLumi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${PYTHIA8_LIBRARIES} ${HEPMC_LIBRARIES})
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build B1. This is so that we can run the executable directly because it
