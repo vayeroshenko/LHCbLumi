@@ -36,6 +36,9 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
     G4int eventNum = event->GetEventID();
 
 
+    // instanciating new event
+    MCTruthManager::GetInstance()->NewEvent();
+
     // Printing an event number
 	if (eventNum%printModulo == 0) {
 		G4cout << "\n---> Begin of Event: " << eventNum << G4endl;

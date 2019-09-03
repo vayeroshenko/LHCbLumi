@@ -76,6 +76,8 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     // For simplicity of using long lines
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
+//    auto motherTrack = aTrack->;
+
 
     // We are interested in charged particles only
     if (aParticle->GetCharge() == 0) return false;
