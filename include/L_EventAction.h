@@ -15,8 +15,6 @@
 #include "L_SteppingAction.h"
 
 
-#include "MCTruthManager.hh"
-
 
 class G4Event;
 

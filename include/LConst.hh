@@ -22,15 +22,15 @@ const G4double worldSizeZ = 4.6*m;
 
 
 // Outer and inner radius of the beampipe
-const G4double BPOuterRadius = 31*mm;
-const G4double BPInnerRadius = 30*mm;
+const G4double BPOuterRadius = 41*mm;
+const G4double BPInnerRadius = 40*mm;
 
 
 // Detector pozition along Z-axis
 
-//const G4double L1pozZ = - 2172.*mm;           // The closest option
+const G4double L1pozZ = - 2172.*mm;           // The closest option
 //const G4double L1pozZ = - 2172.*mm + 400*mm;  // An intermediate option
-const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
+//const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
 
 // The same for the second detector
 //const G4double L2pozZ = - 2172.*mm + 800*mm;
@@ -79,7 +79,7 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 /////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
 const G4double sectorThicknessOut = 1*cm;
 
-const G4double innerRadOut = BPOuterRadius + 1.*cm;
+const G4double innerRadOut = BPOuterRadius + 30.*cm;
 
 const G4double lengthOut = 60*mm;
 //const G4double outerRadOut = 10*cm;
@@ -96,7 +96,7 @@ const G4int nSecOut = 100;
 const G4double saturatedAngle = 46.95*deg;
 const G4double lowerAngle = atan( - innerRadOut / L1pozZ);
 
-const G4double angleOut = saturatedAngle + lowerAngle;
+const G4double angleOut = saturatedAngle - lowerAngle;
 
 const G4double centerRadOut = innerRadOut + lengthOut * cos(angleOut) / 2.;
 const G4double outerRadOut = innerRadOut + lengthOut;
@@ -110,9 +110,10 @@ const G4double absInnerSideOut = 0.01*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0.8;
 const G4double VertHeightOut = outerRadOut - innerRadOut;
 
-const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
+//const G4double innerSideOut = (2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) ) / 8.;
 //const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
 
+const G4double innerSideOut = 3.*mm;
 const G4double outerSideOut = innerSideOut;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

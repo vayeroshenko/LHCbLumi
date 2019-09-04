@@ -25,11 +25,6 @@
 #include "L_PhysicsList.h"
 
 
-#include "MCTruthConfig.hh"
-#include "MCTruthManager.hh"
-#include "MCTruthTrackingAction.hh"
-#include "MCTruthTrackInformation.hh"
-
 #include "Randomize.hh"
 
 int main(int argc, char** argv)
@@ -72,18 +67,6 @@ int main(int argc, char** argv)
 
     L_EventAction* eventAction = new L_EventAction(runAction, stepAction);
 	runManager->SetUserAction(eventAction);
-
-
-    runManager->SetUserAction(new MCTruthTrackingAction);
-
-    // configure MCTruth handling
-    MCTruthConfig* config = new MCTruthConfig;
-    config->SetMinE(1e-3*eV);
-    config->AddParticleType(11);
-    config->AddParticleType(22);
-    config->AddParticleType(0);
-    MCTruthManager::GetInstance()->SetConfig(config);
-
 
 
 	G4VisManager* visManager = new G4VisExecutive;

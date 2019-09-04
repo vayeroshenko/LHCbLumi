@@ -35,8 +35,6 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 //    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
-    // instanciating new event
-    MCTruthManager::GetInstance()->NewEvent();
 
     // Printing an event number
 	if (eventNum%printModulo == 0) {
@@ -98,8 +96,6 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
 	runAction->_EventID = eventNum;
 	runAction->_nPart = nHit;
-
-    MCTruthManager::GetInstance()->PrintEvent();
 
 	runAction->tree->Fill();
 
