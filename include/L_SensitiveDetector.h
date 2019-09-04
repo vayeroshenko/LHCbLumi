@@ -17,6 +17,8 @@ class G4HCofThisEvent;
 class G4Step;
 class G4TouchableHistory;
 
+G4ThreeVector get_normal(int sector_number);
+
 class L_SensitiveDetector: public G4VSensitiveDetector {
 public:
     L_SensitiveDetector(G4String name);
@@ -28,6 +30,8 @@ public:
 	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
 
     G4bool ProcessHitsL(G4Step*, G4TouchableHistory*);
+    G4double Momentum;
+    G4int _nOfReflections = 0;
 
 	void EndOfEvent(G4HCofThisEvent*);
 private:
@@ -36,5 +40,16 @@ private:
 	G4String SDname;
 
 };
+
+// The method stolen from internet for separation words inside the string
+// and returning a vector containig string of words
+template <class Container>
+void splitName(const std::string& str, Container& cont)
+{
+    std::istringstream iss(str);
+    std::copy(std::istream_iterator<std::string>(iss),
+         std::istream_iterator<std::string>(),
+         std::back_inserter(cont));
+}
 
 #endif /* INCLUDE_L_SensitiveDetector_H_ */

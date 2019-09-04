@@ -24,6 +24,14 @@ public:
 
 private:
     L_PrimaryGeneratorAction* _genAction;
+
+    G4double _probOfReflection;
+    G4double _particleID;
+    G4int _currentPhotonID = 0;
+    G4int _numberOfReflections = -1;
+
+    void InternalReflectionProbability(G4double energy,
+                                       G4double& probability);
 };
 
 #endif /* SRC_L_SteppingAction_H_ */

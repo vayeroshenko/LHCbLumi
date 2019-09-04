@@ -30,7 +30,7 @@
 #/run/numberOfThreads 5
 
 
-#/vis/scene/add/axes
+/vis/scene/add/axes
 
 /run/verbose 0
 /event/verbose 0
@@ -48,4 +48,5 @@
 
 /tracking/verbose 0
 
-/run/beamOn 100000
+/run/beamOn 15000
+#/run/beamOn 10000

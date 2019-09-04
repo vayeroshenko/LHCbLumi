@@ -13,7 +13,7 @@
 #/run/numberOfThreads 5
 
 
-#/vis/scene/add/axes 
+/vis/scene/add/axes
 
 /run/verbose 0
 /event/verbose 0
@@ -23,7 +23,7 @@
 /vis/scene/add/hits
 
 
-/vis/viewer/set/viewpointThetaPhi 0 0 deg
+/vis/viewer/set/viewpointThetaPhi 0 180 deg
 
 
 

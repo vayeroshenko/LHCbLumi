@@ -3,6 +3,7 @@
 #include "G4UIterminal.hh"
 
 #include "QGSP_BERT.hh"
+#include "G4PhysListFactory.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
@@ -21,6 +22,7 @@
 #include "L_RunAction.h"
 #include "L_EventAction.h"
 #include "L_SteppingAction.h"
+#include "L_PhysicsList.h"
 
 
 #include "Randomize.hh"
@@ -29,7 +31,7 @@ int main(int argc, char** argv)
 {
 
 	G4UIExecutive* ui = 0;
-	if ( argc == 1 ) {
+    if ( argc == 1 ) {
 		ui = new G4UIExecutive(argc, argv);
 	}
 	G4long myseed = 345354;
@@ -44,13 +46,18 @@ int main(int argc, char** argv)
 	runManager->SetUserInitialization(detector);
 
 
-	// QGSP_BERT Physics list (HEP, used by ATLAS)
-	G4VModularPhysicsList* physicsList = new QGSP_BERT;
-	physicsList->SetVerboseLevel(0);
+    // QGSP_BERT Physics list with Optical processes (HEP, used by ATLAS)
+
+//    G4VModularPhysicsList* physicsList = new QGSP_BERT;
+    G4VModularPhysicsList* physicsList = new L_PhysicsList();
+    physicsList->SetVerboseLevel(0);
 	runManager->SetUserInitialization(physicsList);
 
+
+
     L_RunAction* runAction = new L_RunAction;
-	runManager->SetUserAction(runAction);
+    if (argc == 3) runAction->SetOutputFileName(G4String(argv[2]));
+    runManager->SetUserAction(runAction);
 
     L_PrimaryGeneratorAction* genAction = new L_PrimaryGeneratorAction();
 	runManager->SetUserAction(genAction);
