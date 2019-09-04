@@ -81,21 +81,21 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	for (G4int i = 0; i < nHit; i++) {
 		runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
 		runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
-		runAction->_Energy[i] = (*THC)[i]->myData.Energy;
-		runAction->_Time[i] = (*THC)[i]->myData.Time;
+        runAction->_Energy[i] = (*THC)[i]->myData.Energy / MeV;
+        runAction->_Time[i] = (*THC)[i]->myData.Time / ps;
 		runAction->_PdgID[i] = (*THC)[i]->myData.PdgID;
 		runAction->_StationID[i] = (*THC)[i]->myData.StationID;
-		runAction->_X[i] = (*THC)[i]->myData.X;
-		runAction->_Y[i] = (*THC)[i]->myData.Y;
-		runAction->_Z[i] = (*THC)[i]->myData.Z;
-		runAction->_Px[i] = (*THC)[i]->myData.Px;
-		runAction->_Py[i] = (*THC)[i]->myData.Py;
-		runAction->_Pz[i] = (*THC)[i]->myData.Pz;
+        runAction->_X[i] = (*THC)[i]->myData.X / mm;
+        runAction->_Y[i] = (*THC)[i]->myData.Y / mm;
+        runAction->_Z[i] = (*THC)[i]->myData.Z / mm;
+        runAction->_Px[i] = (*THC)[i]->myData.Px / MeV;
+        runAction->_Py[i] = (*THC)[i]->myData.Py / MeV;
+        runAction->_Pz[i] = (*THC)[i]->myData.Pz / MeV;
         runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
 
-        runAction->_birthX[i] = (*THC)[i]->myData.birthX;
-        runAction->_birthY[i] = (*THC)[i]->myData.birthY;
-        runAction->_birthZ[i] = (*THC)[i]->myData.birthZ;
+        runAction->_birthX[i] = (*THC)[i]->myData.birthX / mm;
+        runAction->_birthY[i] = (*THC)[i]->myData.birthY / mm;
+        runAction->_birthZ[i] = (*THC)[i]->myData.birthZ / mm;
 
         runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
     }
