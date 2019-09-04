@@ -92,7 +92,13 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 		runAction->_Py[i] = (*THC)[i]->myData.Py;
 		runAction->_Pz[i] = (*THC)[i]->myData.Pz;
         runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
-	}
+
+        runAction->_birthX[i] = (*THC)[i]->myData.birthX;
+        runAction->_birthY[i] = (*THC)[i]->myData.birthY;
+        runAction->_birthZ[i] = (*THC)[i]->myData.birthZ;
+
+        runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
+    }
 
 	runAction->_EventID = eventNum;
 	runAction->_nPart = nHit;

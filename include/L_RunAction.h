@@ -58,6 +58,11 @@ public:
     G4double _Momentum[_nPartMax];
 
 
+    G4double _birthX[_nPartMax];
+    G4double _birthY[_nPartMax];
+    G4double _birthZ[_nPartMax];
+
+    G4bool _isPrimary[_nPartMax];
 
 
 private:

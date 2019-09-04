@@ -76,14 +76,16 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     // For simplicity of using long lines
     const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
-//    auto motherTrack = aTrack->;
 
+    // We are interested in charged particles only
+    if (aParticle->GetCharge() == 0) return false;
 
-//    if (aParticle->GetCharge() == 0) return false;
+    // Particle origin position
+    G4ThreeVector initPos = aTrack->GetVertexPosition();
 
-    // Handling only optical photons
-    if (aParticle->GetDefinition()->GetParticleName() != "opticalphoton")
-        return false;
+    // Is the particle primary or not
+    G4bool isPrimary = aTrack->GetParentID() == 0;
+
 
     // New hit instance
     L_Hit* newHit = new L_Hit();
@@ -101,12 +103,11 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     newHit->myData.Py = aTrack->GetMomentum().y();
     newHit->myData.Pz = aTrack->GetMomentum().z();
 
-    //    if (PreName == "L1PlaneInner" && PostName == "World") newHit->myData.StationID = -1;
-    //    else if (PreName == "L1PlaneOuter" && PostName == "World") newHit->myData.StationID = 1;
-    //    else if (PreName == "L2PlaneInner" && PostName == "World") newHit->myData.StationID = -2;
-    //    else if (PreName == "L2PlaneOuter" && PostName == "World") newHit->myData.StationID = 2;
-    //    else return false;
+    newHit->myData.birthX = initPos.x();
+    newHit->myData.birthY = initPos.y();
+    newHit->myData.birthZ = initPos.z();
 
+    newHit->myData.isPrimary = isPrimary;
 
     // Vectors of sector's and detector's names splitted into words
     std::vector<G4String> sectorWords;
@@ -117,20 +118,13 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     splitName(PostName, detectorWords);
 
 
-    //    if (nameWords[0] == "sector" && PostName == "World") {
-    //        if (nameWords[1] == "in"){
-    //            newHit->myData.StationID = - atoi(nameWords[2]);
-    //        } else if (nameWords[1] == "out"){
-    //            newHit->myData.StationID = atoi(nameWords[2]);
-    //        }
-    //    }
-
-
     // Sector ID discrimination for the hit
-    if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
-        newHit->myData.StationID = atoi(detectorWords[2]);
+    // If particle escapes sector into the world, save the ID of that sector
+    if (detectorWords[0] == "World" && sectorWords[0] == "sector") {
+        newHit->myData.StationID = atoi(sectorWords[2]);
     }
     else return false;
+
 
     // Insert this hit
     _Collection->insert(newHit);

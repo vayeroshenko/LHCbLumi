@@ -59,6 +59,12 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     tree->Branch("Py", _Py, "Py[nPart]/D");
     tree->Branch("Pz", _Pz, "Pz[nPart]/D");
 
+    tree->Branch("birthX", _birthX, "birthX[nPart]/D");
+    tree->Branch("birthY", _birthY, "birthY[nPart]/D");
+    tree->Branch("birthZ", _birthZ, "birthZ[nPart]/D");
+
+
+    tree->Branch("isPrimary", _isPrimary, "isPrimary[nPart]/O");
 
     G4cout << "BeginOfRunAction end" << G4endl;
 }
