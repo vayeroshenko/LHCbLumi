@@ -91,7 +91,7 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
         runAction->_Px[i] = (*THC)[i]->myData.Px / MeV;
         runAction->_Py[i] = (*THC)[i]->myData.Py / MeV;
         runAction->_Pz[i] = (*THC)[i]->myData.Pz / MeV;
-        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
+        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum / MeV;
 
         runAction->_birthX[i] = (*THC)[i]->myData.birthX / mm;
         runAction->_birthY[i] = (*THC)[i]->myData.birthY / mm;
