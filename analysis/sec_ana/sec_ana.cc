@@ -38,14 +38,20 @@
 									(parent, std::vector<Int_t>(0)) );
 			}
 
-			spotParent.at(parent).push_back(station);
-
 			if (spotGranny.find(granny) == spotGranny.end()) {
 				spotGranny.insert(	std::pair<Int_t, std::vector<Int_t>>
 									(granny, std::vector<Int_t>(0)) );
 			}
 
-			spotGranny.at(granny).push_back(station);
+			if (std::find(	spotParent.at(parent).begin(), 
+							spotParent.at(parent).end(),
+							station) == spotParent.at(parent).end())
+				spotParent.at(parent).push_back(station);
+
+			if (std::find(	spotGranny.at(granny).begin(), 
+							spotGranny.at(granny).end(),
+							station) == spotGranny.at(granny).end())
+				spotGranny.at(granny).push_back(station);
 		
 		}
 
