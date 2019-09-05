@@ -54,17 +54,20 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
     ////////////////////////////////////////////////////////////////////////
 
-    // Killing downstream particles
-    if (aPrePoint->GetPosition().z() > 50.*cm) {
-        aTrack->SetTrackStatus(fStopAndKill);
-        return;
-    }
+    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
+    ////////////////////////////////////////////////////////////////////////
 
-    // Killing charged particles bellow 20 MeV
-    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
-        aTrack->SetTrackStatus(fStopAndKill);
-        return;
-    }
+//    // Killing downstream particles
+//    if (aPrePoint->GetPosition().z() > 50.*cm) {
+//        aTrack->SetTrackStatus(fStopAndKill);
+//        return;
+//    }
+
+//    // Killing charged particles bellow 20 MeV
+//    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
+//        aTrack->SetTrackStatus(fStopAndKill);
+//        return;
+//    }
 
     // Getting probability of internal reflection
     if (_particleID != trackID) {
@@ -99,10 +102,6 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     if (aPostPoint->GetStepStatus() == fGeomBoundary) {
         G4String sdName = "LSD";
-        G4SDManager* SDman = G4SDManager::GetSDMpointer();
-        L_SensitiveDetector* sd =
-                (L_SensitiveDetector*)SDman->FindSensitiveDetector(sdName);
-
         G4double flat = G4UniformRand();
         switch(boundaryStatus) {
         case Absorption:
@@ -111,28 +110,14 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             // Reflections of surfaces of different media
             break;
         case TotalInternalReflection:
+            // Actually check if particle is reflected
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
-            } else {
-
-                if (trackID == _currentPhotonID) {
-                    _numberOfReflections += 1;
-                    sd->_nOfReflections = _numberOfReflections;
-
-                } else {
-                    _currentPhotonID = trackID;
-                    _numberOfReflections = 1;
-                    sd->_nOfReflections = _numberOfReflections;
-
-                }
+//                G4cout << "KILL THAT BASTARD \n";
             }
+//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
-
-//            if (flat > _probOfReflection) {
-//                G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
-//                aNonConstTrack->SetTrackStatus(fStopAndKill);
-
         case SpikeReflection:
             break;
         default:

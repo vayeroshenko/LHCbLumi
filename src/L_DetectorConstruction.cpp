@@ -146,7 +146,10 @@ void L_DetectorConstruction::DefineMateials() {
     Vacuum->SetMaterialPropertiesTable(AirMPT);
 }
 
+//std::ofstream normals("./output/normals.txt");
+
 G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
+
 
     //////////////////////// World /////////////////////////////
     G4VSolid *worldSolid = new G4Box("World",

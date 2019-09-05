@@ -71,9 +71,11 @@ struct TrapezeSectorStructOut: VolumeStruct {
     {
         G4cout << "Short side: \t" << shortSide / mm << "\t mm" << G4endl;
         G4cout << "Long side: \t\t" << longSide / mm << "\t mm" << G4endl;
+        G4cout << "Tilt angle: \t\t" << LConst::angleOut / deg << "\t deg" << G4endl;
+        G4cout << "Angle from IP: \t\t" << LConst::angleFromIP / deg << "\t deg" << G4endl;
+        G4cout << "Center distance from beam axis: \t\t" << LConst::centerRadOut / mm << "\t mm" << G4endl;
+        G4cout << "Inner distance from beam axis: \t\t" << LConst::innerRadOut / mm << "\t mm" << G4endl;
         G4cout << "Length: \t\t" << height / mm << "\t mm" << G4endl;
-        G4cout << "Distance of the lower edges of the sector from beam pipe: \t" << LConst::innerRadOut << "\t mm" << G4endl;
-        G4cout << "Tilt Angle: \t" << 90. - LConst::angleOut / deg << "\t deg" << G4endl;
     }
 };
 

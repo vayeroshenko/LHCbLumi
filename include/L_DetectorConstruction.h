@@ -82,6 +82,7 @@ private:
     G4Material *BPMaterial;
     G4Material *INOX;
     G4Material *SiO2;
+    G4Material *Beryllium;
     G4Material *Copper;
 
     G4Material *Air;

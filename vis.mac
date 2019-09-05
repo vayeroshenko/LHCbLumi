@@ -23,7 +23,7 @@
 /vis/scene/add/hits
 
 
-/vis/viewer/set/viewpointThetaPhi 0 180 deg
+/vis/viewer/set/viewpointThetaPhi 0 0 deg
 
 
 

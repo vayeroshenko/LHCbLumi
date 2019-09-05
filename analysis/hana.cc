@@ -6,27 +6,34 @@
 	TCanvas *c = new TCanvas("plot", "plot", 0, 0, 1920,1080);
 
 
-	TString filename1, filename2; 
+	TString filename1, filename2, filename3; 
 	TString outname;
 
 
-	filename1 = "new8";
+	filename1 = "8";
 	// filename1 = "heavyIon";
 
 
 	// filename2 = "vfar_5";
-	filename2 = "new_eff8";
+	filename2 = "8-08";
 
-	TFile *file1 = new TFile(filename1+"/histos.root");
-	TH1D* hist1 = (TH1D*)file1->Get( TString("Hit Number0"));
+	// filename3 = "init_be";
 
-	TFile *file2 = new TFile(filename2+"/histos.root");	
+	TFile *file1 = new TFile("far/" + filename1+"/histos.root");
+	TH1D* hist1 = (TH1D*)file1->Get( TString("HitNumber0"));
+
+	TFile *file2 = new TFile("far/"+ filename2+"/histos.root");	
 	file2->cd();
-	TH1D* hist2 = (TH1D*)file2->Get( TString("Hit Number0"));
+	TH1D* hist2 = (TH1D*)file2->Get( TString("HitNumber0"));
+
+	// TFile *file3 = new TFile(filename3+"/histos.root");	
+	// file3->cd();
+	// TH1D* hist3 = (TH1D*)file3->Get( TString("HitNumber0"));
 
 
 
-	outname = filename1 + "_vs_" + filename2 + ".png";
+	// outname = filename1 + "_vs_" + filename2 + ".png";
+	outname = filename1 + "_vs_" + filename2 + "_vs_" + filename3 + ".png";
 
 	std::cout << "_____ " << outname << " _____\n"; 
 
@@ -41,8 +48,9 @@
 
 	// hist1->Scale(hist2->GetEntries()/hist1->GetEntries());
 
-	// hist1->Scale(1e6/hist1->GetEntries());
-	// hist2->Scale(1e6/hist2->GetEntries());
+	// hist1->Scale(1./hist1->GetEntries());
+	// hist2->Scale(1./hist2->GetEntries());
+	// hist3->Scale(1./hist3->GetEntries());
 
 	// hist1->Scale(1e6/hist1->GetEntries());
 	hist2->Scale(hist1->GetEntries()/hist2->GetEntries());
@@ -51,55 +59,24 @@
 
 
 	hist2->SetLineColor(kRed);
+	// hist3->SetLineColor(kBlack);
 
 	// hist2->Draw("SAME E1");
-
-	TF1 *poisson = new TF1("f1", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, NBINS);
-	poisson->SetParameter(0, 1);
-	poisson->SetParameter(1, 1);
-	// poisson->SetParameter(1, 0.0001);
-
-	poisson->SetParName(0, "Area");
-	poisson->SetParName(1, "Mean");
-
-	// poisson->SetLineColor(kRed);
-
-	hist1->GetXaxis()->SetRange(1,NBINS);
-	hist2->GetXaxis()->SetRange(1,NBINS);
-
-
-	TF1 *poisson2 = new TF1("f2", "[0]*ROOT::Math::poisson_pdf(x,[1])", 0, NBINS);
-
-	poisson2->SetParameter(0, 1e3);
-	poisson2->SetParameter(1, 1);
-
-	poisson2->SetParName(0, "Area");
-	poisson2->SetParName(1, "Mean");
-
-	poisson2->SetLineColor(kBlue);
-
-
 
 	// hist1->Fit("f1", "N" , "E0", 0, NBINS);
 	// hist2->Fit("f2", "N", "",0, NBINS);
 
+	hist2->GetXaxis()->SetRangeUser(0,80);
 
-	hist1->Draw("E1");
-	hist2->Draw("SAME E1");
+	hist2->Draw("E1");
+	hist1->Draw("SAME E1");
+	// hist3->Draw("SAME E1");
 
 	// poisson->Draw();
 
 	// poisson->Draw("SAME");
 
 	// hist1->Draw("SAME E1");
-
-	Double_t meanDif = 	abs( poisson2->GetParameter(1) - poisson->GetParameter(1)) / 
-						TMath::Sqrt( 	poisson2->GetParError(1)*poisson2->GetParError(1) +
-									  	poisson->GetParError(1)*poisson->GetParError(1));
-
-	std::cout << "\n" << "Fit mean difference: " << meanDif << " sigma. \n\n";
-
-
 
 	TGraph *gChi2 = new TGraph();
 	gChi2->SetMarkerStyle(kFullSquare);
@@ -156,10 +133,11 @@
 	gStyle->SetOptStat(0);
 	gStyle->SetOptFit();
 
-	TLegend *l = new TLegend();
-	l->SetHeader("VELO vessel thickness", "c");
-	l->AddEntry(hist1, "5 mm","l");
-	l->AddEntry(hist2, "25 mm","l");
+	TLegend *l = new TLegend(0.6,0.75,0.9,0.9);
+	l->SetHeader("6 cm rectangle, 1 cm from beampipe (beryllium)", "c");
+	l->AddEntry(hist1, "mean = 8","l");
+	l->AddEntry(hist2, "mean = 8.08","l");
+	// l->AddEntry(hist3, "6 cm trapeze, 1 cm from beampipe (beryllium)","l");
 
 	l->Draw();
 	// gPad->SetLogy();

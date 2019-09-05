@@ -21,8 +21,6 @@ using namespace std;
 
 TRandom3 *rnd = new TRandom3(0);
 
-Int_t NREBIN = 100;
-
 
 Bool_t isFired(Double_t *eff, Int_t nPhot){
 
@@ -41,9 +39,13 @@ Bool_t isFired(Double_t *eff, Int_t nPhot){
 
 	// Double_t dice = 43;
 
-	if (nPhot == 0) return false;
-	if (nPhot > 99) return true;
+	//	if (nPhot == 0) return false;
+	//if (nPhot > 99) return true;
 
+	if (nPhot > 100) return true;
+	else return false;
+	    
+	
 	if (dice < eff[nPhot-1]) return true;
 	else return false;
 
@@ -74,10 +76,39 @@ void getHist(TString filename, TH1D* h1Hnum)
 		97.4, 97.7, 98.2, 98.35, 98.5, 98.8, 99.1, 99.4, 99.5, 99.55, 99.7, 99.9, 100 };
 
 
+	// Int_t EventID1;
 	Int_t nPart1;
-	Int_t *nPhot = new Int_t[nSec];
+	// Int_t nColl1;
+	// Int_t *TrackID1 = new Int_t[100000];
+	// Int_t *ParentID1 = new Int_t[100000];
+	Int_t *StationID1 = new Int_t[100000];
+	// Double_t *X1 = new Double_t[100000];
+	// Double_t *Y1 = new Double_t[100000];
+	// Double_t *Z1 = new Double_t[100000];
+	// Double_t *Momentum1 = new Double_t[100000];
+	// Double_t *Px1 = new Double_t[100000];
+	// Double_t *Py1 = new Double_t[100000];
+	// Double_t *Pz1 = new Double_t[100000];
+	// Double_t *Time1 = new Double_t[100000];
+	// Double_t *PdgID1 = new Double_t[100000];
+ 
+	// theChain1->SetBranchAddress("EventID", &EventID1);
+	theChain1->SetBranchAddress("nPart", &nPart1);
+	// theChain1->SetBranchAddress("nColl", &nColl1);
+	// theChain1->SetBranchAddress("TrackID", TrackID1);
+	// theChain1->SetBranchAddress("ParentID", ParentID1);
+	theChain1->SetBranchAddress("StationID", StationID1);
+	// theChain1->SetBranchAddress("X", X1);
+	// theChain1->SetBranchAddress("Y", Y1);
+	// theChain1->SetBranchAddress("Z", Z1);
+	// theChain1->SetBranchAddress("Momentum", Momentum1);
+	// theChain1->SetBranchAddress("Px", Px1);
+	// theChain1->SetBranchAddress("Py", Py1);
+	// theChain1->SetBranchAddress("Pz", Pz1);
+	// theChain1->SetBranchAddress("Time", Time1);
+	// theChain1->SetBranchAddress("PdgID", PdgID1);
 
-	theChain1->SetBranchAddress("nPhot", nPhot);
+
 
 	// TH1D *h1nColl = new TH1D("nColl1", "nColl1", 10, 0, 10);
 
@@ -88,34 +119,33 @@ void getHist(TString filename, TH1D* h1Hnum)
 	for (Long_t j = 0; j <  nEv1; ++j) {
 		theChain1->GetEntry(j);
 
-
+		// h1nColl->Fill(nColl1);
+		// 
+	       
+		Int_t nPhot[nSec] = {0};
 		Bool_t isChecked[nSec] = {false};
+
+		// 
+		for (Int_t i = 0; i < nPart1; ++i){
+			// (StationID1[i] < 0) continue;
+			// StationID1[i] += 100;
+			// if (isChecked[StationID1[i]]) continue;
+
+			nPhot[StationID1[i] -1] ++;
+
+			// if (nPhot[StationID1[i]] > 20.){
+			// {
+				// h1Hnum->Fill(StationID[i]);
+				// isChecked[StationID1[i]] = true;
+			// }
+		}
 		
 
-		const Int_t nRebin = NREBIN;
-		// const Int_t nRebin = 100;
-
-
-		for (Int_t i = 0; i < nSec/nRebin; ++i){
-			Double_t numOfHits = 0;			
-
-			for (Int_t j = 0; j < nRebin; ++j){
-				bool fired = false;
-				if (isFired(eff, nPhot[nRebin*i+j])) {
-					fired = true;
-					// break;
-				}
-				if (fired) {
-					numOfHits += 1;	
-				}
-			}
-
-			h1Hnum->Fill( numOfHits );	
-		}
-
-
-
-		// for (int i = 0; i < nSec; ++i){
+		// if (j % 10000 == 0) cout << j << endl;
+		
+		// 
+		Double_t numOfHits = 0;
+		// for (int i = 0; i < nSec/2; ++i){
 
 		// 	bool thisSec = isFired(eff, nPhot[2*i]);
 		// 	bool lSec = isFired(eff, nPhot[2*i+1]);
@@ -129,19 +159,19 @@ void getHist(TString filename, TH1D* h1Hnum)
 
 
 
-		// for (int i = 0; i < nSec; ++i){
+		for (int i = 0; i < nSec; ++i){
 
-		// 	bool thisSec = isFired(eff, nPhot[i]);
+			bool thisSec = isFired(eff, nPhot[i]);
 
-		// 	if (thisSec) {
-		// 		numOfHits += 1;	
-		// 		++i;
-		// 	}
-		// 	// if (thisSec && oppSec) numOfHits += 2;	
-		// }
+			if (thisSec) {
+				numOfHits += 1;	
+				++i;
+			}
+			// if (thisSec && oppSec) numOfHits += 2;	
+		}
 		
 
-		// h1Hnum->Fill( numOfHits );
+		h1Hnum->Fill( numOfHits );
 
 	}
 
@@ -157,7 +187,6 @@ void getHist(TString filename, TH1D* h1Hnum)
 
 int main(int argc, char** argv){
 
-	if (argc != 1) NREBIN = atoi(argv[1]);
 
 	TH1D *array[NHIST];
 
@@ -172,12 +201,12 @@ int main(int argc, char** argv){
 
 	for (Int_t i = 0; i < NHIST; ++i) {
 	  //TString filename = "newData_";
-	  TString filename = "newDataMergedOpt.root";
+	  TString filename = "newDataMerged.root";
 	  //filename += TString (std::to_string(i+1));
 	  //filename += TString(".root");
 	  
 	  //	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, -0.5, nSec-0.5);
-	  array[i] = new TH1D(TString("Hit Number"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
+	  array[i] = new TH1D(TString("HitNumber"+std::to_string(i)),TString("HitNumber"+std::to_string(i)), nSec, 0, nSec);
 
 	  
 	  

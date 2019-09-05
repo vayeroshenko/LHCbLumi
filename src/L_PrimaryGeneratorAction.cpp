@@ -12,7 +12,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     iEv = 0;
 
 
-    //    G4cout << "Start creating primary generator" << G4endl;
+//    G4cout << "Start creating primary generator" << G4endl;
 
     // Pythia seed is generated from system time
     Int_t pythiaSeed = time(NULL)%10000000;
@@ -31,7 +31,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.init();
 
 
-    //    G4cout << "Primary generator created" << G4endl;
+//    G4cout << "Primary generator created" << G4endl;
 }
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
@@ -41,10 +41,10 @@ L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 
-    //    G4cout << "Generate primaries" << G4endl;
+//    G4cout << "Generate primaries" << G4endl;
 
-    //    G4LogicalVolume* worldLV
-    //            = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
+//    G4LogicalVolume* worldLV
+//            = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
 
     // If current event is inapropriate trying another time
     if (!pythia.next()) GeneratePrimaries(anEvent);
@@ -80,7 +80,7 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     }
 
 
-    //    G4cout << "Primaries generated" << G4endl;
+//    G4cout << "Primaries generated" << G4endl;
 }
 
 
@@ -89,6 +89,11 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
     G4int particleID = 0;
 
+    //G4double shift = LConst::VeloLeft + (LConst::VeloRight - LConst::VeloLeft)/0. * 4;
+    //G4double shift = - 175.*mm;
+    //G4double shift =  350.*mm;
+    G4double shift =  0.*mm;
+
     // in terms of pythia:
     // 0        - total values
     // 1 and 2  - initial protons colliding
@@ -96,17 +101,10 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
     for (G4int i = 3; i < event.size(); ++i){
         if (!event[i].isFinal()) continue;
 
-
-        G4double vertexX = G4RandGauss::shoot(LConst::VertexX, LConst::VertexSigmaX);
-        G4double vertexY = G4RandGauss::shoot(LConst::VertexY, LConst::VertexSigmaY);
-        G4double vertexZ = G4RandGauss::shoot(LConst::VertexZ, LConst::VertexSigmaZ);
-
         pdgID[particleID] = event[i].id();
-
-        X[particleID] = event[i].xProd()*mm + vertexX;
-        Y[particleID] = event[i].yProd()*mm + vertexY;
-        Z[particleID] = event[i].zProd()*mm + vertexZ;
-
+        X[particleID] = event[i].xProd()*mm;
+        Y[particleID] = event[i].yProd()*mm;
+        Z[particleID] = event[i].zProd()*mm + shift;
         pX[particleID] = event[i].px()*GeV;
         pY[particleID] = event[i].py()*GeV;
         pZ[particleID] = event[i].pz()*GeV;

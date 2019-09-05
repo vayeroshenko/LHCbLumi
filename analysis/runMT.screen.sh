@@ -15,7 +15,7 @@ rm data*
 for i in {1..20}
 do
 	mkdir "temp_$i"
-	cp groupMTopt.cc "temp_$i"
+	cp groupMT.cc "temp_$i"
 	cp ana2MT.cc "temp_$i"
 	cp runMT.sh "temp_$i"
 	cd "temp_$i"

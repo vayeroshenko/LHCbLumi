@@ -17,8 +17,6 @@ class G4HCofThisEvent;
 class G4Step;
 class G4TouchableHistory;
 
-G4ThreeVector get_normal(int sector_number);
-
 class L_SensitiveDetector: public G4VSensitiveDetector {
 public:
     L_SensitiveDetector(G4String name);
@@ -30,8 +28,6 @@ public:
 	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
 
     G4bool ProcessHitsL(G4Step*, G4TouchableHistory*);
-    G4double Momentum;
-    G4int _nOfReflections = 0;
 
 	void EndOfEvent(G4HCofThisEvent*);
 private:

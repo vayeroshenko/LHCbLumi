@@ -35,20 +35,17 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 //    G4cout << "BeginOfEventAction" << G4endl;
     G4int eventNum = event->GetEventID();
 
+
     // Printing an event number
-    if (eventNum%printModulo == 0) {
-        G4cout << "\n---> Begin of Event: " << eventNum << G4endl;
-    }
+	if (eventNum%printModulo == 0) {
+		G4cout << "\n---> Begin of Event: " << eventNum << G4endl;
+	}
 
     // Setting uo the hit collection to be get in the end of event
 	G4String colName;
 	theCollectionID =
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
 
-    // Setting the number of photons in each sector to 0 for further counting
-    for (G4int i = 0; i < LConst::nSecOut; ++i) {
-        runAction->_nPhot[i] = 0;
-    }
 
     // Reset stepping
 	_steppingAction->Reset();
@@ -57,8 +54,7 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-std::ofstream nreflFile("./output/nrefl.txt");
-std::ofstream nHitsFile("./output/nhit.txt");
+
 void L_EventAction::EndOfEventAction(const G4Event* event)
 {
 
@@ -69,59 +65,46 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	//	  if (theCollectionID < 0) return;
 
 	// Get the Hit Collection
-    G4HCofThisEvent* HCE = event->GetHCofThisEvent();
+	G4HCofThisEvent* HCE = event->GetHCofThisEvent();
     L_HitsCollection * THC = 0;
 
-    //runAction->_EntranceAngles[i] = (*THC)[i]->myData.EntranceAngles;
+	G4int nHit = 0;
 
-    // Declare the number of hits to be get
-    G4int nHit = 0;
-
-
-    // Checking the validity of the hit collection
-    if (HCE){
+	if (HCE){
         THC = (L_HitsCollection*)(HCE->GetHC(theCollectionID));
-    }
-    if (0 == THC) return;
+	}
 
-    // Get the number of hits
-    nHit = THC->entries();
-    nHitsFile << nHit << G4endl;
-    // Getting the number of sectors from the constant collection
-    runAction->_nSec = LConst::nSecOut;
+	if (0 == THC) return;
 
+	nHit = THC->entries();
 
-    //runAction->_EntranceAngles = EventData.EntranceAngles;
-    // Counting each photon dependently on the sector ID
-    // Individual photon tracking is commented
-    for (G4int i = 0; i < nHit; i++) {
-        runAction->_nPhot[(*THC)[i]->myData.StationID] ++;
+	for (G4int i = 0; i < nHit; i++) {
+		runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
+		runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
+        runAction->_Energy[i] = (*THC)[i]->myData.Energy / MeV;
+        runAction->_Time[i] = (*THC)[i]->myData.Time / ps;
+		runAction->_PdgID[i] = (*THC)[i]->myData.PdgID;
+		runAction->_StationID[i] = (*THC)[i]->myData.StationID;
+        runAction->_X[i] = (*THC)[i]->myData.X / mm;
+        runAction->_Y[i] = (*THC)[i]->myData.Y / mm;
+        runAction->_Z[i] = (*THC)[i]->myData.Z / mm;
+        runAction->_Px[i] = (*THC)[i]->myData.Px / MeV;
+        runAction->_Py[i] = (*THC)[i]->myData.Py / MeV;
+        runAction->_Pz[i] = (*THC)[i]->myData.Pz / MeV;
+        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum / MeV;
 
-        //G4cout << (*THC)[i]->myData.EntranceAngles << G4endl;
+        runAction->_birthX[i] = (*THC)[i]->myData.birthX / mm;
+        runAction->_birthY[i] = (*THC)[i]->myData.birthY / mm;
+        runAction->_birthZ[i] = (*THC)[i]->myData.birthZ / mm;
 
-        G4int nrefl = (*THC)[i]->myData.nRefl;
-        nreflFile << nrefl << "\n";
-        runAction->_nRefl[i] = nrefl;
-
-        runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
-        runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
-//        runAction->_Energy[i] = (*THC)[i]->myData.Energy;
-//        runAction->_Time[i] = (*THC)[i]->myData.Time;
-        runAction->_PdgID[i] = (*THC)[i]->myData.PdgID;
-        runAction->_StationID[i] = (*THC)[i]->myData.StationID;
-        runAction->_X[i] = (*THC)[i]->myData.X;
-        runAction->_Y[i] = (*THC)[i]->myData.Y;
-        runAction->_Z[i] = (*THC)[i]->myData.Z;
-//        runAction->_Px[i] = (*THC)[i]->myData.Px;
-//        runAction->_Py[i] = (*THC)[i]->myData.Py;
-//        runAction->_Pz[i] = (*THC)[i]->myData.Pz;
-//        runAction->_Momentum[i] = (*THC)[i]->myData.Momentum;
+        runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
         runAction->_exitAngles[i] = (*THC)[i]->myData.exitAngles;
 
     }
 
 	runAction->_EventID = eventNum;
-    runAction->_nPart = nHit;
+	runAction->_nPart = nHit;
+    //runAction->_entranceAngles = nHit;
 
 	runAction->tree->Fill();
 

@@ -6,23 +6,12 @@
  */
 
 #include "L_SensitiveDetector.h"
-#include "LConst.hh"
+
 #include "G4HCofThisEvent.hh"
 #include "G4RunManager.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
-
-G4ThreeVector get_normal(int sector_number)
-{
-    G4ThreeVector n = G4ThreeVector(LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*sector_number *deg),
-                                      - LConst::centerRadOut * TMath::Tan(pi/2. - LConst::angleOut),
-                        LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*sector_number *deg));
-    n.setMag(1.);
-    n.rotateY(270.0*deg);
-    n.rotateX(90.0*deg);
-    return n;
-}
 
 
 L_SensitiveDetector::L_SensitiveDetector(G4String name) :
@@ -34,7 +23,6 @@ L_SensitiveDetector::L_SensitiveDetector(G4String name) :
     collectionName.insert(HCname);
 
     G4cout << "Sensitive detector created" << G4endl;
-
 }
 
 L_SensitiveDetector::~L_SensitiveDetector() {
@@ -54,13 +42,12 @@ void L_SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
     //  G4cout << "___________________________ Detector initialized" << G4endl;
 }
 
+
 G4bool L_SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist) {
     return ProcessHits(aStep, hist);
 }
-std::ofstream angleFile("./output/test_angle.txt");
-std::ofstream exitAngleFile("./output/exitAngles.txt");
-std::ofstream particleHit("./output/particleHit.txt");
-std::ofstream particleDir("./output/particleDir.txt");
+
+std::ofstream photonHit("./output/photonHit.txt");
 G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
                                         G4TouchableHistory*)
 {
@@ -107,8 +94,8 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
         G4ThreeVector particle_direction = aTrack->GetMomentumDirection();
         G4ThreeVector particle_position = aTrack->GetPosition();
         G4ThreeVector ort_z = G4ThreeVector(0.,0.,-1.);
-                particleHit << particle_position.getX() << " " << particle_position.getY() << " " << particle_position.getZ() << "\n";
-                angleFile  << particle_direction.angle(ort_z) / deg << "\n";
+                //particleHit << particle_position.getX() << " " << particle_position.getY() << " " << particle_position.getZ() << "\n";
+                //angleFile  << particle_direction.angle(ort_z) / deg << "\n";
                 //particleDir << particle_direction.getX() << " " << particle_direction.getY() << " " << particle_direction.getZ() << "\n";
                 //newHit->myData.EntranceAngles = particle_direction.angle(ort_z) / deg;
     }
@@ -156,24 +143,53 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     //    }
 
     /////////////// Code to get the exit angles//////////////////////
+//    if (sectorWords[0] == "sector" && detectorWords[0] == "detector"){
+//        G4ThreeVector photondirection = aTrack->GetMomentumDirection();
+//        int sector_number = std::stoi(sectorWords[2]);
+//        G4ThreeVector normal = get_normal(sector_number);
+//        //G4double exit_angle = normal.angle(photondirection)/deg ;
+//        //exitAngleFile << exit_angle << "\n";
+//        //newHit->myData.exitAngles = exit_angle;
+
+//    }
+
+    /////////////// Code to get coordinates of hits in the detector////
     if (sectorWords[0] == "sector" && detectorWords[0] == "detector"){
-        G4ThreeVector photondirection = aTrack->GetMomentumDirection();
         int sector_number = std::stoi(sectorWords[2]);
-        G4ThreeVector normal = get_normal(sector_number);
-        G4double exit_angle = normal.angle(photondirection)/deg ;
-        exitAngleFile << exit_angle << "\n";
+        /// global position of the photon
+        G4ThreeVector photonPosition = aTrack->GetPosition();
+        /// global direction of the photon
+        G4ThreeVector photonDirection = aTrack->GetMomentumDirection();
+
+        /// get current volume
+        const G4VTouchable *touchable = aTrack->GetTouchable();
+
+        /// get transformations that were applied to this volume
+        const G4RotationMatrix *rotation = touchable->GetRotation();
+        G4RotationMatrix rotation_inv = rotation->inverse();
+        G4ThreeVector translation = touchable->GetTranslation();
+        G4VSolid *sector = touchable->GetSolid();
+
+        /// get local position of the photon hits and normal to the surface
+        G4ThreeVector posLocal = *rotation * (photonPosition - translation);
+        G4ThreeVector normal =  sector->SurfaceNormal(posLocal);
+        G4ThreeVector dirLocal = *rotation * photonDirection;
+        /// get exit angles of photons
+        G4double exit_angle = normal.angle(dirLocal)/deg ;
         newHit->myData.exitAngles = exit_angle;
 
-    }
+        photonHit << sector_number         << " "
+                  << posLocal.getX() << " "
+                  << posLocal.getY() << " "
+                  << posLocal.getZ() << "\n";
 
+    }
     // Sector ID discrimination for the hit
     if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
         newHit->myData.StationID = atoi(detectorWords[2]);
     }
     else return false;
 
-    newHit->myData.nRefl = _nOfReflections;
-    _nOfReflections = 0;
 
     // Insert this hit
     _Collection->insert(newHit);
@@ -183,7 +199,6 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     return true;
 }
-
 void L_SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
 {
 
