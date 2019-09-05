@@ -13,6 +13,8 @@
 #include "HitDataStructure.hh"
 #include "L_EventAction.h"
 
+#include "MCTruthManager.hh"
+
 class G4HCofThisEvent;
 class G4Step;
 class G4TouchableHistory;
@@ -34,6 +36,8 @@ private:
 
     L_HitsCollection* _Collection;
 	G4String SDname;
+
+    MCTruthManager *mcTruthMan;
 
 };
 

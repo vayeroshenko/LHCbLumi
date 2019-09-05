@@ -81,7 +81,7 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
 	nHit = THC->entries();
 
-	for (G4int i = 0; i < nHit; i++) {
+    for (size_t i = 0; i < nHit; i++) {
 		runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
 		runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
         runAction->_Energy[i] = (*THC)[i]->myData.Energy / MeV;
@@ -100,6 +100,7 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
         runAction->_birthY[i] = (*THC)[i]->myData.birthY / mm;
         runAction->_birthZ[i] = (*THC)[i]->myData.birthZ / mm;
 
+        runAction->_grannyID[i] = (*THC)[i]->myData.grannyID;
         runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
     }
 
@@ -107,6 +108,8 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	runAction->_nPart = nHit;
 
 	runAction->tree->Fill();
+
+//    MCTruthManager::GetInstance()->PrintEvent();
 
 	//	G4cout << "End of event" << G4endl;
 }

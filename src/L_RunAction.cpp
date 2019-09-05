@@ -64,6 +64,7 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     tree->Branch("birthZ", _birthZ, "birthZ[nPart]/D");
 
 
+    tree->Branch("grannyID", _grannyID, "grannyID[nPart]/I");
     tree->Branch("isPrimary", _isPrimary, "isPrimary[nPart]/O");
 
     G4cout << "BeginOfRunAction end" << G4endl;

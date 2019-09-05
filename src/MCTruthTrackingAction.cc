@@ -89,7 +89,7 @@ void MCTruthTrackingAction::PostUserTrackingAction(const G4Track* track)
 
         G4long PdgID = track->GetDefinition()->GetPDGEncoding();
 
-        G4cout << PdgID << G4endl;
+//        G4cout << PdgID << G4endl;
 
         MCTruthManager::GetInstance()->
                 AddParticle(fmom, prodpos, endpos,
@@ -125,27 +125,27 @@ void MCTruthTrackingAction::PostUserTrackingAction(const G4Track* track)
 
 G4bool MCTruthTrackingAction::TrackToBeStored(const G4Track* track)
 {
-    MCTruthConfig* config = MCTruthManager::GetInstance()->GetConfig();
+//    MCTruthConfig* config = MCTruthManager::GetInstance()->GetConfig();
 
-    //   check energy
-    if (fmom.e() > config->GetMinE()) return true;
+//    //   check energy
+//    if (fmom.e() > config->GetMinE()) return true;
 
-    //   particle type
-    std::vector<G4int> types = config->GetParticleTypes();
+//    //   particle type
+//    std::vector<G4int> types = config->GetParticleTypes();
 
-    if (track->GetDefinition()->GetParticleName() == "opticalphoton")
-        return true;
+//    if (track->GetDefinition()->GetParticleName() == "opticalphoton")
+//        return true;
 
-    if(std::find( types.begin(), types.end(),
-                  track->GetDefinition()->GetPDGEncoding())
-            != types.end()) return true;
+//    if(std::find( types.begin(), types.end(),
+//                  track->GetDefinition()->GetPDGEncoding())
+//            != types.end()) return true;
 
     //   creator process
 
     //   etc...
 
-    return false;
-    //  return true;
+//    return false;
+      return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

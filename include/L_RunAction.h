@@ -62,6 +62,7 @@ public:
     G4double _birthY[_nPartMax];
     G4double _birthZ[_nPartMax];
 
+    G4int _grannyID[_nPartMax];
     G4bool _isPrimary[_nPartMax];
 
 

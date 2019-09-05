@@ -24,6 +24,8 @@ struct HitData
     G4double birthY;
     G4double birthZ;
 
+    G4double grannyID;
+
 };
 
 #endif
