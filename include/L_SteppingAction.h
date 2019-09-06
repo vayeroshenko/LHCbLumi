@@ -24,6 +24,12 @@ public:
 
 private:
     L_PrimaryGeneratorAction* _genAction;
+
+    G4double _probOfReflection;
+    G4double _particleID;
+
+    void InternalReflectionProbability(G4double energy,
+                                       G4double& probability);
 };
 
 #endif /* SRC_L_SteppingAction_H_ */

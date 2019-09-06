@@ -36,8 +36,10 @@
 #include "G4TwoVector.hh"
 #include "G4SDManager.hh"
 #include "globals.hh"
+#include "G4LogicalBorderSurface.hh"
 
 #include "LConst.hh"
+#include "L_VolumeStructures.h"
 
 class L_DetectorConstruction: public G4VUserDetectorConstruction {
 public:
@@ -45,29 +47,45 @@ public:
     virtual ~L_DetectorConstruction();
 
 public:
-	  G4VPhysicalVolume* Construct();
-	  void ConstructSDandField();
+    G4VPhysicalVolume* Construct();
+    void ConstructSDandField();
+    void DefineOpticalBorders();
+    void SetVisAttributes();
 
-	  void DefineMateials();
-	  G4VPhysicalVolume* DefineVolumes();
-      L_SensitiveDetector *LSD;
-
-
-      G4LogicalVolume *L1PlaneLogInner;
-      G4LogicalVolume *L2PlaneLogInner;
-      G4LogicalVolume *L1PlaneLogOuter;
-      G4LogicalVolume *L2PlaneLogOuter;
+    void DefineMateials();
+    G4VPhysicalVolume* DefineVolumes();
+    L_SensitiveDetector *LSD;
 
 
+    G4LogicalVolume *L1PlaneLogInner;
+    G4LogicalVolume *L2PlaneLogInner;
+    G4LogicalVolume *L1PlaneLogOuter;
+    G4LogicalVolume *L2PlaneLogOuter;
 
+    TrapezeSectorStructIn sectorIn;
+    TrapezeSectorStructOut sectorOut;
+    TrapezeAbsStructIn absorberIn;
+    TrapezeAbsStructOut absorberOut;
+
+    G4LogicalVolume *LSectorIn[LConst::nSecIn];
+    G4LogicalVolume *LSectorOut[LConst::nSecOut];
+
+    G4LogicalVolume *LAbsOut[LConst::nSecOut];
+    G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+
+    G4LogicalVolume *worldLogical;
 
 private:
-	  G4Material *worldMaterial;
-	  G4Material *ScintMaterial;
-      G4Material *Vacuum;
-      G4Material *BPMaterial;
-      G4Material *INOX;
+    G4Material *worldMaterial;
+    G4Material *ScintMaterial;
+    G4Material *Vacuum;
+    G4Material *BPMaterial;
+    G4Material *INOX;
+    G4Material *SiO2;
+    G4Material *Beryllium;
+    G4Material *Copper;
 
+    G4Material *Air;
 
 
 

@@ -15,6 +15,7 @@
 
 //my
 #include "HitDataStructure.hh"
+#include "LConst.hh"
 
 //G4
 #include "G4Timer.hh"
@@ -58,6 +59,15 @@ public:
     G4double _Momentum[_nPartMax];
 
 
+    G4double _birthX[_nPartMax];
+    G4double _birthY[_nPartMax];
+    G4double _birthZ[_nPartMax];
+    G4int _nSec;
+
+    G4bool _isPrimary[_nPartMax];
+    G4double _exitAngles[_nPartMax];
+    G4double _entranceAngles[_nPartMax];
+    G4int _nPhot[LConst::nSecOut];
 
 
 private:
