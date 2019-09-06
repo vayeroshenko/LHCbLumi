@@ -17,9 +17,12 @@
 #include "G4PhysicalConstants.hh"
 
 L_SteppingAction::L_SteppingAction(L_PrimaryGeneratorAction *genAction) :
-    _genAction(genAction){
+    _genAction(genAction)/*, _sensitiveDetector(NULL)*/{
+
     Reset();
     ResetPerEvent();
+
+
 }
 
 L_SteppingAction::~L_SteppingAction() {
@@ -42,16 +45,24 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     G4VPhysicalVolume* aPostPV = aPostPoint->GetPhysicalVolume();
 
 
-    // Further operations are only for optical photons
-    G4ParticleDefinition* particleType = aTrack->GetDefinition();
-    if (particleType != G4OpticalPhoton::OpticalPhotonDefinition())
-        return;
+//    // Further operations are only for optical photons
+//    G4ParticleDefinition* particleType = aTrack->GetDefinition();
+//    if (particleType != G4OpticalPhoton::OpticalPhotonDefinition())
+//        return;
 
-    // Check if particle trying to escape the World
-    if (!aPostPV) return;
+    //    // Check if particle trying to escape the World
+    //    if (!aPostPV) return;
+    if (!aPostPV) {
+        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+        _sensitiveDetector =
+                (L_SensitiveDetector*)SDman->FindSensitiveDetector("LSD");
+        _sensitiveDetector->ProcessHitsL(aStep, new G4TouchableHistory);
+    }
+
+
 
     // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
-//    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
     ////////////////////////////////////////////////////////////////////////
 
     if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20. ) aTrack->SetTrackStatus(fStopAndKill);
@@ -63,11 +74,12 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 //        return;
 //    }
 
-//    // Killing charged particles bellow 20 MeV
-//    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
-//        aTrack->SetTrackStatus(fStopAndKill);
-//        return;
-//    }
+    // Killing charged particles bellow 20 MeV
+    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
+        aTrack->SetTrackStatus(fStopAndKill);
+        return;
+    }
+
 
     // Getting probability of internal reflection
     if (_particleID != trackID) {
@@ -114,9 +126,9 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
-//                G4cout << "KILL THAT BASTARD \n";
+                //                G4cout << "KILL THAT BASTARD \n";
             }
-//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
+            //            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;

@@ -5,22 +5,24 @@
  *      Author: vsevolod
  */
 
-#ifndef SRC_L_SteppingAction_H_
-#define SRC_L_SteppingAction_H_
+#pragma once
 
 #include <G4UserSteppingAction.hh>
 #include "L_PrimaryGeneratorAction.h"
+#include "L_SensitiveDetector.h"
 
 class L_PrimaryGeneratorAction;
+class L_SensitiveDetector;
 
 class L_SteppingAction: public G4UserSteppingAction {
 public:
     L_SteppingAction(L_PrimaryGeneratorAction*);
     virtual ~L_SteppingAction();
-	void UserSteppingAction(const G4Step*);
+    void UserSteppingAction(const G4Step*);
 
-	void Reset();
-	void ResetPerEvent();
+    void Reset();
+    void ResetPerEvent();
+
 
 private:
     L_PrimaryGeneratorAction* _genAction;
@@ -28,8 +30,10 @@ private:
     G4double _probOfReflection;
     G4double _particleID;
 
+
+    L_SensitiveDetector *_sensitiveDetector;
+
+
     void InternalReflectionProbability(G4double energy,
                                        G4double& probability);
 };
-
-#endif /* SRC_L_SteppingAction_H_ */

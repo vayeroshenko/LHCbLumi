@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef L_DETECTORCONSTRUCTION_H_
-#define L_DETECTORCONSTRUCTION_H_
+#pragma once
 
 #include <G4VUserDetectorConstruction.hh>
 #include "L_SensitiveDetector.h"
@@ -90,5 +89,3 @@ private:
 
 
 };
-
-#endif /* L_DETECTORCONSTRUCTION_H_ */

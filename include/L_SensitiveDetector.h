@@ -5,8 +5,7 @@
  *      Author: vsevolod
  */
 
-#ifndef INCLUDE_L_SensitiveDetector_H_
-#define INCLUDE_L_SensitiveDetector_H_
+#pragma once
 
 #include <G4VSensitiveDetector.hh>
 #include "L_Hit.h"
@@ -27,9 +26,9 @@ public:
 
 	void Initialize(G4HCofThisEvent*);
 
-	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*);
 
-    G4bool ProcessHitsL(G4Step*, G4TouchableHistory*);
+    G4bool ProcessHitsL(const G4Step*, G4TouchableHistory*);
 
 	void EndOfEvent(G4HCofThisEvent*);
 private:
@@ -51,5 +50,3 @@ void splitName(const std::string& str, Container& cont)
          std::istream_iterator<std::string>(),
          std::back_inserter(cont));
 }
-
-#endif /* INCLUDE_L_SensitiveDetector_H_ */

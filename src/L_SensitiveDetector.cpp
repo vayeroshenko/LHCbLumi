@@ -45,11 +45,11 @@ void L_SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 }
 
 
-G4bool L_SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist) {
-    return ProcessHits(aStep, hist);
+G4bool L_SensitiveDetector::ProcessHitsL(const G4Step* aStep, G4TouchableHistory* hist) {
+    return ProcessHits((G4Step*)aStep, hist);
 }
 
-G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
+G4bool L_SensitiveDetector::ProcessHits(G4Step *aStep,
                                         G4TouchableHistory*)
 {
     // Getting a track from step
@@ -62,7 +62,74 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
     G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
-    if (!aPostPoint->GetPhysicalVolume()) return false;
+
+    if (!aPostPoint->GetPhysicalVolume()) {
+
+        // Particle origin position
+        G4ThreeVector initPos = aTrack->GetVertexPosition();
+
+        // Is the particle primary or not
+        G4bool isPrimary = parentID == 0;
+
+
+        G4int grannyID = parentID;
+        G4int iterID = parentID;
+
+        auto mcEvent = mcTruthMan->GetCurrentEvent();
+        auto mcParticle = mcEvent->barcode_to_particle(iterID);
+
+        if (mcParticle){
+
+            //        G4cout << mcParticle->production_vertex()->barcode() << G4endl;
+            while (iterID != 0){
+                mcParticle = mcEvent->barcode_to_particle(iterID);
+                grannyID = iterID;
+                auto it = mcParticle->production_vertex()->particles_in_const_begin();
+
+                if (it == mcParticle->production_vertex()->particles_in_const_end()) iterID = 0;
+
+                for(;
+                    it!=mcParticle->production_vertex()->particles_in_const_end();
+                    it++){
+                    //                G4cout << (*it)->barcode() << G4endl;
+                    iterID = (*it)->barcode();
+                }
+            }
+        }
+
+
+        // Hit object filling and inserting
+        L_Hit* newHit = new L_Hit();
+
+        newHit->myData.TrackID = trackID;
+        newHit->myData.ParentID = parentID;
+        newHit->myData.Energy = aTrack->GetKineticEnergy();
+        newHit->myData.PdgID = aTrack->GetParticleDefinition()->GetPDGEncoding();
+        newHit->myData.Time = aTrack->GetGlobalTime();
+        newHit->myData.X = globalPosition.x();
+        newHit->myData.Y = globalPosition.y();
+        newHit->myData.Z = globalPosition.z();
+        newHit->myData.Momentum= aTrack->GetMomentum().mag();
+        newHit->myData.Px = aTrack->GetMomentum().x();
+        newHit->myData.Py = aTrack->GetMomentum().y();
+        newHit->myData.Pz = aTrack->GetMomentum().z();
+
+        newHit->myData.StationID = -1;
+
+        newHit->myData.birthX = initPos.x();
+        newHit->myData.birthY = initPos.y();
+        newHit->myData.birthZ = initPos.z();
+
+        newHit->myData.isPrimary = isPrimary;
+        newHit->myData.grannyID = grannyID;
+
+        // Insert this hit
+        _Collection->insert(newHit);
+        newHit->Draw();
+
+        return true;
+    }
+
 
     G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
     G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
@@ -110,7 +177,7 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
     if (mcParticle){
 
-//        G4cout << mcParticle->production_vertex()->barcode() << G4endl;
+        //        G4cout << mcParticle->production_vertex()->barcode() << G4endl;
         while (iterID != 0){
             mcParticle = mcEvent->barcode_to_particle(iterID);
             grannyID = iterID;
@@ -121,15 +188,15 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
             for(;
                 it!=mcParticle->production_vertex()->particles_in_const_end();
                 it++){
-//                G4cout << (*it)->barcode() << G4endl;
+                //                G4cout << (*it)->barcode() << G4endl;
                 iterID = (*it)->barcode();
             }
         }
 
-//        G4cout << G4endl;
+        //        G4cout << G4endl;
     }
 
-//    G4cout << trackID << "\t" << grannyID << G4endl;
+    //    G4cout << trackID << "\t" << grannyID << G4endl;
 
 
 
@@ -165,7 +232,6 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     _Collection->insert(newHit);
     newHit->Draw();
     //  }
-
 
     return true;
 }
