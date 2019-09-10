@@ -102,6 +102,9 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     if (aPostPoint->GetStepStatus() == fGeomBoundary) {
         G4String sdName = "LSD";
+        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+        L_SensitiveDetector* sd =
+                (L_SensitiveDetector*)SDman->FindSensitiveDetector(sdName);
         G4double flat = G4UniformRand();
         switch(boundaryStatus) {
         case Absorption:
@@ -111,12 +114,23 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
             break;
         case TotalInternalReflection:
             // Actually check if particle is reflected
+
             if (flat > _probOfReflection) {
                 G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
                 aNonConstTrack->SetTrackStatus(fStopAndKill);
-//                G4cout << "KILL THAT BASTARD \n";
+            } else {
+
+                if (trackID == _currentPhotonID) {
+                    _numberOfReflections += 1;
+                    sd->_nOfReflections = _numberOfReflections;
+
+                } else {
+                    _currentPhotonID = trackID;
+                    _numberOfReflections = 1;
+                    sd->_nOfReflections = _numberOfReflections;
+
+                }
             }
-//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;
@@ -191,4 +205,10 @@ void L_SteppingAction::InternalReflectionProbability(G4double energy,
 
     // probability = 0;
 }
+
+
+
+
+
+
 

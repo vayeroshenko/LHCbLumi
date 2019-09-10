@@ -47,25 +47,31 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     tree->Branch("nPart", &_nPart, "nPart/I");
     tree->Branch("TrackID", _TrackID, "TrackID[nPart]/I");
     tree->Branch("ParentID", _ParentID, "ParentID[nPart]/I");
-    tree->Branch("Energy", _Energy, "Energy[nPart]/D");
-    tree->Branch("Time", _Time, "Time[nPart]/D");
-    tree->Branch("PdgID",_PdgID, "PdgID[nPart]/I");
-    tree->Branch("StationID", _StationID, "StationID[nPart]/I");
-    tree->Branch("X", _X, "X[nPart]/D");
-    tree->Branch("Y", _Y, "Y[nPart]/D");
-    tree->Branch("Z", _Z, "Z[nPart]/D");
-    tree->Branch("Momentum", _Momentum, "Momentum[nPart]/D");
-    tree->Branch("Px", _Px, "Px[nPart]/D");
-    tree->Branch("Py", _Py, "Py[nPart]/D");
-    tree->Branch("Pz", _Pz, "Pz[nPart]/D");
+    tree->Branch("nSec", &_nSec, "nSec/I");
 
-    tree->Branch("birthX", _birthX, "birthX[nPart]/D");
-    tree->Branch("birthY", _birthY, "birthY[nPart]/D");
-    tree->Branch("birthZ", _birthZ, "birthZ[nPart]/D");
+//    tree->Branch("Energy", _Energy, "Energy[nPart]/D");
+//    tree->Branch("Time", _Time, "Time[nPart]/D");
+//    tree->Branch("PdgID",_PdgID, "PdgID[nPart]/I");
+//    tree->Branch("StationID", _StationID, "StationID[nPart]/I");
+//    tree->Branch("X", _X, "X[nPart]/D");
+//    tree->Branch("Y", _Y, "Y[nPart]/D");
+//    tree->Branch("Z", _Z, "Z[nPart]/D");
+//    tree->Branch("Momentum", _Momentum, "Momentum[nPart]/D");
+//    tree->Branch("Px", _Px, "Px[nPart]/D");
+//    tree->Branch("Py", _Py, "Py[nPart]/D");
+//    tree->Branch("Pz", _Pz, "Pz[nPart]/D");
+
+//    tree->Branch("birthX", _birthX, "birthX[nPart]/D");
+//    tree->Branch("birthY", _birthY, "birthY[nPart]/D");
+//    tree->Branch("birthZ", _birthZ, "birthZ[nPart]/D");
 
 
-    tree->Branch("isPrimary", _isPrimary, "isPrimary[nPart]/O");
+//    tree->Branch("isPrimary", _isPrimary, "isPrimary[nPart]/O");
     tree->Branch("exitAngles", _exitAngles, "exitAngles[nPart]/D");
+    tree->Branch("entranceAngles", _entranceAngles, "entranceAngles[nPart]/D");
+    tree->Branch("enttranceAngles", _enttranceAngles, "enttranceAngles[nPart]/D");
+    tree->Branch("nRefl", _nRefl, "nRefl[nPart]/I");
+    tree->Branch("nPhot", _nPhot, "nPhot[nSec]/I");
 
     G4cout << "BeginOfRunAction end" << G4endl;
 }

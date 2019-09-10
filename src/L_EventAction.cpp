@@ -21,7 +21,7 @@
 
 L_EventAction::L_EventAction(L_RunAction* runact,
         L_SteppingAction* steppingAction) :
-		runAction(runact), _steppingAction(steppingAction), printModulo(100)
+        runAction(runact), _steppingAction(steppingAction), printModulo(100)
 {
 	//  theCollectionID = -1;
 }
@@ -68,6 +68,13 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	G4HCofThisEvent* HCE = event->GetHCofThisEvent();
     L_HitsCollection * THC = 0;
 
+    // Setting the number of photons in each sector to 0 for further counting
+    for (G4int i = 0; i < LConst::nSectors; ++i) {
+        runAction->_nPhot[i] = 0;
+    }
+
+    // Getting the number of sectors from the constant collection
+    runAction->_nSec = LConst::nSectors;
 	G4int nHit = 0;
 
 	if (HCE){
@@ -79,6 +86,9 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	nHit = THC->entries();
 
 	for (G4int i = 0; i < nHit; i++) {
+        runAction->_nPhot[(*THC)[i]->myData.StationID] ++;
+        G4int nrefl = (*THC)[i]->myData.nRefl;
+        runAction->_nRefl[i] = nrefl;
 		runAction->_TrackID[i] = (*THC)[i]->myData.TrackID;
 		runAction->_ParentID[i] = (*THC)[i]->myData.ParentID;
         runAction->_Energy[i] = (*THC)[i]->myData.Energy / MeV;
@@ -99,9 +109,11 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 
         runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
         runAction->_exitAngles[i] = (*THC)[i]->myData.exitAngles;
+        runAction->_entranceAngles[i] = (*THC)[i]->myData.entranceAngles;
 
     }
 
+//    runAction->EventInfo.enttranceAngles = enttra;
 	runAction->_EventID = eventNum;
 	runAction->_nPart = nHit;
     //runAction->_entranceAngles = nHit;

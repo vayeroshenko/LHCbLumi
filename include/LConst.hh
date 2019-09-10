@@ -16,8 +16,8 @@
 namespace LConst{
 
 // World size
-const G4double worldSizeX = 1.3*m;
-const G4double worldSizeY = 1.3*m;
+const G4double worldSizeX = 1.7*m;
+const G4double worldSizeY = 1.7*m;
 const G4double worldSizeZ = 4.6*m;
 
 
@@ -29,7 +29,7 @@ const G4double BPInnerRadius = 40*mm;
 // Detector pozition along Z-axis
 
 const G4double L1pozZ = - 2172.*mm;           // The closest option
-//const G4double L1pozZ = - 2172.*mm + 400*mm;  // An intermediate option
+//const G4double L1pozZ = - 2172.*mm + 100*mm;  // An intermediate option
 //const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
 
 // The same for the second detector
@@ -81,10 +81,10 @@ const G4double sectorThicknessOut = 5*mm;
 
 const G4double innerRadOut = BPOuterRadius + 40.*cm;
 
-const G4double lengthOut = 100*mm;
+const G4double lengthOut = 400*mm;
 //const G4double outerRadOut = 10*cm;
 
-const G4int nSecOut = 100;
+const G4int nSectors = 100;
 
 /*
  * Saturated track angles in quartz:    46.64 - 47.77
@@ -96,10 +96,9 @@ const G4int nSecOut = 100;
 const G4double saturatedAngle = 46.95*deg;
 const G4double lowerAngle = atan( - innerRadOut / L1pozZ);
 
-const G4double angleOut = saturatedAngle - lowerAngle;
-//const G4double angleOut = 90*deg - lowerAngle - saturatedAngle;//
+const G4double tiltAngle = 90*deg - lowerAngle - saturatedAngle;
 
-const G4double centerRadOut = innerRadOut + lengthOut * cos(angleOut) / 2.;
+const G4double centerRadOut = innerRadOut + lengthOut * cos(tiltAngle) / 2.;
 const G4double angleFromIP = TMath::ATan(- centerRadOut / L1pozZ);
 
 
@@ -108,22 +107,22 @@ const G4double outerRadOut = innerRadOut + lengthOut;
 
 
 const G4double detectorLengthOut = 1*mm;
-const G4double detectorRadOut = centerRadOut + (lengthOut + detectorLengthOut) * TMath::Cos(angleOut) / 2.;
-const G4double detectorSurfOut = centerRadOut + (lengthOut) * TMath::Cos(angleOut) / 2.;
-const G4double detectorPozZ = L1pozZ - (detectorLengthOut + lengthOut) * 0.5 * TMath::Sin(angleOut);
+const G4double detectorRadOut = centerRadOut + (lengthOut + detectorLengthOut) * TMath::Cos(tiltAngle) / 2.;
+const G4double detectorSurfOut = centerRadOut + (lengthOut) * TMath::Cos(tiltAngle) / 2.;
+const G4double detectorPozZ = L1pozZ - (detectorLengthOut + lengthOut) * 0.5 * TMath::Sin(tiltAngle);
 
-//const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
-//                               outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
+//const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSectors) +
+//                               outerRadOut * TMath::Cos(TMath::Pi() / nSectors)) / 2.;
 
 const G4double absInnerSideOut = 0.01*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0.8;
 const G4double VertHeightOut = outerRadOut - innerRadOut;
 
-//const G4double innerSideOut = (2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) ) / 8.;
-//const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
+//const G4double innerSideOut = (2. * (centerRadOut - VertHeightOut * TMath::Cos(tiltAngle)/2.) * TMath::Sin(TMath::Pi() / nSectors) ) / 8.;
+//const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(tiltAngle)/2.) * TMath::Sin(TMath::Pi() / nSectors) - absOuterSideOut*20;
 
-const G4double innerSideOut = 5.*mm;
-const G4double outerSideOut = 5;
+const G4double innerSideOut = 5*mm;
+const G4double outerSideOut = 5*mm;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

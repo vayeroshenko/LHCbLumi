@@ -5,9 +5,16 @@
  *      Author: vsevolod
  */
 
+/*
+ * L_PrimaryGeneratorAction.cpp
+ *
+ *  Created on: Oct 2, 2018
+ *      Author: vsevolod
+ */
+
 #include "L_PrimaryGeneratorAction.h"
 
-
+///////Code that generates proton-proton collision///////////
 L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     iEv = 0;
 
@@ -113,3 +120,43 @@ bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
     }
     nParticles = particleID;
 }
+
+
+
+
+
+
+///////Code that generates single particles///////////
+//To use it just comment everything above and uncomment everything below//
+
+
+//#include "L_PrimaryGeneratorAction.h"
+
+//L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {}
+
+//L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {}
+
+//void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
+
+//    for (int i=0;i<100;i++) {
+
+//    G4String particleName = "mu+";
+//    G4ThreeVector position(0, 0, 0);
+//    G4ThreeVector direction(0,0,-1);
+//    direction = direction.rotateX(-LConst::angleFromIP);
+//    direction = direction.rotateZ(360./LConst::nSectors * i * deg);
+//    // Default particle kinematics
+//    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+//    G4ParticleDefinition* particle = particleTable->FindParticle(particleName);
+
+
+//     _particleGun->SetParticleDefinition(particle);
+//     _particleGun->SetParticleMomentumDirection(direction);
+//     _particleGun->SetParticleEnergy(100*GeV);
+//     _particleGun->SetParticlePosition(position);
+//     _particleGun->GeneratePrimaryVertex(anEvent);
+
+//     }
+//}
+
+

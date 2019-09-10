@@ -25,7 +25,7 @@ struct HitData
     G4double birthZ;
     G4double exitAngles;
     G4double entranceAngles;
-
+    G4int nRefl;
 
 
 };

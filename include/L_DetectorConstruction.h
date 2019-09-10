@@ -68,10 +68,10 @@ public:
     TrapezeAbsStructOut absorberOut;
 
     G4LogicalVolume *LSectorIn[LConst::nSecIn];
-    G4LogicalVolume *LSectorOut[LConst::nSecOut];
+    G4LogicalVolume *LSectorOut[LConst::nSectors];
 
-    G4LogicalVolume *LAbsOut[LConst::nSecOut];
-    G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+    G4LogicalVolume *LAbsOut[LConst::nSectors];
+    G4LogicalVolume *LDetectorOut[LConst::nSectors];
 
     G4LogicalVolume *worldLogical;
 

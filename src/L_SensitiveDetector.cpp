@@ -48,6 +48,7 @@ G4bool L_SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist
 }
 
 std::ofstream photonHit("./output/photonHit.txt");
+std::ofstream angleFile("./output/angles.txt");
 G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
                                         G4TouchableHistory*)
 {
@@ -95,9 +96,9 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
         G4ThreeVector particle_position = aTrack->GetPosition();
         G4ThreeVector ort_z = G4ThreeVector(0.,0.,-1.);
                 //particleHit << particle_position.getX() << " " << particle_position.getY() << " " << particle_position.getZ() << "\n";
-                //angleFile  << particle_direction.angle(ort_z) / deg << "\n";
+                angleFile  << particle_direction.angle(ort_z) / deg << "\n";
                 //particleDir << particle_direction.getX() << " " << particle_direction.getY() << " " << particle_direction.getZ() << "\n";
-                //newHit->myData.EntranceAngles = particle_direction.angle(ort_z) / deg;
+                newHit->myData.entranceAngles = particle_direction.angle(ort_z) / deg;
     }
 
 
@@ -119,11 +120,6 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 //      newHit->myData.Pz = aTrack->GetMomentum().z();
 ////      G4cout << PreName << " " << PostName << G4endl;
 
-//        else if (PreName == "L1PlaneOuter" && PostName == "World") newHit->myData.StationID = 1;
-//        else if (PreName == "L2PlaneInner" && PostName == "World") newHit->myData.StationID = -2;
-//        else if (PreName == "L2PlaneOuter" && PostName == "World") newHit->myData.StationID = 2;
-//        else return false;
-
 
     // Vectors of sector's and detector's names splitted into words
     std::vector<G4String> sectorWords;
@@ -134,26 +130,8 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     splitName(PostName, detectorWords);
 
 
-    //    if (nameWords[0] == "sector" && PostName == "World") {
-    //        if (nameWords[1] == "in"){
-    //            newHit->myData.StationID = - atoi(nameWords[2]);
-    //        } else if (nameWords[1] == "out"){
-    //            newHit->myData.StationID = atoi(nameWords[2]);
-    //        }
-    //    }
+    ////Code to get coordinates of hits in the detector and exit angles////
 
-    /////////////// Code to get the exit angles//////////////////////
-//    if (sectorWords[0] == "sector" && detectorWords[0] == "detector"){
-//        G4ThreeVector photondirection = aTrack->GetMomentumDirection();
-//        int sector_number = std::stoi(sectorWords[2]);
-//        G4ThreeVector normal = get_normal(sector_number);
-//        //G4double exit_angle = normal.angle(photondirection)/deg ;
-//        //exitAngleFile << exit_angle << "\n";
-//        //newHit->myData.exitAngles = exit_angle;
-
-//    }
-
-    /////////////// Code to get coordinates of hits in the detector////
     if (sectorWords[0] == "sector" && detectorWords[0] == "detector"){
         int sector_number = std::stoi(sectorWords[2]);
         /// global position of the photon
@@ -190,6 +168,8 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
     }
     else return false;
 
+    newHit->myData.nRefl = _nOfReflections;
+    _nOfReflections = 0;
 
     // Insert this hit
     _Collection->insert(newHit);

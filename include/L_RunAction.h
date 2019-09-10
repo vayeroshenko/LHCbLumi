@@ -15,6 +15,8 @@
 
 //my
 #include "HitDataStructure.hh"
+#include "EventDataStructure.hh"
+#include "LConst.hh"
 
 //G4
 #include "G4Timer.hh"
@@ -39,9 +41,10 @@ public:
     G4String GetOutputFileName() { return _outputFileName;}
     TTree* tree;
     HitData HitInfo;
-
+    EventData EventInfo;
     G4int _nPart;
     G4int _EventID;
+    G4int _nSec;
     static const G4int _nPartMax = 200000;
     G4int _TrackID[_nPartMax];
     G4int _ParentID[_nPartMax];
@@ -56,6 +59,7 @@ public:
     G4double _Py[_nPartMax];
     G4double _Pz[_nPartMax];
     G4double _Momentum[_nPartMax];
+    G4int _nPhot[LConst::nSectors];
 
 
     G4double _birthX[_nPartMax];
@@ -65,6 +69,9 @@ public:
     G4bool _isPrimary[_nPartMax];
     G4double _exitAngles[_nPartMax];
     G4double _entranceAngles[_nPartMax];
+    G4double _enttranceAngles[_nPartMax];
+    G4int _nRefl[_nPartMax];
+
 
 
 private:

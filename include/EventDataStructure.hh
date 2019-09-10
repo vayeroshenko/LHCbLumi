@@ -1,11 +1,11 @@
-#ifndef HitDataStructure_h
-#define HitDataStructure_h 1
+#ifndef EventDataStructure_h
+#define EventDataStructure_h 1
 
 #include "globals.hh"
 
 struct EventData
 {
-    //G4double entranceAngles;
+    G4double enttranceAngles;
 };
 
 #endif
