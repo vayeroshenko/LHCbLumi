@@ -26,8 +26,8 @@
 	// TH1D* hs0 = new TH1D("s0","s0", 300,0,300);
 	// TH1D* hs1 = new TH1D("s1","s1", 300,0,300);
 
-	TH1D* hr0 = new TH1D("ratio0", "s0 / p0", 100,0,2);
-	TH1D* hr1 = new TH1D("ratio1", "s1 / p1", 100,0,2);
+	TH1D* hr0 = new TH1D("ratio0", "s0 / p0", 200,0,2);
+	TH1D* hr1 = new TH1D("ratio1", "s1 / p1", 200,0,2);
 
 	Long_t nEv = t->GetEntries();
 
@@ -86,6 +86,9 @@
 		std::vector<Int_t> vp0(0);
 		std::vector<Int_t> vp1(0);
 
+		std::vector<Int_t> vs0(0);
+		std::vector<Int_t> vs1(0);
+
 		for (auto pp : spotPrimary){
 			std::vector<Int_t> vec = std::get<1>(pp);
 			vec.erase(std::remove(vec.begin(), vec.end(), -1), vec.end());
@@ -98,19 +101,46 @@
 			hparent->Fill(vec.size());
 		}
 
+		std::vector<Int_t> secs0(0);
+		std::vector<Int_t> secs1(0);
+
 		for (auto pp : spotGranny){
 			auto grID = std::get<0>(pp);
 			auto vec = std::get<1>(pp);
+			vec.erase(std::remove(vec.begin(), vec.end(), -1), vec.end());
 			hgranny->Fill(vec.size());
 
-			if (std::find(vp0.begin(),vp0.end(), grID) != vp0.end()) s0 ++;
-			if (std::find(vp1.begin(),vp1.end(), grID) != vp1.end()) s1 ++;
+			if (std::find(vp0.begin(),vp0.end(), grID) != vp0.end()) {
+				vs0.push_back(grID);
+				for (auto secID : vec){
+					if (std::find(secs0.begin(),secs0.end(), secID) == secs0.end())
+						secs0.push_back(secID);
+				}
+			}
 
+			if (std::find(vp1.begin(),vp1.end(), grID) != vp1.end()) {
+				vs1.push_back(grID);
+				for (auto secID : vec){
+					if (std::find(secs1.begin(),secs1.end(), secID) == secs1.end())
+						secs1.push_back(secID);
+				}
+			}
 		}
 
+		// s0 = vs0.size();
+		// s1 = vs1.size();
 
-		hr0->Fill(s0 / vp0.size());
-		hr1->Fill(s1 / vp1.size());
+		// for (auto i : secs0)
+		// 	std::cout << i << " ";
+		// std::cout << std::endl;
+
+		s0 = secs0.size();
+		s1 = secs1.size();
+
+		hr0->Fill( s0 / vp0.size());
+		hr1->Fill( s1 / vp1.size());
+		// hr0->Fill( s0);
+		// hr1->Fill( s1);
 
 		// hp0->Fill(p0);
 		// hp1->Fill(p1);
