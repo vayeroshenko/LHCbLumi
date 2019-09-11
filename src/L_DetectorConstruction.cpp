@@ -27,13 +27,6 @@ G4VPhysicalVolume* L_DetectorConstruction::Construct() {
 
 void L_DetectorConstruction::ConstructSDandField() {
 
-
-    //    L1PlaneLogInner->SetSensitiveDetector(LSD);
-    //    L2PlaneLogInner->SetSensitiveDetector(LSD);
-    //    L1PlaneLogOuter->SetSensitiveDetector(LSD);
-    //    L2PlaneLogOuter->SetSensitiveDetector(LSD);
-
-
     //    G4cout << "_____________________________________________Detectors are made" << G4endl;
 }
 // Defining materials
@@ -62,21 +55,18 @@ void L_DetectorConstruction::DefineMateials() {
     G4Material* Scint = man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     ScintMaterial = Scint;
 
+    //    BPMaterial = man->FindOrBuildMaterial("G4_Be");
     INOX = man->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
-    Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
 
     BPMaterial = Copper;
-//    BPMaterial = Beryllium;
-
 
     Vacuum = new G4Material( "Galactic", z=1., a=1.01*g/mole, density= universe_mean_density,
                              kStateGas, 2.73*kelvin, 3.e-18*pascal );
 
     // Quartz Material (SiO2)
-    SiO2 =
-            new G4Material("quartz", density = 2.200*g/cm3, ncomponents = 2);
+    SiO2 = new G4Material("quartz", density = 2.200*g/cm3, ncomponents = 2);
     SiO2->AddElement(Si, natoms = 1);
     SiO2->AddElement(O , natoms = 2);
 
@@ -148,7 +138,9 @@ void L_DetectorConstruction::DefineMateials() {
     Vacuum->SetMaterialPropertiesTable(AirMPT);
 }
 
+
 G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
+
 
     //////////////////////// World /////////////////////////////
     G4VSolid *worldSolid = new G4Box("World",
@@ -201,6 +193,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     ////////////////////////////////////////////////////////////
 
 
+
     ////////////////////// VELO cap ////////////////////////////
     G4VSolid *VELOsphere = new G4Sphere("VELOsphere",
                                         LConst::sphereInnerR,
@@ -223,134 +216,21 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 worldLogical,
                 false,
                 0);
-    ////////////////////////////////////////////////////////////
 
 
-
-
-    //    G4VSolid *BPVSolid = new G4Tubs("BeamPipeVacuum",               // name
-    //            0.,                                                     // inner radius
-    //            LConst::BPInnerRadius,                              	// outer radius
-    //            (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,                                  // dZ/2
-    //            0,                                                      // theta start
-    //            twopi);                                                 // theta of sector
-
-    //    G4LogicalVolume *BPVLogical = new G4LogicalVolume(BPVSolid,
-    //            Vacuum,
-    //            "BeamPipeVacuum");
-    //    G4VPhysicalVolume *BPVPhysical =  new G4PVPlacement(
-    //            new G4RotationMatrix(),
-    //            G4ThreeVector(0.,0.,(LConst::worldSizeZ/2. + LConst::BeamStart)/2.),
-    //            BPVLogical,
-    //            "BeamPipe",
-    //            worldLogical,
-    //            false,
-    //            0);
-
-
-    ////////////////////// OLD CONFIGURATION ////////////////////////////
-
-    ///////////////////////////////////////////////////////
-    G4VSolid *L1SolidPlane= new G4Box("L1Plane",
-                                      100*cm,
-                                      100*cm,
-                                      1*mm);
-    G4SubtractionSolid *L1Solid = new G4SubtractionSolid("L1Plane",
-                                                         L1SolidPlane,
-                                                         ExtSolid);
-    L1PlaneLogOuter = new G4LogicalVolume(L1Solid,
-                                          Vacuum,
-                                          "L1PlaneOuter");
-    //    G4VPhysicalVolume *L1PlanePhysOuter =  new G4PVPlacement(
-    //                new G4RotationMatrix(),
-    //                G4ThreeVector(0.,0.,LConst::L1pozZ),
-    //                L1PlaneLogOuter,
-    //                "L1PlaneOuter",
-    //                worldLogical,
-    //                false,
-    //                0);
+    worldLogical->SetSensitiveDetector(LSD);
     ///////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////
-    G4VSolid *L1SolidIn= new G4Tubs("L1Plane",
-                                    0.,
-                                    LConst::BPOuterRadius,
-                                    1*mm,
-                                    0,
-                                    twopi);
-    L1PlaneLogInner = new G4LogicalVolume(L1SolidIn,
-                                          Vacuum,
-                                          "L1PlaneInner");
-    //        G4VPhysicalVolume *L1PlanePhysInner =  new G4PVPlacement(
-    //                    new G4RotationMatrix(),
-    //                    G4ThreeVector(0.,0.,LConst::L1pozZ),
-    //                    L1PlaneLogInner,
-    //                    "L1PlaneInner",
-    //                    worldLogical,
-    //                    false,
-    //                    0);
-    ////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////
-    G4VSolid *L2SolidPlane= new G4Box("L2Plane",
-                                      100*cm,
-                                      100*cm,
-                                      1*mm);
-    G4SubtractionSolid *L2Solid = new G4SubtractionSolid("L2Plane",
-                                                         L2SolidPlane,
-                                                         ExtSolid);
-    L2PlaneLogOuter = new G4LogicalVolume(L2Solid,
-                                          Vacuum,
-                                          "L2PlaneOuter");
-    //            G4VPhysicalVolume *L2PlanePhysOuter =  new G4PVPlacement(
-    //                        new G4RotationMatrix(),
-    //                        G4ThreeVector(0.,0.,LConst::L2pozZ),
-    //                        L2PlaneLogOuter,
-    //                        "L2PlaneOuter",
-    //                        worldLogical,
-    //                        false,
-    //                        0);
-    ////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////
-    G4VSolid *L2SolidIn= new G4Tubs("L2Plane",
-                                    0.,
-                                    LConst::BPOuterRadius,
-                                    1*mm,
-                                    0,
-                                    twopi);
-    L2PlaneLogInner = new G4LogicalVolume(L2SolidIn,
-                                          Vacuum,
-                                          "L2PlaneInner");
-    //        G4VPhysicalVolume *L2PlanePhysInner =  new G4PVPlacement(
-    //                    new G4RotationMatrix(),
-    //                    G4ThreeVector(0.,0.,LConst::L2pozZ),
-    //                    L2PlaneLogInner,
-    //                    "L2PlaneInner",
-    //                    worldLogical,
-    //                    false,
-    //                    0);
-    ////////////////////////////////////////////////////////
-
-
-    /////////////////// END OF OLD CONFIGURATION ///////////////////////
 
 
     G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
     G4RotationMatrix *Ra = new G4RotationMatrix();
 
     ////////////// Trapeze sectors and absorbers ///////////////
-    G4Trd *secIn = new G4Trd(
-                "sectorIn",
-                sectorIn.shortSide/2.,
-                sectorIn.longSide/2.,
-                sectorIn.thickness/2.,
-                sectorIn.thickness/2.,
-                sectorIn.height/2.
-                );
 
-    G4Trd *secOut = new G4Trd(
-                "sectorOut",
+    G4Trd *sector = new G4Trd(
+                "sector",
                 sectorOut.shortSide/2.,
                 sectorOut.longSide/2.,
                 sectorOut.thickness/2.,
@@ -358,21 +238,13 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 sectorOut.height/2.
                 );
 
-    G4Trd *absIn = new G4Trd(
-                "absIn",
-                absorberIn.shortSide/2.,
-                absorberIn.longSide/2.,
-                absorberIn.thickness/2.,
-                absorberIn.thickness/2.,
-                absorberIn.height/2.
-                );
 
     G4Trd *absOut = new G4Trd(
                 "absOut",
+                absorberOut.thickness/2.,
+                absorberOut.thickness/2.,
                 absorberOut.shortSide/2.*1.3,
                 absorberOut.longSide/2.*1.3,
-                absorberOut.thickness/2.,
-                absorberOut.thickness/2.,
                 absorberOut.height/2.
                 );
     ////////////////////////////////////////////////////////////
@@ -381,46 +253,25 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     G4VSolid *detectorOut = new G4Box("detector",
                                       sectorOut.longSide/2.,
                                       sectorOut.thickness/2.,
-                                      1*mm
+                                      LConst::detectorLengthOut/2.
                                       );
     ////////////////////////////////////////////////////////////
 
+    G4VSolid *gasBoxTube = new G4Tubs("gasBox",
+                                      LConst::BPOuterRadius,
+                                      LConst::outerRadOut + 1.*cm,
+                                      LConst::lengthOut * sin(LConst::angleFromIP) + 1.*cm,
+                                      0.,
+                                      twopi);
 
-    // Loop for sectors in order to place them with detectors and absorbers
-    // IN THE OLD CONFIGURATION (placing is commented)
-    for (int j = 0; j < LConst::nSecIn; ++j) {
-        /////////// sector /////////////
-        G4String name = "sector in ";
-        name += std::to_string(j+1);
-        LSectorIn[j] = new G4LogicalVolume(secIn,
-                                           /*Vacuum*/ SiO2,
-                                           name);
-        LSectorIn[j]->SetSensitiveDetector(LSD);
-        Ta = new G4ThreeVector(0.,0.,0.);
-        Ra = new G4RotationMatrix();
-
-        Ra->rotateX(-90.*deg);
-        Ra->rotateY(- 360./LConst::nSecIn*j *deg - 90.*deg);
-        Ta->setX(LConst::centerRadIn * TMath::Cos(360./LConst::nSecIn*j *deg));
-        Ta->setZ(LConst::L1pozZ);
-        Ta->setY(LConst::centerRadIn * TMath::Sin(360./LConst::nSecIn*j *deg));
+    gasBox = new G4LogicalVolume(gasBoxTube,
+                                 Air,
+                                 "gasBox");
 
 
-        //        G4VPhysicalVolume *PSecIn =  new G4PVPlacement(
-        //                    Ra,
-        //                    *Ta,
-        //                    LSectorIn[j],
-        //                    name,
-        //                    worldLogical,
-        //                    false,
-        //                    0);
-    }
-
-
-
-
+    ////////////Rotation that tilts the sectors/////////////////
     G4RotationMatrix RTilt = G4RotationMatrix();
-    RTilt.rotateX(LConst::angleOut);
+    RTilt.rotateY(-90*deg+LConst::tiltAngle);
 
 
     G4Transform3D Tr;
@@ -429,58 +280,36 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     G4AssemblyVolume *assembly = new G4AssemblyVolume();
     G4String name;
 
+    Ta = new G4ThreeVector(0.,0.,LConst::L1pozZ);  //this vector should be non-zero to then change his coordinates properly
+    Ra = new G4RotationMatrix();
+
+    assembly->AddPlacedVolume(gasBox, *Ta, Ra);
+
 
     // Loop for sectors in order to place them with detectors and absorbers
-    for (int j = 0; j < LConst::nSecOut; ++j) {
+    for (int j = 0; j < LConst::nSectors; ++j) {
         /////////// sector /////////////
         name = "sector out ";
         name += std::to_string(j+1);
-        LSectorOut[j] = new G4LogicalVolume(secOut,
-                                            /*Vacuum*/SiO2,
+        LSectorOut[j] = new G4LogicalVolume(sector,
+                                            SiO2,
                                             name);
         LSectorOut[j]->SetSensitiveDetector(LSD);
-        Ta = new G4ThreeVector(0.,0.,0.);
+        Ta = new G4ThreeVector(1.,0.,0.);  //this vector should be non-zero to then change his coordinates properly
         Ra = new G4RotationMatrix();
 
-        //        Ra->rotateX(-90.*deg);
-        Ra->rotateY(- 360./LConst::nSecOut*j *deg + 90*deg);
+        //Tilt and rotate sectors
+        Ra->rotateZ(360./LConst::nSectors*j *deg);
         *Ra = *Ra * RTilt;
 
+        // We use cylindrical coordinates to place sectors
+        Ta->setZ(LConst::L1pozZ);                      //distance along z-axis
+        Ta->setPhi(360./LConst::nSectors * j *deg);    //azimuth angle
+        Ta->setPerp(LConst::centerRadOut);             //distance from z-axis
 
-
-        //        Ta = G4ThreeVector(0.,0.,0.);
-        //        Ra = G4RotationMatrix();
-
-        //        Ra.rotateY(- 360./fTOFConst::nSec*i *deg + 90.*deg);
-
-        //        Ra = Ra * RTilt;
-
-        //        Ta.setX(fTOFConst::centerRad * TMath::Cos(360./fTOFConst::nSec*i *deg));
-        //        Ta.setY(dist);
-        //        Ta.setZ(fTOFConst::centerRad * TMath::Sin(360./fTOFConst::nSec*i *deg));
-
-        //        Tr = G4Transform3D(Ra,Ta);
-        //        secAssembly->AddPlacedVolume(fullBarLog,Tr);
-
-
-
-        Ta->setX(LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg));
-        Ta->setY(LConst::L1pozZ);
-        Ta->setZ(LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
 
         Tr = G4Transform3D(*Ra, *Ta);
-//        if (j == 0)
-            assembly->AddPlacedVolume(LSectorOut[j], Tr);
-
-
-        //        G4VPhysicalVolume *PSecOut =  new G4PVPlacement(
-        //                    Ra,
-        //                    *Ta,
-        //                    LSectorOut[j],
-        //                    name,
-        //                    worldLogical,
-        //                    false,
-        //                    0);
+        assembly->AddPlacedVolume(LSectorOut[j], Tr);
 
 
         ////////// absorber /////////////
@@ -488,98 +317,54 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         name = "absorber out ";
         name += std::to_string(j+1);
 
-        Ta = new G4ThreeVector(0.,0.,0.);
+        Ta = new G4ThreeVector(1.,0.,0.);
         Ra = new G4RotationMatrix();
 
-        Ra->rotateY(- 360./LConst::nSecOut*(j+0.5) *deg + 90.*deg);
-
+        Ra->rotateZ(360./LConst::nSectors*(j+0.5) *deg);
         *Ra = *Ra * RTilt;
-        Ta->setX(LConst::centerRadOut
-                 * TMath::Cos(360./LConst::nSecOut*(j+0.5) *deg));
-        Ta->setY(LConst::L1pozZ);
-        Ta->setZ(LConst::centerRadOut
-                 * TMath::Sin(360./LConst::nSecOut*(j+0.5) *deg));
 
-        *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
-                              LConst::L1pozZ,
-                              LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
-
-        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
-
-        *Ta += G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
-                              LConst::L1pozZ,
-                              LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
+        // Absorbers are positioned between the sectors, hence (j+0.5)
+        Ta->setZ(LConst::L1pozZ);
+        Ta->setPhi(360./LConst::nSectors * (j+0.5) *deg);
+        Ta->setPerp(LConst::centerRadOut);
 
         Tr = G4Transform3D(*Ra,*Ta);
 
         LAbsOut[j] = new G4LogicalVolume(absOut,
-                                         /*Vacuum*/SiO2,
+                                         SiO2,
                                          name);
 
 
-//        if (j == 0 || j == LConst::nSecOut - 1)
-            assembly->AddPlacedVolume(LAbsOut[j], Tr);
+        assembly->AddPlacedVolume(LAbsOut[j], Tr);
 
         /////////// outer detector ///////
 
         name = "detector out ";
         name += std::to_string(j+1);
 
-        Ta = new G4ThreeVector(0.,0.,0.);
+        Ta = new G4ThreeVector(1.,0.,0.);
         Ra = new G4RotationMatrix();
 
-        Ra->rotateY(- 360./LConst::nSecOut*j *deg + 90.*deg);
-
-
-        Ta->setX((LConst::detectorRadOut *TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Cos(360./LConst::nSecOut*j *deg));
-        Ta->setY(LConst::L1pozZ);
-        Ta->setZ((LConst::detectorRadOut*TMath::Cos(TMath::Pi() / LConst::nSecOut) + 1*mm) * TMath::Sin(360./LConst::nSecOut*j *deg));
-
-        *Ta -= G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
-                              LConst::L1pozZ,
-                              LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
-
-        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
-
-        *Ta += G4ThreeVector( LConst::centerRadOut * TMath::Cos(360./LConst::nSecOut*j *deg),
-                              LConst::L1pozZ,
-                              LConst::centerRadOut * TMath::Sin(360./LConst::nSecOut*j *deg));
-
+        Ra->rotateZ(360./LConst::nSectors*j *deg);
         *Ra = *Ra * RTilt;
+
+        Ta->setZ(LConst::detectorPozZ);
+        Ta->setPhi(360./LConst::nSectors * j *deg);
+        Ta->setPerp(LConst::detectorRadOut);
+
         Tr = G4Transform3D(*Ra,*Ta);
 
         LDetectorOut[j] = new G4LogicalVolume(detectorOut,
-                                              /*Vacuum*/SiO2,
+                                              SiO2,
                                               name);
-//        if (j == 0)
-            assembly->AddPlacedVolume(LDetectorOut[j],Tr);
-
-
-
+        assembly->AddPlacedVolume(LDetectorOut[j],Tr);
 
 
     }
 
-    Ra = new G4RotationMatrix();
-    Ta = new G4ThreeVector();
-
-
     // Managing the final position of the assembly
 
-    Ra->rotateY(270.0*deg);
-    Ra->rotateX(90.0*deg);
-
-    Ta->setX(0.);
-    Ta->setY(0.);
-    Ta->setZ(0.);
-
-    //    Ta += G4ThreeVector(fTOFConst::centerRad * TMath::Cos(360./fTOFConst::nSec*i *deg),
-    //                        0,
-    //                        fTOFConst::centerRad * TMath::Sin(360./fTOFConst::nSec*i *deg));
-
-    Ta->rotateZ(270*deg);
-
-    Tr = G4Transform3D(*Ra,*Ta);
+    Tr = G4Transform3D();
 
     assembly->MakeImprint(worldLogical, Tr, 0, true);
 
@@ -614,7 +399,7 @@ void L_DetectorConstruction::DefineOpticalBorders()
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
-    for (int j = 0; j < LConst::nSecOut; ++j) {
+    for (int j = 0; j < LConst::nSectors; ++j) {
         new G4LogicalSkinSurface("AbsTrdSurface",
                                  LAbsOut[j], OpVolumeKillSurface);
         new G4LogicalSkinSurface("DetectorAbsSurface",
@@ -643,8 +428,11 @@ void L_DetectorConstruction::SetVisAttributes()
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
-    for (int j = 0; j < LConst::nSecOut; ++j) {
+    G4VisAttributes *detectorVisAtt = new G4VisAttributes;
+    detectorVisAtt->SetColor(cyan);
+    detectorVisAtt->SetVisibility(true);
+    for (int j = 0; j < LConst::nSectors; ++j) {
         LSectorOut[j]->SetVisAttributes(sectorVisAtt);
-        LSectorIn[j]->SetVisAttributes(sectorVisAtt);
+        LDetectorOut[j]->SetVisAttributes(detectorVisAtt);
     }
 }

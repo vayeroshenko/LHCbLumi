@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
     L_EventAction* eventAction = new L_EventAction(runAction, stepAction);
 	runManager->SetUserAction(eventAction);
-    detector->SetEventAction(eventAction);
+//    detector->SetEventAction(eventAction);
 
 
 

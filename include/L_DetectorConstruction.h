@@ -5,7 +5,8 @@
  *      Author: vsevolod
  */
 
-#pragma once
+#ifndef L_DETECTORCONSTRUCTION_H_
+#define L_DETECTORCONSTRUCTION_H_
 
 #include <G4VUserDetectorConstruction.hh>
 #include "L_SensitiveDetector.h"
@@ -39,7 +40,6 @@
 
 #include "LConst.hh"
 #include "L_VolumeStructures.h"
-#include "L_EventAction.h"
 
 class L_DetectorConstruction: public G4VUserDetectorConstruction {
 public:
@@ -68,14 +68,17 @@ public:
     TrapezeAbsStructOut absorberOut;
 
     G4LogicalVolume *LSectorIn[LConst::nSecIn];
-    G4LogicalVolume *LSectorOut[LConst::nSecOut];
+    G4LogicalVolume *LSectorOut[LConst::nSectors];
 
-    G4LogicalVolume *LAbsOut[LConst::nSecOut];
-    G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+    G4LogicalVolume *LAbsOut[LConst::nSectors];
+    G4LogicalVolume *LDetectorOut[LConst::nSectors];
 
     G4LogicalVolume *worldLogical;
 
-    inline void SetEventAction(L_EventAction* evAct){ _eventAction = evAct; };
+    G4LogicalVolume *gasBox;
+
+    inline void SetEventAction(L_EventAction* evAct){ _eventAction = evAct; }
+
 
 private:
     G4Material *worldMaterial;
@@ -84,13 +87,13 @@ private:
     G4Material *BPMaterial;
     G4Material *INOX;
     G4Material *SiO2;
-    G4Material *Copper;
     G4Material *Beryllium;
+    G4Material *Copper;
 
     G4Material *Air;
 
     L_EventAction *_eventAction;
 
-
-
 };
+
+#endif /* L_DETECTORCONSTRUCTION_H_ */

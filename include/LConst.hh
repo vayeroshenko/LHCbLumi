@@ -5,7 +5,8 @@
  *      Author: vsevolod
  */
 
-#pragma once
+#ifndef INCLUDE_LCONST_HH_
+#define INCLUDE_LCONST_HH_
 
 #include "TMath.h"
 #include "G4SystemOfUnits.hh"
@@ -15,14 +16,12 @@
 namespace LConst{
 
 // World size
-const G4double worldSizeX = 1*m;
-const G4double worldSizeY = 1*m;
+const G4double worldSizeX = 1.7*m;
+const G4double worldSizeY = 1.7*m;
 const G4double worldSizeZ = 4.6*m;
 
 
 // Outer and inner radius of the beampipe
-//const G4double BPOuterRadius = 31*mm;
-//const G4double BPInnerRadius = 30*mm;
 const G4double BPOuterRadius = 41*mm;
 const G4double BPInnerRadius = 40*mm;
 
@@ -30,7 +29,7 @@ const G4double BPInnerRadius = 40*mm;
 // Detector pozition along Z-axis
 
 const G4double L1pozZ = - 2172.*mm;           // The closest option
-//const G4double L1pozZ = - 2172.*mm + 400*mm;  // An intermediate option
+//const G4double L1pozZ = - 2172.*mm + 100*mm;  // An intermediate option
 //const G4double L1pozZ = - 2172.*mm + 800*mm;    // The farthest option
 
 // The same for the second detector
@@ -56,6 +55,8 @@ const G4double VeloRight = 350*mm;
 
 
 
+
+
 ///////////////////////// Detector inside beampipe ///////////////////////////////////////////////////
 // The old configuration
 
@@ -76,45 +77,55 @@ const G4double outerSideIn = 2. * outerRadIn * TMath::Sin(TMath::Pi() / nSecIn) 
 
 
 /////////////////////////// Detoctor outside beampipe ///////////////////////////////////////////////
-const G4double sectorThicknessOut = 1*cm;
+const G4double sectorThicknessOut = 5*mm;
 
-const G4double innerRadOut = BPOuterRadius + 1.*cm;
+const G4double innerRadOut = BPOuterRadius + 40.*cm;
 
-const G4double lengthOut = 60*mm;
+const G4double lengthOut = 400*mm;
 //const G4double outerRadOut = 10*cm;
 
-const G4int nSecOut = 100;
+const G4int nSectors = 100;
 
 /*
  * Saturated track angles in quartz:    46.64 - 47.77
  * Green light saturated track angle:   46.95
  *
- * Lower angle is the angle of the detector inner radius
+ * Lower angle is the angle of the inner radius of detector
 */
 
 const G4double saturatedAngle = 46.95*deg;
-const G4double lowerAngle = atan( - (innerRadOut + lengthOut / sqrt(2) * 0.1) / L1pozZ);
+const G4double lowerAngle = atan( - innerRadOut / L1pozZ);
 
-const G4double angleOut = saturatedAngle + lowerAngle;
+const G4double tiltAngle = 90*deg - lowerAngle - saturatedAngle;
 
-const G4double centerRadOut = innerRadOut + lengthOut * cos(angleOut) / 2.;
+const G4double centerRadOut = innerRadOut + lengthOut * cos(tiltAngle) / 2.;
+const G4double angleFromIP = TMath::ATan(- centerRadOut / L1pozZ);
+
+
+
 const G4double outerRadOut = innerRadOut + lengthOut;
 
-const G4double detectorRadOut = centerRadOut + lengthOut / 2.;
 
-//const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSecOut) +
-//                               outerRadOut * TMath::Cos(TMath::Pi() / nSecOut)) / 2.;
+const G4double detectorLengthOut = 1*mm;
+const G4double detectorRadOut = centerRadOut + (lengthOut + detectorLengthOut) * TMath::Cos(tiltAngle) / 2.;
+const G4double detectorSurfOut = centerRadOut + (lengthOut) * TMath::Cos(tiltAngle) / 2.;
+const G4double detectorPozZ = L1pozZ - (detectorLengthOut + lengthOut) * 0.5 * TMath::Sin(tiltAngle);
+
+//const G4double centerRadOut = (innerRadOut * TMath::Cos(TMath::Pi() / nSectors) +
+//                               outerRadOut * TMath::Cos(TMath::Pi() / nSectors)) / 2.;
 
 const G4double absInnerSideOut = 0.01*mm;
 const G4double absOuterSideOut = absInnerSideOut * outerRadOut / innerRadOut * 0.8;
 const G4double VertHeightOut = outerRadOut - innerRadOut;
 
-const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absInnerSideOut*40;
-//const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
+//const G4double innerSideOut = (2. * (centerRadOut - VertHeightOut * TMath::Cos(tiltAngle)/2.) * TMath::Sin(TMath::Pi() / nSectors) ) / 8.;
+//const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(tiltAngle)/2.) * TMath::Sin(TMath::Pi() / nSectors) - absOuterSideOut*20;
 
-const G4double outerSideOut = innerSideOut;
+const G4double innerSideOut = 5*mm;
+const G4double outerSideOut = 5*mm;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 ///////////////////////////////////////// Vertex /////////////////////////////////////////////////////////
@@ -123,13 +134,22 @@ const G4double VertexY = 0.;
 const G4double VertexZ = 0.;
 
 
-const G4double VertexSigmaX = 0.;
-const G4double VertexSigmaY = 0.;
-const G4double VertexSigmaZ = 1.*cm;
+const G4double VertexSigmaX = 0.2*mm;
+const G4double VertexSigmaY = 0.2*mm;
+const G4double VertexSigmaZ = 63.*mm;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 
 }
 
+
+
+
+
+
+
+
+
+
+#endif /* INCLUDE_LCONST_HH_ */
