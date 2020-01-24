@@ -67,11 +67,14 @@ public:
     TrapezeAbsStructIn absorberIn;
     TrapezeAbsStructOut absorberOut;
 
-    G4LogicalVolume *LSectorIn[LConst::nSecIn];
-    G4LogicalVolume *LSectorOut[LConst::nSecOut];
+    PMT_window pmt_window;
+    PMT_detector pmt_detector;
 
-    G4LogicalVolume *LAbsOut[LConst::nSecOut];
-    G4LogicalVolume *LDetectorOut[LConst::nSecOut];
+//    G4LogicalVolume *LSectorIn[LConst::nSecIn];
+    G4LogicalVolume *LSectorOut[LConst::pmt_n_channels];
+
+    G4LogicalVolume *LAbsOut[LConst::pmt_n_channels];
+    G4LogicalVolume *LDetectorOut[LConst::pmt_n_channels];
 
     G4LogicalVolume *worldLogical;
 

@@ -117,4 +117,21 @@ struct TrapezeAbsStructOut: VolumeStruct {
     {;}
 };
 
+struct PMT_window: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_window():
+        radius(LConst::window_radius),
+        thickness(LConst::window_thickness)
+    {;}
+};
+
+struct PMT_detector: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_detector():
+        radius(LConst::window_radius),
+        thickness(LConst::pmt_detector_thickness)
+    {;}
+};
 

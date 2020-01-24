@@ -95,7 +95,9 @@ const G4int nSecOut = 100;
 const G4double saturatedAngle = 46.95*deg;
 const G4double lowerAngle = atan( - (innerRadOut + lengthOut / sqrt(2) * 0.1) / L1pozZ);
 
-const G4double angleOut = saturatedAngle + lowerAngle;
+//const G4double angleOut = saturatedAngle + lowerAngle;
+const G4double angleOut = 45*deg;
+
 
 const G4double centerRadOut = innerRadOut + lengthOut * cos(angleOut) / 2.;
 const G4double outerRadOut = innerRadOut + lengthOut;
@@ -113,6 +115,25 @@ const G4double innerSideOut = 2. * (centerRadOut - VertHeightOut * TMath::Cos(an
 //const G4double outerSideOut = 2. * (centerRadOut + VertHeightOut * TMath::Cos(angleOut)/2.) * TMath::Sin(TMath::Pi() / nSecOut) - absOuterSideOut*20;
 
 const G4double outerSideOut = innerSideOut;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
+
+const G4int pmt_n_channels = 100;
+
+const G4double window_radius = 5. *mm;
+const G4double window_thickness = 1.2 *mm;
+//const G4double window_thickness = 12 *mm;
+
+const G4double pmt_detector_thickness = 0.1 *mm;
+
+const G4double pmt_center_rad = 30.*cm;
+const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
+
+const G4double pmt_angle = 90.*deg + atan( pmt_center_rad / L1pozZ);
+
+//const G4double pmt_angle =
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
