@@ -479,7 +479,7 @@ void L_DetectorConstruction::SetVisAttributes()
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
-    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
         LSectorOut[j]->SetVisAttributes(sectorVisAtt);
     }
 }
