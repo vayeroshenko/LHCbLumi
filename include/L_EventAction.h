@@ -28,7 +28,7 @@ public:
     virtual void    EndOfEventAction(const G4Event* );
 
     void SetPrimGenerator(L_PrimaryGeneratorAction *gen){_primGenerator = gen;}
-    inline void InsertPhoton(G4int secID){ _nPhot[secID - 1] ++; }
+    inline void InsertPhoton(G4int secID){ int id = (secID > 0) ? (secID-1) : (LConst::pmt_n_channels - secID - 1); _nPhot[id] ++; }
 
 private:
     L_RunAction* runAction;
@@ -36,7 +36,7 @@ private:
     G4int printModulo;
     G4int theCollectionID;
 
-    G4int _nPhot[LConst::pmt_n_channels];
+    G4int _nPhot[LConst::pmt_n_channels*2];
 
     L_PrimaryGeneratorAction* _primGenerator;
 };

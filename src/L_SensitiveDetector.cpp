@@ -73,10 +73,15 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step* aStep,
 
 
     // Sector ID discrimination for the hit
+//    if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
+//        G4int stationID = atoi(detectorWords[2]);
+//        _eventAction->InsertPhoton(stationID);
+//    }
     if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
         G4int stationID = atoi(detectorWords[2]);
         _eventAction->InsertPhoton(stationID);
     }
+
     else return false;
 
 

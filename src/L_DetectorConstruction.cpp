@@ -226,50 +226,11 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     ////////////////////////////////////////////////////////////
 
 
-
-
-    //    G4VSolid *BPVSolid = new G4Tubs("BeamPipeVacuum",               // name
-    //            0.,                                                     // inner radius
-    //            LConst::BPInnerRadius,                              	// outer radius
-    //            (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,                                  // dZ/2
-    //            0,                                                      // theta start
-    //            twopi);                                                 // theta of sector
-
-    //    G4LogicalVolume *BPVLogical = new G4LogicalVolume(BPVSolid,
-    //            Vacuum,
-    //            "BeamPipeVacuum");
-    //    G4VPhysicalVolume *BPVPhysical =  new G4PVPlacement(
-    //            new G4RotationMatrix(),
-    //            G4ThreeVector(0.,0.,(LConst::worldSizeZ/2. + LConst::BeamStart)/2.),
-    //            BPVLogical,
-    //            "BeamPipe",
-    //            worldLogical,
-    //            false,
-    //            0);
-
-
-
     G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
     G4RotationMatrix *Ra = new G4RotationMatrix();
 
     ////////////// Trapeze sectors and absorbers ///////////////
-    G4Trd *secIn = new G4Trd(
-                "sectorIn",
-                sectorIn.shortSide/2.,
-                sectorIn.longSide/2.,
-                sectorIn.thickness/2.,
-                sectorIn.thickness/2.,
-                sectorIn.height/2.
-                );
 
-    //    G4Trd *secOut = new G4Trd(
-    //                "sectorOut",
-    //                sectorOut.shortSide/2.,
-    //                sectorOut.longSide/2.,
-    //                sectorOut.thickness/2.,
-    //                sectorOut.thickness/2.,
-    //                sectorOut.height/2.
-    //                );
 
     G4Tubs *secOut = new G4Tubs(
                 "sectorOut",
@@ -280,31 +241,10 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 twopi);
 
 
-    G4Trd *absIn = new G4Trd(
-                "absIn",
-                absorberIn.shortSide/2.,
-                absorberIn.longSide/2.,
-                absorberIn.thickness/2.,
-                absorberIn.thickness/2.,
-                absorberIn.height/2.
-                );
 
-    G4Trd *absOut = new G4Trd(
-                "absOut",
-                absorberOut.shortSide/2.*1.3,
-                absorberOut.longSide/2.*1.3,
-                absorberOut.thickness/2.,
-                absorberOut.thickness/2.,
-                absorberOut.height/2.
-                );
     ////////////////////////////////////////////////////////////
 
     ///////////// Photon detector at the surface ///////////////
-    //    G4VSolid *detectorOut = new G4Box("detector",
-    //                                      sectorOut.longSide/2.,
-    //                                      sectorOut.thickness/2.,
-    //                                      1*mm
-    //                                      );
 
     G4VSolid *detectorOut = new G4Tubs(
                 "sectorOut",
@@ -345,7 +285,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         *Ra = *Ra * RTilt;
 
         Ta->setX(LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::L1pozZ);
+        Ta->setY(LConst::pmt_window_pos_z);
         Ta->setZ(LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
 
         Tr = G4Transform3D(*Ra, *Ta);
@@ -369,18 +309,18 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 //        Ta->setZ((LConst::pmt_detector_rad*TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
 
         Ta->setX((LConst::pmt_detector_rad) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::L1pozZ);
+        Ta->setY(LConst::pmt_window_pos_z);
         Ta->setZ((LConst::pmt_detector_rad) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
 
 
         *Ta -= G4ThreeVector( LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::L1pozZ,
+                              LConst::pmt_window_pos_z,
                               LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
 
         *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
 
         *Ta += G4ThreeVector( LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::L1pozZ,
+                              LConst::pmt_window_pos_z,
                               LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
 
         *Ra = *Ra * RTilt;
@@ -393,6 +333,68 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         assembly->AddPlacedVolume(LDetectorOut[j],Tr);
 
 
+
+        /////////// sector /////////////
+        name = "sector out ";
+        name += std::to_string(-j-1);
+        LSectorOut[LConst::pmt_n_channels+j] = new G4LogicalVolume(secOut,
+                                            /*Vacuum*/SiO2,
+                                            name);
+        LSectorOut[LConst::pmt_n_channels+j]->SetSensitiveDetector(LSD);
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+//        Ra->rotateX(90.*deg);
+        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90*deg);
+        *Ra = *Ra * RTilt;
+
+        Ta->setX(LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
+        Ta->setY(LConst::pmt_window_pos_z_1);
+        Ta->setZ(LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
+
+        Tr = G4Transform3D(*Ra, *Ta);
+        //        if (j == 0)
+        assembly->AddPlacedVolume(LSectorOut[LConst::pmt_n_channels+j], Tr);
+
+
+        /////////// outer detector ///////
+
+        name = "detector out ";
+        name += std::to_string(-j-1);
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90.*deg);
+
+
+//        Ta->setX((LConst::pmt_detector_rad *TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
+//        Ta->setY(LConst::L1pozZ);
+//        Ta->setZ((LConst::pmt_detector_rad*TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
+
+        Ta->setX((LConst::pmt_detector_rad_1) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
+        Ta->setY(LConst::pmt_window_pos_z_1);
+        Ta->setZ((LConst::pmt_detector_rad_1) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
+
+
+        *Ta -= G4ThreeVector( LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
+                              LConst::pmt_window_pos_z_1,
+                              LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
+
+        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
+
+        *Ta += G4ThreeVector( LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
+                              LConst::pmt_window_pos_z_1,
+                              LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
+
+        *Ra = *Ra * RTilt;
+        Tr = G4Transform3D(*Ra,*Ta);
+
+        LDetectorOut[LConst::pmt_n_channels+j] = new G4LogicalVolume(detectorOut,
+                                              /*Vacuum*/SiO2,
+                                              name);
+        //        if (j == 0)
+        assembly->AddPlacedVolume(LDetectorOut[LConst::pmt_n_channels+j],Tr);
 
 
 
@@ -453,14 +455,10 @@ void L_DetectorConstruction::DefineOpticalBorders()
     quartzSurface->SetType(dielectric_dielectric);
 
     for (int j = 0; j < LConst::pmt_n_channels; ++j) {
-        new G4LogicalSkinSurface("AbsTrdSurface",
-                                 LAbsOut[j], OpVolumeKillSurface);
         new G4LogicalSkinSurface("DetectorAbsSurface",
                                  LDetectorOut[j], OpVolumeKillSurface);
         new G4LogicalSkinSurface("sectorSurface",
                                  LSectorOut[j], quartzSurface);
-
-
     }
 
 

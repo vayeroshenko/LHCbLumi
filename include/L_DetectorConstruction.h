@@ -70,11 +70,9 @@ public:
     PMT_window pmt_window;
     PMT_detector pmt_detector;
 
-//    G4LogicalVolume *LSectorIn[LConst::nSecIn];
-    G4LogicalVolume *LSectorOut[LConst::pmt_n_channels];
+    G4LogicalVolume *LSectorOut[LConst::pmt_n_channels*2];
 
-    G4LogicalVolume *LAbsOut[LConst::pmt_n_channels];
-    G4LogicalVolume *LDetectorOut[LConst::pmt_n_channels];
+    G4LogicalVolume *LDetectorOut[LConst::pmt_n_channels*2];
 
     G4LogicalVolume *worldLogical;
 
