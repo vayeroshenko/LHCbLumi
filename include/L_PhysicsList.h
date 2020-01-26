@@ -13,6 +13,8 @@
 #include "G4PhysicalConstants.hh"
 #include "G4ParticleTableIterator.hh"
 
+#include "G4ProcessManager.hh"
+
 class G4Cerenkov;
 class G4OpAbsorption;
 class G4OpRayleigh;
