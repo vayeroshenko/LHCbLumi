@@ -51,7 +51,7 @@ Bool_t isFired(Double_t *eff, Int_t nPhot){
 	// if (dice < eff[nPhot-1]) return true;
 	// else return false;
 
-	if (nPhot > 0) return true;
+	if (nPhot >= 35) return true;
 	else return false;
 
 	// delete rnd;
@@ -275,6 +275,11 @@ int main(int argc, char** argv){
 	array[0]->SetLineColor(kBlue);
 	array[1]->SetLineColor(kRed);
 	array[2]->SetLineColor(kGreen);
+
+
+	cout << "AND: \t" << array[0]->GetMean() << " \t+- \t" << array[0]->GetMeanError() << std::endl;
+	cout << "OR: \t" << array[1]->GetMean() << " \t+- \t" << array[1]->GetMeanError() << std::endl;
+	cout << "First: \t" << array[2]->GetMean() << " \t+- \t" << array[2]->GetMeanError() << std::endl;
 	
 
 	out->cd();

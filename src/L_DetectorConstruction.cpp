@@ -106,7 +106,7 @@ void L_DetectorConstruction::DefineMateials() {
     for (int i=0; i<num; i++) {
         WaveLength[i] = (300 + i*10)*nanometer;
         Absorption[i] = 100*m;      // Fake number for no absorption
-        AirAbsorption[i] = 10.*cm;   // If photon hits air, kill it
+        AirAbsorption[i] = 10.*um;   // If photon hits air, kill it
         AirRefractiveIndex[i] = 1.; // Rough air refraction
         PhotonEnergy[num - (i+1)] = twopi*hbarc/WaveLength[i];
         /* Absorption is given per length and G4 needs mean free path
@@ -259,6 +259,8 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
     G4RotationMatrix RTilt = G4RotationMatrix();
     RTilt.rotateX(LConst::pmt_angle);
+
+    G4cout << "PMT angle: \t" << atan( - LConst::pmt_center_rad / LConst::pmt_window_pos_z) / deg << G4endl;
 
 
     G4Transform3D Tr;
