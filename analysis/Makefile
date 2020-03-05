@@ -30,7 +30,7 @@ OUTBIN = ./bin/
 
 #----------------------------------------------------#
 
-all: makedir stabana spectra reco 
+all: makedir stabana reco 
 
 makedir: 
 	mkdir -p $(OUTLIB)
@@ -38,9 +38,6 @@ makedir:
 
 stabana: makedir 
 	$(CXX) -o $(OUTBIN)stabana stabana.cc $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
-
-spectra: makedir 
-	$(CXX) -o $(OUTBIN)spectra spectra.cc $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 reco: makedir 
 	$(CXX) -o $(OUTBIN)reco reco.cc $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
