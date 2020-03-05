@@ -113,7 +113,10 @@ void L_DetectorConstruction::DefineMateials() {
          length, calculate it here
          mean free path length - taken as probablility equal 1/e
          that the photon will be absorbed */
-        QuartzAbsorption[i] = (-1)/log(QuartzAbsorption[i])*100*cm;
+
+//        QuartzAbsorption[i] = (-1)/log(QuartzAbsorption[i])*100*cm;
+        QuartzAbsorption[i] = 10.*cm;
+
         //EpotekAbsorption[i] = (-1)/log(EpotekAbsorption[i])*
         //epotekBarJoint.thickness;
     }
