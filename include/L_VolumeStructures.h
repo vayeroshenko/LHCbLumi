@@ -126,6 +126,16 @@ struct PMT_window: VolumeStruct {
     {;}
 };
 
+struct PMT_tablet: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_tablet():
+        radius(LConst::window_radius),
+        thickness(LConst::tablet_thickness)
+    {;}
+};
+
+
 struct PMT_detector: VolumeStruct {
     const G4double radius;
     const G4double thickness;

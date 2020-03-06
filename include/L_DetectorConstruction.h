@@ -56,7 +56,8 @@ public:
     G4VPhysicalVolume* DefineVolumes();
     L_SensitiveDetector *LSD;
 
-    TrapezeSectorStructOut sectorOut;
+//    TrapezeSectorStructOut sectorOut;
+    PMT_tablet tablet;
 
     PMT_window pmt_window;
     PMT_detector pmt_detector;

@@ -243,12 +243,19 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 0.,
                 twopi);
 
-    G4VSolid *bar_solid = new G4Box(
-                "sectorOut",
-                sectorOut.thickness / 2.,
-                sectorOut.thickness / 2.,
-                sectorOut.height / 2.);
+//    G4VSolid *bar_solid = new G4Box(
+//                "sectorOut",
+//                sectorOut.thickness / 2.,
+//                sectorOut.thickness / 2.,
+//                sectorOut.height / 2.);
 
+    G4VSolid *bar_solid = new G4Tubs(
+                "sectorOut",
+                0.,
+                tablet.radius,
+                tablet.thickness / 2.,
+                0.,
+                twopi);
 
     ////////////////////////////////////////////////////////////
 
@@ -285,7 +292,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     // // // // // // // Layer 1 // // // // // // //
     for (int j = 0; j < LConst::pmt_n_channels; ++j) {
         /////////// bar /////////////
-        name = "bar out ";
+        name = "tablet out ";
         name += std::to_string(j+1);
         LBarOut[j] = new G4LogicalVolume(bar_solid,
                                          /*Vacuum*/SiO2,
@@ -385,7 +392,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     for (int j = 0; j < LConst::pmt_n_channels; ++j) {
 
         /////////// bar /////////////
-        name = "bar out ";
+        name = "tablet out ";
         name += std::to_string(-j-1);
         LBarOut[LConst::pmt_n_channels+j] = new G4LogicalVolume(bar_solid,
                                                                 /*Vacuum*/SiO2,
