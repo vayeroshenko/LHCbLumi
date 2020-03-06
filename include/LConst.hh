@@ -122,6 +122,7 @@ const G4double outerSideOut = innerSideOut;
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
 const G4int pmt_n_channels = 24;
+const G4double IPangle = 12. *deg;
 
 const G4double window_radius = 5. *mm;
 const G4double window_thickness = 1.2 *mm;
@@ -130,21 +131,33 @@ const G4double window_thickness = 1.2 *mm;
 //const G4double pmt_window_pos_z = - 2070.*mm;
 //const G4double pmt_window_pos_z = - 1670.*mm;
 const G4double pmt_window_pos_z = - 1270.*mm;
+const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 100 * mm;
 
 //const G4double pmt_center_rad = 218.*mm;
 //const G4double pmt_center_rad = 176.*mm;
-const G4double pmt_center_rad = 134.*mm;
+//const G4double pmt_center_rad = 134.*mm;
 
+const G4double bar_window_gap = 0.1 *mm;
 const G4double pmt_detector_thickness = 0.1 *mm;
-const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
+
+
+const G4double bar_length = 60 *mm;
+
+const G4double bar_center_rad = pmt_window_pos_z * tan(IPangle);
+const G4double pmt_window_rad = bar_center_rad + bar_length /2. + window_thickness / 2. + bar_window_gap;
+const G4double pmt_detector_rad = pmt_window_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
 
 
 
-const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 100 * mm;
-const G4double pmt_center_rad_1 = pmt_center_rad * pmt_window_pos_z_1 / pmt_window_pos_z;
-const G4double pmt_detector_rad_1 = pmt_center_rad_1 + window_thickness / 2. + pmt_detector_thickness / 2.;
 
-const G4double pmt_angle = 90.*deg - atan( - pmt_center_rad / pmt_window_pos_z) - 47.*deg;
+const G4double bar_center_rad_1 = pmt_window_pos_z_1 * tan(IPangle);
+const G4double pmt_window_rad_1 = bar_center_rad_1 + bar_length /2. + window_thickness / 2. + bar_window_gap;
+const G4double pmt_detector_rad_1 = pmt_window_rad_1 + window_thickness / 2. + pmt_detector_thickness / 2.;
+
+
+
+const G4double pmt_angle = 180.*deg + IPangle - saturatedAngle;
+//const G4double pmt_angle = 90.*deg + IPangle;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

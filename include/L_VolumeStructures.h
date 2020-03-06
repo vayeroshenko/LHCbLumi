@@ -60,10 +60,10 @@ struct TrapezeSectorStructOut: VolumeStruct {
     const G4double sides;
     const G4double middleLine;
     TrapezeSectorStructOut():
-        thickness(LConst::sectorThicknessOut),
-        height(LConst::lengthOut),
-        shortSide(LConst::innerSideOut),
-        longSide(LConst::outerSideOut),
+        thickness(LConst::window_radius*2.),
+        height(LConst::bar_length),
+        shortSide(LConst::window_radius*2.),
+        longSide(LConst::window_radius*2.),
         angle(atan((longSide-shortSide)/2./height)),
         sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
         middleLine((longSide+shortSide)/2.)
