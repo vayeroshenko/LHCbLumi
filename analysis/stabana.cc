@@ -41,35 +41,10 @@ Double_t eff[100] = {0.06, 0.15, 0.3, 0.4, 0.6, 0.6, 0.9, 1.2, 1.4, \
 
 Bool_t isFired(Int_t nPhot){
 
-	// Double_t eff[20] ={	0.6, 1.8, 3.4, 5.7, 8.1, 11.5, 16.4, 24., \
-	// 					35.5, 50, 64.5, 76, 83.6, 88.5, 91.9, 94.3, \
-	// 					96.6, 98.2, 99.4, 100};
-
-	// Double_t eff[40] ={	0.3, 0.6, 1., 1.8, 2.4, 3.4, 4.1, 5.7, 6.5, 8.1, 11.5, 13., \
-	// 					16.4, 19.,  24., 30.3, 35.5, 43.5, 50, 56.5, 64.5, 69.7, 76, \
-	// 					81., 83.6, 87., 88.5, 91., 91.9, 93.5, 94.3, 95.9, 96.6, 97.6, \
-	// 					98.2, 99., 99.4, 99.9, 100};
-
-
-
 	Double_t dice = rnd->Uniform() * 100.;
-
-	// Double_t dice = 43;
-
-	//	if (nPhot == 0) return false;
-	//if (nPhot > 99) return true;
-
-	// if (nPhot > 100) return true;
-	// else return false;
-	    
-	
-	// if (dice < eff[nPhot-1]) return true;
-	// else return false;
 
 	if (nPhot >= 35) return true;
 	else return false;
-
-	// delete rnd;
 
 }
 
@@ -78,16 +53,10 @@ void getHistSpectra(TString filename, Int_t flag, TH1D* htot, TH1D* hlayer1, TH1
 {
 
 	cout << filename << endl;
-	// TChain *theChain1 = new TChain("T");
 
 	TFile *file = new TFile(filename);
 	TTree *theChain1 = (TTree*)file->Get("T");
-	// if (!theChain1) { std::
-	// theChain1->Add(filename);
 
-
-
-	// Int_t nPart1;
 	Int_t *nPhot = new Int_t[nSec*2];
 
 
@@ -308,27 +277,27 @@ int main(int argc, char** argv){
 	TString filename = "file8.root";
 
 
-	if (argc != 1) NMAX = atoi(argv[1]);
-	if (argc != 2) {
+
+	if (argc == 2) NMAX = atoi(argv[1]); else
+	if (argc == 3) {
 		filename = TString(argv[1]);
 		NMAX = atoi(argv[2]);
-	}
-	if (argc != 3){
+	} else
+	if (argc == 4){
 		filename = TString(argv[1]);
 		NMAX = atoi(argv[2]);
 		NREBIN = atoi(argv[3]);
-	}
+	} else {
+	cout<<" PLUME simulation data analysis SW: "<<endl
+		<<"       [1] - input root file name               (default: \"" << filename << "\")   "<<endl
+		<<"       [2] - max number of photons in spectra   (default:     500     )   "<<endl
+		<<"       [3] - number of sectors in group         (default:      "<< nSec <<"     )"  <<endl
+		<<"                                                                          "  <<endl
+		<<" Recomended combinations: [2], [1][2], [1][2][3]"<< endl;
+	return 0 ;
+	} 
 
-	// if (argc != 0) {
-	// cout<<" PLUME simulation data analysis SW: "<<endl
-	// 	<<"       [1] - input root file name               (default: \"" << filename << "\")   "<<endl
-	// 	<<"       [2] - max number of photons in spectra   (default:     500     )   "<<endl
-	// 	<<"       [3] - number of sectors in group         (default:      "<< nSec <<"     )"  <<endl
-	// 	<<"                                                                          "  <<endl
-	// 	<<" Recomended combinations: [2], [1][2], [1][2][3]"<< endl;
-	// return 0 ;
-	// }
-
+	
 
 	TH1D *array[9];
 	TH2D *array2[2];
