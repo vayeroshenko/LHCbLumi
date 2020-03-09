@@ -55,25 +55,7 @@ public:
     G4VPhysicalVolume* DefineVolumes();
     L_SensitiveDetector *LSD;
 
-
-    G4LogicalVolume *L1PlaneLogInner;
-    G4LogicalVolume *L2PlaneLogInner;
-    G4LogicalVolume *L1PlaneLogOuter;
-    G4LogicalVolume *L2PlaneLogOuter;
-
-    TrapezeSectorStructIn sectorIn;
-    TrapezeSectorStructOut sectorOut;
-    TrapezeAbsStructIn absorberIn;
-    TrapezeAbsStructOut absorberOut;
-
-    PMT_window pmt_window;
-//    PMT_detector pmt_detector;
-
-    G4LogicalVolume *LSectorIn[LConst::pmt_n_channels];
-    G4LogicalVolume *LSectorOut[LConst::pmt_n_channels];
-
-    G4LogicalVolume *LAbsOut[LConst::pmt_n_channels];
-    G4LogicalVolume *LDetectorOut[LConst::pmt_n_channels];
+    G4LogicalVolume *PlaneLog;
 
     G4LogicalVolume *worldLogical;
 

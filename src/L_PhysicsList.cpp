@@ -32,7 +32,7 @@ void L_PhysicsList::ConstructProcess()
     //  Cherenkov process and optical processes
 
     QGSP_BERT::ConstructProcess();
-    ConstructOp();
+//    ConstructOp();
 }
 //void SetCuts();
 

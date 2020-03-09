@@ -58,6 +58,13 @@ public:
     G4double _Momentum[_nPartMax];
 
 
+    G4double _trackTheta[_nPartMax];
+    G4double _hitR[_nPartMax];
+    G4double _hitTheta[_nPartMax];
+    G4double _hitPhi[_nPartMax];
+
+
+
     G4double _birthX[_nPartMax];
     G4double _birthY[_nPartMax];
     G4double _birthZ[_nPartMax];

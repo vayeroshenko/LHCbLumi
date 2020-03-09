@@ -19,12 +19,15 @@ struct HitData
     G4double Pz;
     G4double Momentum;
 
-    G4bool isPrimary;
+    G4double trackTheta;
+
+    G4double hitR;
+    G4double hitTheta;
+    G4double hitPhi;
+
     G4double birthX;
     G4double birthY;
     G4double birthZ;
-
-    G4double grannyID;
 
 };
 

@@ -10,9 +10,9 @@
 #include <G4VSensitiveDetector.hh>
 #include "L_Hit.h"
 #include "HitDataStructure.hh"
-#include "L_EventAction.h"
-
-#include "MCTruthManager.hh"
+//#include "L_EventAction.h"
+#include "globals.hh"
+#include <iterator>
 
 class G4HCofThisEvent;
 class G4Step;
@@ -36,7 +36,6 @@ private:
     L_HitsCollection* _Collection;
 	G4String SDname;
 
-    MCTruthManager *mcTruthMan;
 
 };
 

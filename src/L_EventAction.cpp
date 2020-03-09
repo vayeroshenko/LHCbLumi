@@ -23,7 +23,9 @@ L_EventAction::L_EventAction(L_RunAction* runact,
         L_SteppingAction* steppingAction) :
 		runAction(runact), _steppingAction(steppingAction), printModulo(100)
 {
-	//  theCollectionID = -1;
+      theCollectionID = -1;
+
+
 }
 
 L_EventAction::~L_EventAction() {
@@ -37,7 +39,7 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 
 
     // instanciating new event
-    MCTruthManager::GetInstance()->NewEvent();
+//    MCTruthManager::GetInstance()->NewEvent();
 
     // Printing an event number
 	if (eventNum%printModulo == 0) {
@@ -48,6 +50,8 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 	G4String colName;
 	theCollectionID =
 			G4SDManager::GetSDMpointer()->GetCollectionID("Collection");
+
+//    G4cout << "Event collection ID is: " << theCollectionID << G4endl;
 
 
     // Reset stepping
@@ -96,20 +100,22 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
         runAction->_Pz[i] = (*THC)[i]->myData.Pz / MeV;
         runAction->_Momentum[i] = (*THC)[i]->myData.Momentum / MeV;
 
+        runAction->_trackTheta[i] = (*THC)[i]->myData.trackTheta;
+        runAction->_hitR[i] = (*THC)[i]->myData.hitR / mm;
+        runAction->_hitTheta[i] = (*THC)[i]->myData.hitTheta;
+        runAction->_hitPhi[i] = (*THC)[i]->myData.hitPhi;
+
+
         runAction->_birthX[i] = (*THC)[i]->myData.birthX / mm;
         runAction->_birthY[i] = (*THC)[i]->myData.birthY / mm;
         runAction->_birthZ[i] = (*THC)[i]->myData.birthZ / mm;
 
-        runAction->_grannyID[i] = (*THC)[i]->myData.grannyID;
-        runAction->_isPrimary[i] = (*THC)[i]->myData.isPrimary;
     }
 
 	runAction->_EventID = eventNum;
 	runAction->_nPart = nHit;
 
 	runAction->tree->Fill();
-
-//    MCTruthManager::GetInstance()->PrintEvent();
 
 	//	G4cout << "End of event" << G4endl;
 }
