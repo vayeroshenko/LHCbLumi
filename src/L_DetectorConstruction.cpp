@@ -62,13 +62,13 @@ void L_DetectorConstruction::DefineMateials() {
     G4Material* Scint = man->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     ScintMaterial = Scint;
 
-    BPMaterial = man->FindOrBuildMaterial("G4_Al");
+//    BPMaterial = man->FindOrBuildMaterial("G4_Al");
     INOX = man->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
     Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
 
-//    BPMaterial = Copper;
+    BPMaterial = Copper;
 //    BPMaterial = Beryllium;
 
 
