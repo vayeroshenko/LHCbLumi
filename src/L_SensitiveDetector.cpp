@@ -75,24 +75,25 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step *aStep,
     G4StepPoint *aPostPoint = aStep->GetPostStepPoint();
     G4StepPoint *aPrevPoint = aStep->GetPreStepPoint();
 
-    if (!aPostPoint->GetPhysicalVolume()) {
-        return false;
-    }
+//    if (!aPostPoint->GetPhysicalVolume()) {
+//        return false;
+//    }
 
-    G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
+//    G4LogicalVolume *PostVolume = aPostPoint->GetPhysicalVolume()->GetLogicalVolume();
     G4LogicalVolume *PrevVolume = aPrevPoint->GetPhysicalVolume()->GetLogicalVolume();
 
     // Names of previous and next volume
     G4String PreName = PrevVolume->GetName();
-    G4String PostName = PostVolume->GetName();
+//    G4String PostName = PostVolume->GetName();
 
     // For simplicity of using long lines
     //    const G4DynamicParticle *aParticle = aTrack->GetDynamicParticle();
 
     // Sector ID discrimination for the hit
     // If particle escapes sector into the world, save the ID of that sector
-    if ( !(PostName == "World" && PreName == "detector") )
-        return false;
+
+    //    if ( !(PostName == "World" && PreName == "detector") )
+//        return false;
 
     // We are interested in charged particles only
     //    if (aParticle->GetCharge() == 0) return false;
@@ -124,14 +125,17 @@ G4bool L_SensitiveDetector::ProcessHits(G4Step *aStep,
     newHit->myData.birthY = initPos.y();
     newHit->myData.birthZ = initPos.z();
 
-    newHit->myData.trackTheta = aTrack->GetMomentum().unit().dot(G4ThreeVector(0,0,-1.));
+    newHit->myData.trackTheta = acos(aTrack->GetMomentum().unit().dot(G4ThreeVector(0, 0, 1.)));
 
-    G4double hitX = aTrack->GetMomentum().x();
-    G4double hitY = aTrack->GetMomentum().y();
-    G4double hitZ = aTrack->GetMomentum().z();
+    G4double hitX = globalPosition.x();
+    G4double hitY = globalPosition.y();
+    G4double hitZ = globalPosition.z();
     G4double hitR = sqrt( hitX*hitX + hitY*hitY );
     newHit->myData.hitR = hitR;
-    newHit->myData.hitTheta = - atan(hitR / hitZ);
+
+//    newHit->myData.hitTheta = atan(hitR / hitZ);
+    newHit->myData.hitTheta = acos(globalPosition.unit().dot(G4ThreeVector(0, 0, 1.)));
+
     newHit->myData.hitPhi = acos(hitY / hitX);
 
 

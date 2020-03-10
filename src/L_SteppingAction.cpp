@@ -51,8 +51,12 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     //        return;
 
     //    // Check if particle trying to escape the World
-    if (!aPostPV) return;
-
+    if (!aPostPV) {
+        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+        _sensitiveDetector =
+                (L_SensitiveDetector*)SDman->FindSensitiveDetector("LSD");
+        _sensitiveDetector->ProcessHitsL(aStep, new G4TouchableHistory);
+    }   else return;
 
 
     // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////

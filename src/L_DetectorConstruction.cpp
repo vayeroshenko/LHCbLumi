@@ -70,7 +70,7 @@ void L_DetectorConstruction::DefineMateials() {
     Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
 
-    //    BPMaterial = Copper;
+    BPMaterial = Copper;
     //    BPMaterial = Beryllium;
 
 
@@ -241,14 +241,14 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                    "detector");
     PlaneLog->SetSensitiveDetector(LSD);
 
-    new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0., -LConst::worldSizeZ / 2. + 1.*mm/2.),
-                PlaneLog,
-                "detector",
-                worldLogical,
-                false,
-                0);
+    //    new G4PVPlacement(
+    //                new G4RotationMatrix(),
+    //                G4ThreeVector(0.,0., -LConst::worldSizeZ / 2. + 1.*mm/2.),
+    //                PlaneLog,
+    //                "detector",
+    //                worldLogical,
+    //                false,
+    //                0);
 
 
     /////////////////// END OF OLD CONFIGURATION ///////////////////////
