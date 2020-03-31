@@ -54,6 +54,11 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
     // generating all primaries from event
     for (G4int pId = 0; pId < nParticles; ++pId){
+        if (Z[pId] > LConst::worldSizeZ / 2. || Z[pId] < - LConst::worldSizeZ / 2.) continue;
+        if (X[pId] > LConst::worldSizeX / 2. || Z[pId] < - LConst::worldSizeX / 2.) continue;
+        if (Y[pId] > LConst::worldSizeY / 2. || Y[pId] < - LConst::worldSizeY / 2.) continue;
+
+
         G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
         G4ParticleDefinition* particle = particleTable->FindParticle(pdgID[pId]);
         G4double m = particle->GetPDGMass();

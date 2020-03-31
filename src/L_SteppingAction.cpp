@@ -51,6 +51,11 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     //        return;
 
     //    // Check if particle trying to escape the World
+    if (!aPrePV) {
+        aTrack->SetTrackStatus(fStopAndKill);
+        return;
+    }
+
     if (!aPostPV) {
         G4SDManager* SDman = G4SDManager::GetSDMpointer();
         _sensitiveDetector =
