@@ -51,13 +51,13 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
 //        return;
 
     //    // Check if particle trying to escape the World
-    //    if (!aPostPV) return;
-    if (!aPostPV) {
-        G4SDManager* SDman = G4SDManager::GetSDMpointer();
-        _sensitiveDetector =
-                (L_SensitiveDetector*)SDman->FindSensitiveDetector("LSD");
-        _sensitiveDetector->ProcessHitsL(aStep, new G4TouchableHistory);
-    }
+        if (!aPostPV) return;
+//    if (!aPostPV) {
+//        G4SDManager* SDman = G4SDManager::GetSDMpointer();
+//        _sensitiveDetector =
+//                (L_SensitiveDetector*)SDman->FindSensitiveDetector("LSD");
+//        _sensitiveDetector->ProcessHitsL(aStep, new G4TouchableHistory);
+//    }
 
 
 
@@ -81,63 +81,6 @@ void L_SteppingAction::UserSteppingAction(const G4Step* aStep) {
     }
 
 
-    // Getting probability of internal reflection
-    if (_particleID != trackID) {
-        Reset();
-        _particleID = trackID;
-        InternalReflectionProbability(aTrack->GetTotalEnergy()/eV,
-                                      _probOfReflection);
-    }
-
-    // Declaring boundary
-    G4OpBoundaryProcessStatus boundaryStatus = Undefined;
-    static G4OpBoundaryProcess* boundary = NULL;
-
-    // Find boundary process
-    if (!boundary) {
-        G4ProcessManager* pm =
-                aStep->GetTrack()->GetDefinition()->GetProcessManager();
-        G4int nprocesses = pm->GetProcessListLength();
-        G4ProcessVector* pv = pm->GetProcessList();
-        for (G4int i = 0; i < nprocesses; i++) {
-            if ((*pv)[i]->GetProcessName() == "OpBoundary") {
-                boundary = (G4OpBoundaryProcess*)(*pv)[i];
-                break;
-            }
-        }
-    }
-
-    // Only boundary processes are handling further
-    if (!boundary) return;
-
-    boundaryStatus = boundary->GetStatus();
-
-    if (aPostPoint->GetStepStatus() == fGeomBoundary) {
-        G4String sdName = "LSD";
-        G4double flat = G4UniformRand();
-        switch(boundaryStatus) {
-        case Absorption:
-            break;
-        case FresnelReflection:
-            // Reflections of surfaces of different media
-            break;
-        case TotalInternalReflection:
-            // Actually check if particle is reflected
-            if (flat > _probOfReflection) {
-                G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
-                aNonConstTrack->SetTrackStatus(fStopAndKill);
-                //                G4cout << "KILL THAT BASTARD \n";
-            }
-            //            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
-            break;
-        case SpikeReflection:
-            break;
-        default:
-            break;
-
-        }
-
-    }
 
 
     return;

@@ -64,6 +64,7 @@ void L_DetectorConstruction::DefineMateials() {
 
 //    BPMaterial = man->FindOrBuildMaterial("G4_Al");
     INOX = man->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+    Concrete = man->FindOrBuildMaterial("G4_CONCRETE");
 
     Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
@@ -210,7 +211,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                                         twopi, //LConst::sphereTheta*2.,
                                         0,
                                         LConst::sphereTheta);
-    G4SubtractionSolid *VELOsphereSolid = new G4SubtractionSolid("VELOsphere", VELOsphere, ExtSolid);
+    G4VSolid *VELOsphereSolid = new G4SubtractionSolid("VELOsphere", VELOsphere, ExtSolid);
     G4LogicalVolume *VELOsphereLog = new G4LogicalVolume(VELOsphereSolid,
                                                          INOX,
                                                          "VELOsphere");
@@ -225,6 +226,28 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
                 false,
                 0);
     ////////////////////////////////////////////////////////////
+
+    Rm = new G4RotationMatrix();
+
+    G4VSolid *solidWall = new G4Box("concreteWall",
+                                    LConst::worldSizeX / 2.,
+                                    LConst::worldSizeY / 2.,
+                                    100. * mm / 2.);
+    G4VSolid *wallWithHole = new G4SubtractionSolid("concreteWall", solidWall, ExtSolid);
+
+    G4LogicalVolume *wallLog = new G4LogicalVolume(wallWithHole,
+                                                   Concrete,
+                                                   "concreteWall");
+
+    new G4PVPlacement(
+                Rm,
+                G4ThreeVector(0.,0., (- LConst::worldSizeZ /2. + 100*mm / 2.)),
+                wallLog,
+                "VELOsphere",
+                worldLogical,
+                false,
+                0);
+
 
 
 

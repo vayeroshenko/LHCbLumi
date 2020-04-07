@@ -12,7 +12,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     iEv = 0;
 
 
-//    G4cout << "Start creating primary generator" << G4endl;
+    //    G4cout << "Start creating primary generator" << G4endl;
 
     // Pythia seed is generated from system time
     Int_t pythiaSeed = time(NULL)%10000000;
@@ -31,7 +31,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.init();
 
 
-//    G4cout << "Primary generator created" << G4endl;
+    //    G4cout << "Primary generator created" << G4endl;
 }
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
@@ -41,10 +41,10 @@ L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 
-//    G4cout << "Generate primaries" << G4endl;
+    //    G4cout << "Generate primaries" << G4endl;
 
-//    G4LogicalVolume* worldLV
-//            = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
+    //    G4LogicalVolume* worldLV
+    //            = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
 
     // If current event is inapropriate trying another time
     if (!pythia.next()) GeneratePrimaries(anEvent);
@@ -54,6 +54,9 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
     // generating all primaries from event
     for (G4int pId = 0; pId < nParticles; ++pId){
+        if (Z[pId] > LConst::worldSizeZ / 2. || Z[pId] < - LConst::worldSizeZ / 2.) continue;
+        if (X[pId] > LConst::worldSizeX / 2. || Z[pId] < - LConst::worldSizeX / 2.) continue;
+        if (Y[pId] > LConst::worldSizeY / 2. || Y[pId] < - LConst::worldSizeY / 2.) continue;
         G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
         G4ParticleDefinition* particle = particleTable->FindParticle(pdgID[pId]);
         G4double m = particle->GetPDGMass();
@@ -80,7 +83,7 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     }
 
 
-//    G4cout << "Primaries generated" << G4endl;
+    //    G4cout << "Primaries generated" << G4endl;
 }
 
 

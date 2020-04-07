@@ -32,7 +32,7 @@ void L_PhysicsList::ConstructProcess()
     //  Cherenkov process and optical processes
 
     QGSP_BERT::ConstructProcess();
-    ConstructOp();
+//    ConstructOp();
 }
 //void SetCuts();
 
@@ -63,8 +63,8 @@ void L_PhysicsList::ConstructOp()
         G4String particleName = particle->GetParticleName();
         if (theCerenkovProcess->IsApplicable(*particle)) {
             G4cout << "Add Cerenkov process to " << particleName << G4endl;
-//            pmanager->AddProcess(theCerenkovProcess);
-//            pmanager->SetProcessOrdering(theCerenkovProcess, idxPostStep);
+            pmanager->AddProcess(theCerenkovProcess);
+            pmanager->SetProcessOrdering(theCerenkovProcess, idxPostStep);
         }
         if (particleName == "opticalphoton") {
             G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;

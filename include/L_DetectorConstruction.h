@@ -86,6 +86,7 @@ private:
     G4Material *SiO2;
     G4Material *Beryllium;
     G4Material *Copper;
+    G4Material *Concrete;
 
     G4Material *Air;
 

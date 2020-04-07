@@ -123,13 +123,13 @@ const G4double outerSideOut = innerSideOut;
 const G4int pmt_n_channels = 24;
 
 const G4double window_radius = 10. *mm;
-const G4double window_thickness = 1.2 *mm;
-//const G4double window_thickness = 12 *mm;
+//const G4double window_thickness = 1.2 *mm;
+const G4double window_thickness = 6.2 *mm;
 
 const G4double pmt_window_pos_z = - 2072.*mm  + 0*800*mm;
 
 const G4double pmt_detector_thickness = 0.1 *mm;
-const G4double pmt_center_rad = 40.*cm;
+const G4double pmt_center_rad = 136.*mm;
 const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
 
 const G4double pmt_angle = 90.*deg + atan( pmt_center_rad / pmt_window_pos_z);
