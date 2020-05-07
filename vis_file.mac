@@ -15,7 +15,7 @@
 #
 # Visualization setting
 
-#/vis/open HepRepFile
+/vis/open HepRepFile
 #/vis/open RayTracerX
 #/vis/open OGL
 /vis/scene/create
@@ -48,5 +48,5 @@
 
 /tracking/verbose 0
 
-/run/beamOn 20000
-#/run/beamOn 1
+#/run/beamOn 8000
+/run/beamOn 1

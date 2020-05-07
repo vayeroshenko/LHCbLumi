@@ -128,12 +128,12 @@ const G4double window_thickness = 1.2 *mm;
 //const G4double window_thickness = 12 *mm;
 
 //const G4double pmt_window_pos_z = - 2070.*mm;
-//const G4double pmt_window_pos_z = - 1670.*mm;
-const G4double pmt_window_pos_z = - 1270.*mm;
+const G4double pmt_window_pos_z = - 1670.*mm;
+//const G4double pmt_window_pos_z = - 1270.*mm;
 
 //const G4double pmt_center_rad = 218.*mm;
-//const G4double pmt_center_rad = 176.*mm;
-const G4double pmt_center_rad = 134.*mm;
+const G4double pmt_center_rad = 176.*mm;
+//const G4double pmt_center_rad = 134.*mm;
 
 const G4double pmt_detector_thickness = 0.1 *mm;
 const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;

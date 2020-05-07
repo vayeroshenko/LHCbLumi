@@ -41,6 +41,13 @@
 #include "L_VolumeStructures.h"
 #include "L_EventAction.h"
 
+
+#include "G4TessellatedSolid.hh"
+#include "CADMesh.hh"
+
+#include "G4GDMLParser.hh"
+
+
 class L_DetectorConstruction: public G4VUserDetectorConstruction {
 public:
     L_DetectorConstruction();
@@ -87,6 +94,7 @@ private:
     G4Material *SiO2;
     G4Material *Copper;
     G4Material *Beryllium;
+    G4Material *Aluminum;
 
     G4Material *Air;
 
