@@ -83,7 +83,11 @@ public:
 
     G4LogicalVolume *worldLogical;
 
+    G4String gdml_filename = "SCv8.gdml";
+
     inline void SetEventAction(L_EventAction* evAct){ _eventAction = evAct; };
+
+
 
 private:
     G4Material *worldMaterial;
@@ -98,8 +102,10 @@ private:
 
     G4Material *Air;
 
+
     L_EventAction *_eventAction;
 
 
+    G4GDMLParser* parser;
 
 };
