@@ -5,7 +5,7 @@
 #include "TROOT.h"
 #include "TStyle.h"
 
-void ana(int flag){
+void pmt_ana(int flag){
 	gROOT->Reset();
 
 	TFile* f_al = new TFile("histos.root");
