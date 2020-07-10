@@ -121,11 +121,11 @@ const G4double outerSideOut = innerSideOut;
 
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
-const G4int pmt_n_channels = 24;
-const G4double IPangle = 6. *deg;
+const G4int pmt_n_channels = 1;
+const G4double IPangle = 0. *deg;
 
 const G4double window_radius = 5. *mm;
-const G4double window_thickness = 1.2 *mm;
+const G4double window_thickness = 0.5 *mm;
 //const G4double window_thickness = 11.2 *mm;
 
 //const G4double pmt_window_pos_z = - 2070.*mm;
@@ -137,10 +137,10 @@ const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 100 * mm;
 //const G4double pmt_center_rad = 176.*mm;
 //const G4double pmt_center_rad = 134.*mm;
 
-const G4double bar_window_gap = 0.1 *mm;
+const G4double bar_window_gap = 0. *mm;
 const G4double pmt_detector_thickness = 0.1 *mm;
 
-const G4double tablet_thickness = 5 *mm;
+const G4double tablet_thickness = 0.5 *mm;
 
 
 const G4double bar_length = 60 *mm;
