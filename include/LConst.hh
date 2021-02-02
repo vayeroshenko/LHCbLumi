@@ -121,17 +121,17 @@ const G4double outerSideOut = innerSideOut;
 
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
-const G4int pmt_n_channels = 24;
-const G4double IPangle = 4.7 *deg;
+const G4int pmt_n_channels = 1;
+const G4double IPangle = 0 *deg;
 
 const G4double window_radius = 5. *mm;
-const G4double window_thickness = 1.2 *mm;
-//const G4double window_thickness = 11.2 *mm;
+//const G4double window_thickness = 1.2 *mm;
+const G4double window_thickness = 6.2 *mm;
 
 //const G4double pmt_window_pos_z = - 2070.*mm;
-const G4double pmt_window_pos_z = - 1670.*mm;
+const G4double pmt_window_pos_z = - 100.*mm;
 //const G4double pmt_window_pos_z = - 1270.*mm;
-const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 150 * mm;
+const G4double pmt_window_pos_z_1 = +1000*mm;
 
 //const G4double pmt_center_rad = 218.*mm;
 //const G4double pmt_center_rad = 176.*mm;
@@ -139,7 +139,7 @@ const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 150 * mm;
 
 const G4double pmt_detector_thickness = 0.1 *mm;
 
-const G4double tablet_thickness = 5 *mm;
+const G4double tablet_thickness = 0 *mm;
 
 const G4double pmt_center_rad = pmt_window_pos_z * tan(IPangle);
 const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
