@@ -459,7 +459,7 @@ void L_DetectorConstruction::DefineOpticalBorders()
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
-    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
         new G4LogicalSkinSurface("DetectorAbsSurface",
                                  LDetectorOut[j], OpVolumeKillSurface);
         new G4LogicalSkinSurface("sectorSurface",

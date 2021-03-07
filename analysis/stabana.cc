@@ -52,7 +52,7 @@ Bool_t isFired(Int_t nPhot){
 
 
 
-	Double_t dice = rnd->Uniform() * 100.;
+	// Double_t dice = rnd->Uniform() * 100.;
 
 	// Double_t dice = 43;
 
@@ -185,7 +185,7 @@ void getHist_AND(TString filename, TH1D* h1Hnum)
 
 	}
 	
-	file->Close();
+	// file->Close();
 	
 }
 
@@ -236,7 +236,7 @@ void getHist_OR(TString filename, TH1D* h1Hnum)
 
 	}
 	
-	file->Close();
+	// file->Close();
 	
 }
 
@@ -297,7 +297,7 @@ void getHist_FIRST(TString filename, TH1D* h1Hnum)
 
 	}
 	
-	file->Close();
+	// file->Close();
 	
 }
 
@@ -319,7 +319,7 @@ int main(int argc, char** argv){
 		NREBIN = atoi(argv[3]);
 	}
 
-	// if (argc != 0) {
+	// if (argc == 1) {
 	// cout<<" PLUME simulation data analysis SW: "<<endl
 	// 	<<"       [1] - input root file name               (default: \"" << filename << "\")   "<<endl
 	// 	<<"       [2] - max number of photons in spectra   (default:     500     )   "<<endl
@@ -333,7 +333,6 @@ int main(int argc, char** argv){
 	TH1D *array[9];
 	TH2D *array2[2];
 	
-	TFile *out = new TFile("histos.root","RECREATE");
 
 
 
@@ -386,6 +385,7 @@ int main(int argc, char** argv){
 	cout << "First: \t" << array[2]->GetMean() << " \t+- \t" << array[2]->GetMeanError() << std::endl;
 	
 
+	TFile *out = new TFile("histos.root","RECREATE");
 	out->cd();
 
 	for (auto hist : array){
