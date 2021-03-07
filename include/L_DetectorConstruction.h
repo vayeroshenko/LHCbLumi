@@ -57,11 +57,13 @@ public:
     L_SensitiveDetector *LSD;
 
 
+
     G4LogicalVolume *L1PlaneLogInner;
     G4LogicalVolume *L2PlaneLogInner;
     G4LogicalVolume *L1PlaneLogOuter;
     G4LogicalVolume *L2PlaneLogOuter;
 
+    Assembly pmt_assembly[48];
 //    PMT_window pmt_window;
 //    PMT_detector pmt_detector;
 
@@ -82,6 +84,7 @@ private:
     G4Material *SiO2;
     G4Material *Copper;
     G4Material *Beryllium;
+    G4Material *Aluminum;
 
     G4Material *Air;
 

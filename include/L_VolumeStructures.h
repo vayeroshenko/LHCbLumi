@@ -13,6 +13,7 @@
 #include "G4ThreeVector.hh"
 #include "G4Tubs.hh"
 #include "G4AssemblyVolume.hh"
+#include "G4VSensitiveDetector.hh"
 
 #include "TMath.h"
 
@@ -78,6 +79,23 @@ struct PMT_tablet: VolumeStruct {
     }
 };
 
+struct PMT_body: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_body():
+        radius(LConst::window_radius),
+        thickness(LConst::pmt_body_thickness)
+    {
+        solid = new G4Tubs(
+                    "bodyOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
+};
+
 struct PMT_detector: VolumeStruct {
     const G4double radius;
     const G4double thickness;
@@ -102,17 +120,22 @@ struct Assembly {
     PMT_detector    *detector;
     PMT_window      *window;
     PMT_tablet      *tablet;
+    PMT_body        *body;
     G4double angle;
     G4double pos_z;
     G4double phi;
 
     G4double pmt_center_rad;
     G4double pmt_detector_rad;
+    G4double pmt_body_rad;
+
+    G4VSensitiveDetector* sensitive;
 
     Assembly() {
-        detector =   new PMT_detector;
+        detector = new PMT_detector;
         window =   new PMT_window;
         tablet =   new PMT_tablet;
+        body =     new PMT_body;
     }
 //    Assembly() {
 //        detector    = det_glob;
@@ -136,8 +159,11 @@ struct Assembly {
         window->ConstructLogical();
         tablet->ConstructLogical();
 
+        window->logical->SetSensitiveDetector(sensitive);
+
         pmt_center_rad = pos_z * tan(angle);
         pmt_detector_rad = pmt_center_rad + window->thickness / 2. + detector->thickness / 2.;
+        pmt_body_rad = pmt_center_rad + window->thickness / 2. + detector->thickness + 5*mm;
 
 
         G4RotationMatrix RTilt = G4RotationMatrix();
@@ -179,6 +205,33 @@ struct Assembly {
         Ta->setX((pmt_detector_rad) * TMath::Cos(phi));
         Ta->setY(pos_z);
         Ta->setZ((pmt_detector_rad) * TMath::Sin(phi));
+
+
+        *Ta -= G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
+
+        *Ta += G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ra = *Ra * RTilt;
+        Tr = G4Transform3D(*Ra,*Ta);
+
+        assembly->AddPlacedVolume(detector->logical, Tr);
+
+        /////////// PMT body ///////
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateY(-phi + 90.*deg);
+
+        Ta->setX((pmt_body_rad) * TMath::Cos(phi));
+        Ta->setY(pos_z);
+        Ta->setZ((pmt_body_rad) * TMath::Sin(phi));
 
 
         *Ta -= G4ThreeVector( pmt_center_rad * TMath::Cos(phi),

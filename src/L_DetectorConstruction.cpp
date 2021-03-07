@@ -66,6 +66,7 @@ void L_DetectorConstruction::DefineMateials() {
 
     Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
+    Aluminum = man->FindOrBuildMaterial("G4_Al");
 
     BPMaterial = Copper;
     //    BPMaterial = Beryllium;
@@ -242,12 +243,14 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     G4String name;
 
 
-    Assembly pmt_assembly[48];
-//    pmt_assembly[0].SetIdZThetaPhi(
-//                0,
-//                LConst::pmt_window_pos_z,
-//                LConst::IPangle_1,
-//                0);
+
+    for (G4int j = 0; j < 48; ++j){
+        pmt_assembly[j].window->material = SiO2;
+        pmt_assembly[j].detector->material = SiO2;
+        pmt_assembly[j].tablet->material = SiO2;
+        pmt_assembly[j].body->material = Aluminum;
+    }
+
 
     G4int id = 0;
 
@@ -358,6 +361,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
 
     for (G4int j = 0; j < 48; ++j){
+        pmt_assembly[j].sensitive = LSD;
         pmt_assembly[j].Place(assembly);
     }
 
@@ -416,12 +420,12 @@ void L_DetectorConstruction::DefineOpticalBorders()
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
-//    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
-//        new G4LogicalSkinSurface("DetectorAbsSurface",
-//                                 LDetectorOut[j], OpVolumeKillSurface);
-//        new G4LogicalSkinSurface("sectorSurface",
-//                                 LSectorOut[j], quartzSurface);
-//    }
+    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+        new G4LogicalSkinSurface("DetectorAbsSurface",
+                                 pmt_assembly[j].detector->logical, OpVolumeKillSurface);
+        new G4LogicalSkinSurface("sectorSurface",
+                                 pmt_assembly[j].window->logical, quartzSurface);
+    }
 
 
 
@@ -441,7 +445,8 @@ void L_DetectorConstruction::SetVisAttributes()
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
-//    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
-//        LSectorOut[j]->SetVisAttributes(sectorVisAtt);
-//    }
+    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+        pmt_assembly[j].window->logical->SetVisAttributes(sectorVisAtt);
+    }
+
 }
