@@ -62,13 +62,8 @@ public:
     G4LogicalVolume *L1PlaneLogOuter;
     G4LogicalVolume *L2PlaneLogOuter;
 
-    TrapezeSectorStructIn sectorIn;
-    TrapezeSectorStructOut sectorOut;
-    TrapezeAbsStructIn absorberIn;
-    TrapezeAbsStructOut absorberOut;
-
-    PMT_window pmt_window;
-    PMT_detector pmt_detector;
+//    PMT_window pmt_window;
+//    PMT_detector pmt_detector;
 
     G4LogicalVolume *LSectorOut[LConst::pmt_n_channels*2];
 
