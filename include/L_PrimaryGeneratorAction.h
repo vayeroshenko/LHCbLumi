@@ -34,6 +34,7 @@
 
 #include "Randomize.hh"
 
+#include <iostream>
 
 //class G4Hep
 class G4HEPEvtInterface;
@@ -49,30 +50,24 @@ public:
     void GeneratePrimaries(G4Event* anEvent);
 
 private:
-    bool GetEvent(Pythia8::Event event);
+    bool GetEvent();
 
 private:
     G4ParticleGun *_particleGun = new G4ParticleGun();
 
-//    TChain *tree;
-
     // Data to be transported from pythia to gun
-    G4int nEvents;
-    G4int nParticles;
-    G4int pdgID[20000];
-    G4float X[20000];
-    G4float Y[20000];
-    G4float Z[20000];
-    G4float pX[20000];
-    G4float pY[20000];
-    G4float pZ[20000];
-    G4float T[20000];
-
-    G4int iEv;
+    G4int nEvents = 0;
+    G4int nParticles = 0;
+    G4int pdgID[20000] = {0};
+    G4float X[20000] = {0};
+    G4float Y[20000] = {0};
+    G4float Z[20000] = {0};
+    G4float pX[20000] = {0};
+    G4float pY[20000] = {0};
+    G4float pZ[20000] = {0};
+    G4float T[20000] = {0};
 
     // Pythia generator declaration
     Pythia8::Pythia pythia;
-    // Pythia event declaration
-    Pythia8::Event& PythiaEvent = pythia.event;
 };
 
