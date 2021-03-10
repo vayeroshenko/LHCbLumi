@@ -4,7 +4,7 @@
 #include <TRandom3.h>
 #include <iostream>
 
-#define NSEC 100
+#define NSEC 24
 #define MEAN 8
 
 
