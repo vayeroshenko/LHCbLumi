@@ -1,0 +1,13 @@
+executable              = runCondor.sh
+arguments               = "$(Process)"
+initialdir              = ./
+transfer_input_files    = vis_file.mac,PythiaSettings.cmnd
+should_transfer_files   = IF_NEEDED
+when_to_transfer_output = ON_EXIT			
+error                   = logs/errors$(Process).txt
+log                     = logs/log$(Process).log
+request_memory          = 1 GB
++JobFlavour = "workday"
+# getenv = True
+
+queue 500
