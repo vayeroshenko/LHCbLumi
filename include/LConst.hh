@@ -133,6 +133,7 @@ const G4double IPangle_5 = 9.4 *deg;
 
 const G4double window_radius = 5. *mm;
 const G4double window_thickness = 1.2 *mm + 5.*mm;
+//const G4double window_thickness = 1.2 *mm;
 
 const G4double pmt_body_thickness = 10*mm;
 

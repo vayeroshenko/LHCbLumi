@@ -81,7 +81,7 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 bool L_PrimaryGeneratorAction::GetEvent() {
 
     // If current event is inapropriate trying another time
-    // (never actually tested how often does it happens)
+    // (never actually tested how often does it happen
     if (!pythia.next()) GetEvent();
 
     G4int particleID = 0;

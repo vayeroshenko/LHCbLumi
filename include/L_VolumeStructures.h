@@ -158,6 +158,7 @@ struct Assembly {
         detector->ConstructLogical();
         window->ConstructLogical();
         tablet->ConstructLogical();
+        body->ConstructLogical();
 
         window->logical->SetSensitiveDetector(sensitive);
 
@@ -247,7 +248,7 @@ struct Assembly {
         *Ra = *Ra * RTilt;
         Tr = G4Transform3D(*Ra,*Ta);
 
-        assembly->AddPlacedVolume(detector->logical, Tr);
+        assembly->AddPlacedVolume(body->logical, Tr);
 
     }
 };
