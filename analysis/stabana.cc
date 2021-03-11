@@ -161,14 +161,10 @@ void getHist_OR(TString filename, TH1D* h1Hnum, Int_t sec_start, Int_t sec_end)
 	for (Long_t j = 0; j <  nEv1; ++j) {
 		theChain1->GetEntry(j);
 
-
 		// Bool_t isChecked[nSec] = {false};
 		
-
 		const Int_t nRebin = NREBIN;
 		// const Int_t nRebin = 100;
-
-
 
 		Double_t numOfHits = 0;			
 

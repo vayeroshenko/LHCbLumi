@@ -146,7 +146,7 @@ struct Assembly {
         angle = Theta;
         phi = Phi;
         pos_z = Z;
-        ID = Id;
+        ID = Id+1;
 
         detector->name = "detector out " + std::to_string(ID);
         window->name = "sector out " + std::to_string(ID);
