@@ -74,6 +74,53 @@ Bool_t isFired(Int_t nPhot){
 }
 
 
+void getHistSpectra(TString filename, Int_t flag, TH1D* htot, Int_t sec_start, Int_t sec_end)
+{
+
+	cout << filename << endl;
+	// TChain *theChain1 = new TChain("T");
+
+	TFile *file = new TFile(filename);
+	TTree *theChain1 = (TTree*)file->Get("T");
+	// if (!theChain1) { std::
+	// theChain1->Add(filename);
+
+
+
+	// Int_t nPart1;
+	Int_t *nPhot = new Int_t[nSec*2];
+
+
+	theChain1->SetBranchAddress("nPhot", nPhot);
+
+	// TH1D *h1nColl = new TH1D("nColl1", "nColl1", 10, 0, 10);
+
+	Long_t nEv1 = theChain1->GetEntries();
+
+	
+	////////// Loop 1 //////////
+	for (Long_t j = 0; j <  nEv1; ++j) {
+		theChain1->GetEntry(j);
+
+
+		for (Int_t i = sec_start; i < sec_end; ++i){
+			if (flag == 0) {
+				htot->Fill(nPhot[i]);
+				htot->Fill(nPhot[i+nSec]);
+			}
+			if (flag == 1) {
+				if (isFired(nPhot[i]) && isFired(nPhot[i+nSec])) {
+					htot->Fill(nPhot[i]);
+					htot->Fill(nPhot[i+nSec]);
+				}
+			}
+		}
+
+	}
+	
+	file->Close();
+	
+}
 
 
 void getHist_AND(TString filename, TH1D* h1Hnum, Int_t sec_start, Int_t sec_end)
@@ -102,8 +149,8 @@ void getHist_AND(TString filename, TH1D* h1Hnum, Int_t sec_start, Int_t sec_end)
 	std::cout << "AND " << sec_start << " - " << sec_end << std::endl; 
 	
 	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
+	for (Long_t i_ev = 0; i_ev <  nEv1; ++i_ev) {
+		theChain1->GetEntry(i_ev);
 
 
 		// Bool_t isChecked[nSec] = {false};
@@ -158,8 +205,8 @@ void getHist_OR(TString filename, TH1D* h1Hnum, Int_t sec_start, Int_t sec_end)
 	std::cout << "OR " << sec_start << " - " << sec_end << std::endl; 
 	
 	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
+	for (Long_t i_ev = 0; i_ev <  nEv1; ++i_ev) {
+		theChain1->GetEntry(i_ev);
 
 		// Bool_t isChecked[nSec] = {false};
 		
@@ -213,8 +260,8 @@ void getHist_FIRST(TString filename, TH1D* h1Hnum, Int_t sec_start, Int_t sec_en
 	std::cout << "FIRST " << sec_start << " - " << sec_end << std::endl; 
 	
 	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
+	for (Long_t i_ev = 0; i_ev <  nEv1; ++i_ev) {
+		theChain1->GetEntry(i_ev);
 
 
 		// Bool_t isChecked[nSec] = {false};
@@ -278,8 +325,11 @@ int main(int argc, char** argv){
 
 	TFile *out = new TFile("histos.root","RECREATE");
 	TH1D *array[15];
+	TH1D *array_spectrum[10];
 	
- 
+ // getHistSpectra(TString filename, Int_t flag, TH1D* htot);
+
+
 
 	Int_t configuration[5] = {4,8,4,4,4};
 	Int_t i_first = 0;
@@ -287,12 +337,22 @@ int main(int argc, char** argv){
 
 	for (Int_t i_ring = 0; i_ring < 5; ++i_ring){
 		i_end += configuration[i_ring];
+
 		array[3*i_ring+0] = new TH1D(TString("HitNumber_AND_"+std::to_string(i_ring+1)),
 			TString("HitNumber_AND_"+std::to_string(i_ring+1)), nSec, 0, nSec);
 		array[3*i_ring+1] = new TH1D(TString("HitNumber_OR_"+std::to_string(i_ring+1)),
 			TString("HitNumber_OR_"+std::to_string(i_ring+1)), nSec, 0, nSec);
 		array[3*i_ring+2] = new TH1D(TString("HitNumber_FIRST_"+std::to_string(i_ring+1)),
 			TString("HitNumber_FIRST_"+std::to_string(i_ring+1)), nSec, 0, nSec);
+
+		array_spectrum[2*i_ring+0] = new TH1D(TString("nPhot_"+std::to_string(i_ring+1)),
+			TString("nPhot_"+std::to_string(i_ring+1)), 1000, 1, 1001);
+		array_spectrum[2*i_ring+1] = new TH1D(TString("nPhot_AND_"+std::to_string(i_ring+1)),
+			TString("nPhot_AND_"+std::to_string(i_ring+1)), 1000, 1, 1001);
+		
+		getHistSpectra(filename, 0, array_spectrum[2*i_ring+0], i_first, i_end);
+		getHistSpectra(filename, 1, array_spectrum[2*i_ring+1], i_first, i_end);
+
 
 		getHist_AND(filename, array[3*i_ring+0], i_first, i_end);
 		getHist_OR(filename, array[3*i_ring+1], i_first, i_end);
@@ -311,6 +371,11 @@ int main(int argc, char** argv){
 	
 
 	out->cd();
+
+	for (auto hist : array_spectrum){
+		hist->Write();
+	} 
+
 
 	for (auto hist : array){
 		hist->Write();

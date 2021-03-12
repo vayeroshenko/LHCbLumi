@@ -10,9 +10,9 @@ void pmt_ana(int flag){
 
 	TFile* f_al = new TFile("histos.root");
 
-	TH1D* h_and = (TH1D*)f_al->Get("HitNumber_AND");
-	TH1D* h_or = (TH1D*)f_al->Get("HitNumber_OR");
-	TH1D* h_first = (TH1D*)f_al->Get("HitNumber_FIRST");
+	TH1D* h_and = (TH1D*)f_al->Get("HitNumber_AND_2");
+	TH1D* h_or = (TH1D*)f_al->Get("HitNumber_OR_2");
+	TH1D* h_first = (TH1D*)f_al->Get("HitNumber_FIRST_2");
 
 	h_and->SetLineColor(kBlue);
 	h_or->SetLineColor(kRed);
