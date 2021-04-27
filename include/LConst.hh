@@ -16,6 +16,18 @@
 
 namespace LConst{
 
+
+///////////////////////////////////////////// Beam ///////////////////////////////////////////////////
+
+const G4double beam1Energy = 6500 * GeV;
+const G4double beam2Energy = 6500 * GeV;
+
+const G4double beam1AngleVertical = 0.200 * mrad;
+const G4double beam1AngleHorizontal = 0.420 * mrad;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // World size
 const G4double worldSizeX = 1*m;
 const G4double worldSizeY = 1*m;
@@ -122,16 +134,31 @@ const G4double outerSideOut = innerSideOut;
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
 const G4int pmt_n_channels = 24;
-const G4double IPangle = 6. *deg;
+
+const G4double IPangle = 4.6 *deg;
+
+const G4double IPangle_1 = 5.4 *deg;
+const G4double IPangle_2 = 6.4 *deg;
+const G4double IPangle_3 = 7.4 *deg;
+const G4double IPangle_4 = 8.4 *deg;
+const G4double IPangle_5 = 9.4 *deg;
 
 const G4double window_radius = 5. *mm;
-const G4double window_thickness = 1.2 *mm;
+const G4double window_thickness = 1.2 *mm + 5.*mm;
+//const G4double window_thickness = 1.2 *mm;
+
+const G4double pmt_body_thickness = 10*mm;
+
 //const G4double window_thickness = 11.2 *mm;
 
-//const G4double pmt_window_pos_z = - 2070.*mm;
-const G4double pmt_window_pos_z = - 1670.*mm;
-//const G4double pmt_window_pos_z = - 1270.*mm;
-const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 100 * mm;
+////const G4double pmt_window_pos_z = - 2070.*mm;
+//const G4double pmt_window_pos_z = - 1670.*mm;
+////const G4double pmt_window_pos_z = - 1270.*mm;
+//const G4double pmt_window_pos_z_1 = pmt_window_pos_z - 150 * mm;
+
+const G4double pmt_window_pos_z = -1680 *mm;
+const G4double pmt_window_pos_z_1 = -1900 *mm;
+
 
 //const G4double pmt_center_rad = 218.*mm;
 //const G4double pmt_center_rad = 176.*mm;
@@ -148,8 +175,6 @@ const G4double pmt_center_rad_1 = pmt_window_pos_z_1 * tan(IPangle);
 const G4double pmt_detector_rad_1 = pmt_center_rad_1 + window_thickness / 2. + pmt_detector_thickness / 2.;
 
 
-
-//const G4double pmt_angle = 180.*deg + IPangle - saturatedAngle;
 const G4double pmt_angle = 90.*deg + IPangle;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

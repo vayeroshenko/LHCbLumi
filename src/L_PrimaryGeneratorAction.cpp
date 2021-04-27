@@ -9,13 +9,12 @@
 
 
 L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
-    iEv = 0;
-
 
     //    G4cout << "Start creating primary generator" << G4endl;
 
     // Pythia seed is generated from system time
     Int_t pythiaSeed = time(NULL)%10000000;
+
 
     // Getting number of event to be run in order to give Pythia
     // an information how many event to generate
@@ -28,6 +27,9 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.readString("Random:seed = " + std::to_string(pythiaSeed));
 
     // Starting up the pythia instance
+
+    initBeams();
+
     pythia.init();
 
 
@@ -38,30 +40,48 @@ L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 
 }
 
+void L_PrimaryGeneratorAction::initBeams() {
+    beam1p = G4ThreeVector(0.,0.,1.);
+    beam2p = G4ThreeVector(0.,0.,-1.);
+
+    beam1p.rotateX(-LConst::beam1AngleHorizontal);
+    beam2p.rotateX(LConst::beam1AngleHorizontal);
+
+    beam1p.rotateY(-LConst::beam1AngleVertical);
+    beam2p.rotateY(LConst::beam1AngleVertical);
+
+    beam1p *= LConst::beam1Energy;
+    beam2p *= LConst::beam2Energy;
+
+    pythia.readString("Beams:pxA = " + std::to_string(beam1p.x() / GeV));
+    pythia.readString("Beams:pyA = " + std::to_string(beam1p.y() / GeV));
+    pythia.readString("Beams:pzA = " + std::to_string(beam1p.z() / GeV));
+
+    pythia.readString("Beams:pxB = " + std::to_string(beam2p.x() / GeV));
+    pythia.readString("Beams:pyB = " + std::to_string(beam2p.y() / GeV));
+    pythia.readString("Beams:pzB = " + std::to_string(beam2p.z() / GeV));
+}
+
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
-
-    //    G4cout << "Generate primaries" << G4endl;
-
-    //    G4LogicalVolume* worldLV
-    //            = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
-
-    // If current event is inapropriate trying another time
-    if (!pythia.next()) GeneratePrimaries(anEvent);
-
     // filling up class variables with event data from pythia
-    GetEvent(PythiaEvent);
+    GetEvent();
+
+    G4ParticleTable* particleTable;
+    G4ParticleDefinition* particle;
+    G4ThreeVector dir;
+    G4double m, momentum, Ekin;
 
     // generating all primaries from event
     for (G4int pId = 0; pId < nParticles; ++pId){
-        G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-        G4ParticleDefinition* particle = particleTable->FindParticle(pdgID[pId]);
-        G4double m = particle->GetPDGMass();
+        particleTable = G4ParticleTable::GetParticleTable();
+        particle = particleTable->FindParticle(pdgID[pId]);
+        m = particle->GetPDGMass();
 
-        G4ThreeVector dir = G4ThreeVector(pX[pId],pY[pId],pZ[pId]);
+        dir = G4ThreeVector(pX[pId],pY[pId],pZ[pId]);
 
-        G4double momentum = TMath::Sqrt(pX[pId]*pX[pId] + pY[pId]*pY[pId] + pZ[pId]*pZ[pId]);
-        G4double Ekin = (TMath::Sqrt(momentum*momentum + m*m) - m);
+        momentum = TMath::Sqrt(pX[pId]*pX[pId] + pY[pId]*pY[pId] + pZ[pId]*pZ[pId]);
+        Ekin = (TMath::Sqrt(momentum*momentum + m*m) - m);
 
         _particleGun->SetParticleDefinition(particle);
         _particleGun->SetParticleMomentumDirection(dir);
@@ -70,13 +90,10 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
         _particleGun->SetParticlePosition(G4ThreeVector(X[pId], Y[pId], Z[pId]));
 
-
         // Cut off low-momentum particles (< 20 MeV)
         if (momentum < 20.) continue; //////////////////////// Momentum cut ////////////////////////////
 
         _particleGun->GeneratePrimaryVertex(anEvent);
-
-        //			G4cout << "Particle name = " << particle->GetParticleName() << G4endl;
     }
 
 
@@ -86,32 +103,44 @@ void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 // Method for getting an information from pythia into the class variables to pass
 // into the particle gun
-bool L_PrimaryGeneratorAction::GetEvent(Pythia8::Event event) {
+bool L_PrimaryGeneratorAction::GetEvent() {
+
+    // If current event is inapropriate trying another time
+    // (never actually tested how often does it happen
+    if (!pythia.next()) GetEvent();
+
     G4int particleID = 0;
+    G4double vertexX, vertexY, vertexZ;
 
     // in terms of pythia:
     // 0        - total values
     // 1 and 2  - initial protons colliding
     // so starting from 4th (id = 3) particle
-    for (G4int i = 3; i < event.size(); ++i){
-        if (!event[i].isFinal()) continue;
+    for (G4int i = 3; i < pythia.event.size(); ++i){
+        if (!pythia.event[i].isFinal()) continue;
 
 
-        G4double vertexX = G4RandGauss::shoot(LConst::VertexX, LConst::VertexSigmaX);
-        G4double vertexY = G4RandGauss::shoot(LConst::VertexY, LConst::VertexSigmaY);
-        G4double vertexZ = G4RandGauss::shoot(LConst::VertexZ, LConst::VertexSigmaZ);
+        vertexX = G4RandGauss::shoot(LConst::VertexX, LConst::VertexSigmaX);
+        vertexY = G4RandGauss::shoot(LConst::VertexY, LConst::VertexSigmaY);
+        vertexZ = G4RandGauss::shoot(LConst::VertexZ, LConst::VertexSigmaZ);
 
-        pdgID[particleID] = event[i].id();
+        pdgID[particleID] = pythia.event[i].id();
 
-        X[particleID] = event[i].xProd()*mm + vertexX;
-        Y[particleID] = event[i].yProd()*mm + vertexY;
-        Z[particleID] = event[i].zProd()*mm + vertexZ;
+        X[particleID] = pythia.event[i].xProd()*mm + vertexX;
+        Y[particleID] = pythia.event[i].yProd()*mm + vertexY;
+        Z[particleID] = pythia.event[i].zProd()*mm + vertexZ;
 
-        pX[particleID] = event[i].px()*GeV;
-        pY[particleID] = event[i].py()*GeV;
-        pZ[particleID] = event[i].pz()*GeV;
-        T[particleID] = event[i].tProd()*mm / c_light;
+        pX[particleID] = pythia.event[i].px()*GeV;
+        pY[particleID] = pythia.event[i].py()*GeV;
+        pZ[particleID] = pythia.event[i].pz()*GeV;
+        T[particleID] = pythia.event[i].tProd()*mm / c_light;
         particleID ++;
     }
+
+
+
     nParticles = particleID;
+
+    return true;
 }
+

@@ -2,12 +2,17 @@
 #include "TH2D.h"
 #include "TChain.h"
 #include <iostream>
+#include <string>
 #include "TApplication.h"
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TRandom3.h"
 #include <vector>
+
+#include "histo.h"
+
+using std::string;
 
 #define nSec 24
 
@@ -20,303 +25,285 @@ using namespace std;
 
 #define NHIST 1
 
-TRandom3 *rnd = new TRandom3(0);
 
-Int_t NREBIN = nSec;
-Int_t NMAX = 500;
+class stabana : public histogramming {
+
+public:
+    stabana() {
+        file = new TFile(filename);
+        theChain1 = (TTree *) file->Get("T");
+        nEv1 = theChain1->GetEntries();
+        theChain1->SetBranchAddress("nPhot", nPhot);
+    }
+    ~stabana() = default;
+
+    TRandom3 *rnd = new TRandom3(0);
+
+    Int_t NMAX = 500;
+
+    Double_t eff[100] = {0.06, 0.15, 0.3, 0.4, 0.6, 0.6, 0.9, 1.2, 1.4, \
+    1.8, 1.9, 2.2, 2.6, 2.9, 3.4, 3.575, 3.95, 4.5, 4.825, 5.7, 5.9, 6.35, \
+    7, 7.4, 8.1, 8.4, 9.05, 10, 10.9, 11.5, 12.1, 12.75, 14, 15, 16.4, 17, \
+    18.3, 20.2, 22, 24, 25.6, 26.875, 29.75, 33, 35.5, 37.2, 39.175, 42.85, \
+    46, 50, 52, 53.625, 57.25, 60, 64.3, 66.2, 67.625, 70.75, 73.8, 75.6, 76.5, \
+    78.35, 80.1, 82, 83.6, 84.2, 84.9, 86.3, 87.3, 88.5, 89.1, 89.35, 90.2, 91, \
+    91.9, 92.3, 92.5, 93.1, 94, 94.2, 94.6, 94.875, 95.45, 96, 96.6, 96.8, 97, \
+    97.4, 97.7, 98.2, 98.35, 98.5, 98.8, 99.1, 99.4, 99.5, 99.55, 99.7, 99.9, 100};
+
+    Int_t configuration[5] = {4,8,4,4,4};
+    string Names[5] = {"Right", "Top", "Left", "Bottom", "Diagonal"};
+
+	TString filename = "file8.root";
+
+    TFile *file;
+    TTree *theChain1;
+        // if (!theChain1) { std::
+        // theChain1->Add(filename);
+
+
+        // Int_t nPart1;
+    Int_t *nPhot = new Int_t[nSec * 2];
+
+    Long_t nEv1;
 
+	void doTheJob(){
+
+        TFile *out = new TFile("histos.root","RECREATE");
 
+     // getHistSpectra(TString filename, Int_t flag, TH1D* htot);
+
+        Int_t i_first = 0;
+        Int_t i_end = 0;
 
-Double_t eff[100] = {0.06, 0.15, 0.3, 0.4, 0.6, 0.6, 0.9, 1.2, 1.4, \
-	1.8, 1.9, 2.2, 2.6, 2.9, 3.4, 3.575, 3.95, 4.5, 4.825, 5.7, 5.9, 6.35, \
-	7, 7.4, 8.1, 8.4, 9.05, 10, 10.9, 11.5, 12.1, 12.75, 14, 15, 16.4, 17, \
-	18.3, 20.2, 22, 24, 25.6, 26.875, 29.75, 33, 35.5, 37.2, 39.175, 42.85, \
-	46, 50, 52, 53.625, 57.25, 60, 64.3, 66.2, 67.625, 70.75, 73.8, 75.6, 76.5, \
-	78.35, 80.1, 82, 83.6, 84.2, 84.9, 86.3, 87.3, 88.5, 89.1, 89.35, 90.2, 91, \
-	91.9, 92.3, 92.5, 93.1, 94, 94.2, 94.6, 94.875, 95.45, 96, 96.6, 96.8, 97, \
-	97.4, 97.7, 98.2, 98.35, 98.5, 98.8, 99.1, 99.4, 99.5, 99.55, 99.7, 99.9, 100 };
+        for (Int_t i_ring = 0; i_ring < 5; ++i_ring){
+            i_end += configuration[i_ring];
 
+            book_1d("HitNumber_AND_"+ to_string(i_ring),
+                nSec, 0, nSec);
+            book_1d("HitNumber_OR_"+ to_string(i_ring),
+                nSec, 0, nSec);
+            book_1d("HitNumber_FIRST_"+ to_string(i_ring),
+                nSec, 0, nSec);
 
+            book_1d("nPhot_"+ to_string(i_ring),
+                1000, 1, 1001);
+            book_1d("nPhot_AND_"+ to_string(i_ring),
+                1000, 1, 1001);
 
+            for (Int_t i_side = 0; i_side < 4; ++i_side){
+                book_1d("HitNumber_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+                book_1d("HitNumber_OR_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+                book_1d("HitNumber_FIRST_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+                if (configuration[i_ring] == 4) {
+                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
+                                i_first + i_side, i_first + i_side + 1);
+                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
+                               i_first + i_side, i_first + i_side + 1);
+                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
+                                  i_first + i_side, i_first + i_side + 1);
+                } else if (configuration[i_ring] == 8){
+                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
+                                i_first + 2*i_side, i_first + 2*i_side + 1);
+                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
+                               i_first + 2*i_side, i_first + 2*i_side + 1);
+                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
+                                  i_first + 2*i_side, i_first + 2*i_side + 1);
 
-Bool_t isFired(Int_t nPhot){
+                }
+            }
 
-	// Double_t eff[20] ={	0.6, 1.8, 3.4, 5.7, 8.1, 11.5, 16.4, 24., \
-	// 					35.5, 50, 64.5, 76, 83.6, 88.5, 91.9, 94.3, \
-	// 					96.6, 98.2, 99.4, 100};
+            getHist_AND("HitNumber_AND_" + to_string(i_ring),
+                        i_first, i_end);
+            getHist_OR("HitNumber_OR_" + to_string(i_ring),
+                       i_first, i_end);
+            getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring),
+                          i_first, i_end);
 
-	// Double_t eff[40] ={	0.3, 0.6, 1., 1.8, 2.4, 3.4, 4.1, 5.7, 6.5, 8.1, 11.5, 13., \
-	// 					16.4, 19.,  24., 30.3, 35.5, 43.5, 50, 56.5, 64.5, 69.7, 76, \
-	// 					81., 83.6, 87., 88.5, 91., 91.9, 93.5, 94.3, 95.9, 96.6, 97.6, \
-	// 					98.2, 99., 99.4, 99.9, 100};
+            getHistSpectra(0, "nPhot_"+ to_string(i_ring), i_first, i_end);
+            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring), i_first, i_end);
 
 
+            i_first = i_end;
 
-	// Double_t dice = rnd->Uniform() * 100.;
+            set_line_color_1d("HitNumber_AND_" + to_string(i_ring), kBlue);
+            set_line_color_1d("HitNumber_OR_" + to_string(i_ring), kRed);
+            set_line_color_1d("HitNumber_FIRST_" + to_string(i_ring), kGreen+2);
 
-	// Double_t dice = 43;
+        }
 
-	//	if (nPhot == 0) return false;
-	//if (nPhot > 99) return true;
+        book_1d("HitNumber_AND_tot",
+            nSec, 0, nSec);
+        book_1d("HitNumber_OR_tot",
+            nSec, 0, nSec);
+        book_1d("HitNumber_FIRST_tot",
+            nSec, 0, nSec);
 
-	// if (nPhot > 100) return true;
-	// else return false;
-	    
-	
-	// if (dice < eff[nPhot-1]) return true;
-	// else return false;
+        book_1d("nPhot_tot",
+            1000, 1, 1001);
+        book_1d("nPhot_AND_tot",
+            1000, 1, 1001);
 
-	if (nPhot >= 35) return true;
-	else return false;
+        getHistSpectra(0, "nPhot_tot", 0, 24);
+        getHistSpectra(1, "nPhot_AND_tot", 0, 24);
 
-	// delete rnd;
 
-}
+        getHist_AND("HitNumber_AND_tot", 0, 24);
+        getHist_OR("HitNumber_OR_tot", 0, 24);
+        getHist_FIRST("HitNumber_FIRST_tot", 0, 24);
 
 
-void getHistSpectra(TString filename, Int_t flag, TH1D* htot, TH1D* hlayer1, TH1D* hlayer2, TH2D* hcorr)
-{
+        cout << "AND: \t" << get_mean_1d("HitNumber_AND_tot") << " \t+- \t"
+                << get_mean_error_1d("HitNumber_AND_tot") << std::endl;
+        cout << "OR: \t" << get_mean_1d("HitNumber_OR_tot") << " \t+- \t"
+                << get_mean_error_1d("HitNumber_OR_tot") << std::endl;
+        cout << "FIRST: \t" << get_mean_1d("HitNumber_FIRST_tot") << " \t+- \t"
+                << get_mean_error_1d("HitNumber_FIRST_tot") << std::endl;
 
-	cout << filename << endl;
-	// TChain *theChain1 = new TChain("T");
+        out->cd();
 
-	TFile *file = new TFile(filename);
-	TTree *theChain1 = (TTree*)file->Get("T");
-	// if (!theChain1) { std::
-	// theChain1->Add(filename);
+        for (auto hist : hists1d){
+            hist.second->Write();
+        }
 
+//        for (auto hist : hists2d){
+//            hist.second->Write();
+//        }
 
+        out->Close();
 
-	// Int_t nPart1;
-	Int_t *nPhot = new Int_t[nSec*2];
+	// delete htemp;
 
+    }
 
-	theChain1->SetBranchAddress("nPhot", nPhot);
+    Bool_t isFired(Int_t nPhot) {
 
-	// TH1D *h1nColl = new TH1D("nColl1", "nColl1", 10, 0, 10);
+        if (nPhot >= 150) return true;
+        else return false;
 
-	Long_t nEv1 = theChain1->GetEntries();
+    }
 
-	
-	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
 
+    template<class name_type>
+    void getHistSpectra(Int_t flag, name_type name, Int_t sec_start, Int_t sec_end) {
+	    ////////// Loop 1 //////////
+        for (Long_t j = 0; j < nEv1; ++j) {
+            theChain1->GetEntry(j);
 
-		for (Int_t i = 0; i < nSec; ++i){
-			if (flag == 0) {
-				htot->Fill(nPhot[i]);
-				htot->Fill(nPhot[i+nSec]);
-				hlayer1->Fill(nPhot[i]);
-				hlayer2->Fill(nPhot[i+nSec]);
-				hcorr->Fill(nPhot[i], nPhot[i+nSec]);
-			}
-			if (flag == 1) {
-				if (isFired(nPhot[i]) && isFired(nPhot[i+nSec])) {
-					htot->Fill(nPhot[i]);
-					htot->Fill(nPhot[i+nSec]);
-					hlayer1->Fill(nPhot[i]);
-					hlayer2->Fill(nPhot[i+nSec]);
-					hcorr->Fill(nPhot[i], nPhot[i+nSec]);
-				}
-			}
-		}
 
-	}
-	
-	file->Close();
-	
-}
+            for (Int_t i = sec_start; i < sec_end; ++i) {
+                if (flag == 0) {
+                    fill_1d(name, nPhot[i]);
+                    fill_1d(name, nPhot[i + nSec]);
+                }
+                if (flag == 1) {
+                    if (isFired(nPhot[i]) && isFired(nPhot[i + nSec])) {
+                        fill_1d(name, nPhot[i]);
+                        fill_1d(name, nPhot[i + nSec]);
+                    }
+                }
+            }
 
+        }
+    }
 
+    template<class name_type>
+    void getHist_AND(name_type name, Int_t sec_start, Int_t sec_end) {
 
-void getHist_AND(TString filename, TH1D* h1Hnum)
-{
+        std::cout << "AND " << sec_start << " - " << sec_end << std::endl;
 
-	cout << filename << endl;
-	// TChain *theChain1 = new TChain("T");
+        ////////// Loop 1 //////////
+        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+            theChain1->GetEntry(i_ev);
 
-	TFile *file = new TFile(filename);
-	TTree *theChain1 = (TTree*)file->Get("T");
-	// if (!theChain1) { std::
-	// theChain1->Add(filename);
+            Double_t numOfHits = 0;
+            for (Int_t j = sec_start; j < sec_end; ++j) {
+                bool fired = false;
+                if (isFired(nPhot[j]) && isFired(nPhot[nSec + j])) {
+                    fired = true;
+                    // break;
+                }
+                if (fired) {
+                    numOfHits += 1;
+                }
+            }
+            fill_1d(name, numOfHits);
 
+        }
 
-	Int_t nPart1;
-	Int_t *nPhot = new Int_t[nSec*2];
+    }
 
-	Int_t n_hodo = nSec;
+    template<class name_type>
+    void getHist_OR(name_type name, Int_t sec_start, Int_t sec_end) {
 
-	theChain1->SetBranchAddress("nPhot", nPhot);
+        std::cout << "OR " << sec_start << " - " << sec_end << std::endl;
 
-	// TH1D *h1nColl = new TH1D("nColl1", "nColl1", 10, 0, 10);
+        ////////// Loop 1 //////////
+        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+            theChain1->GetEntry(i_ev);
 
-	Long_t nEv1 = theChain1->GetEntries();
+            Double_t numOfHits = 0;
+            for (Int_t j = sec_start; j < sec_end; ++j) {
+                bool fired = false;
+                if (isFired(nPhot[j]) || isFired(nPhot[nSec + j])) {
+                    fired = true;
+                    // break;
+                }
+                if (fired) {
+                    numOfHits += 1;
+                }
+            }
+            fill_1d(name, numOfHits);
+        }
 
-	
-	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
+    }
 
+    template<class name_type>
+    void getHist_FIRST(name_type name, Int_t sec_start, Int_t sec_end) {
 
-		// Bool_t isChecked[nSec] = {false};
-		
+        std::cout << "FIRST " << sec_start << " - " << sec_end << std::endl;
 
-		const Int_t nRebin = NREBIN;
-		// const Int_t nRebin = 100;
+        ////////// Loop 1 //////////
+        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+            theChain1->GetEntry(i_ev);
 
+            Double_t numOfHits = 0;
+            for (Int_t j = sec_start; j < sec_end; ++j) {
+                bool fired = false;
+                if (isFired(nPhot[j])) {
+                    fired = true;
+                    // break;
+                }
+                if (fired) {
+                    numOfHits += 1;
+                }
+            }
+            fill_1d(name, numOfHits);
 
-		for (Int_t i = 0; i < n_hodo/nRebin; ++i){
-			Double_t numOfHits = 0;			
+        }
 
-			for (Int_t j = 0; j < nRebin; ++j){
-				bool fired = false;
-				if (isFired(nPhot[nRebin*i+j]) && isFired(nPhot[n_hodo+nRebin*i+j])) {
-					fired = true;
-					// break;
-				}
-				if (fired) {
-					numOfHits += 1;	
-				}
-			}
+    }
 
-			h1Hnum->Fill( numOfHits );	
-		}
+    template<class name_type>
+    inline void set_line_color_1d(name_type name, Int_t color) {hists1d[name]->SetLineColor(color);}
 
-	}
-	
-	// file->Close();
-	
-}
-
-void getHist_OR(TString filename, TH1D* h1Hnum)
-{
-
-	cout << filename << endl;
-	// TChain *theChain1 = new TChain("T");
-
-	TFile *file = new TFile(filename);
-	TTree *theChain1 = (TTree*)file->Get("T");
-	// if (!theChain1) { std::
-	// theChain1->Add(filename);
-
-
-	Int_t nPart1;
-	Int_t *nPhot = new Int_t[nSec*2];
-
-	Int_t n_hodo = nSec;
-
-	theChain1->SetBranchAddress("nPhot", nPhot);
-
-	Long_t nEv1 = theChain1->GetEntries();
-
-	
-	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
-
-		const Int_t nRebin = NREBIN;
-
-		for (Int_t i = 0; i < n_hodo/nRebin; ++i){
-			Double_t numOfHits = 0;			
-
-			for (Int_t j = 0; j < nRebin; ++j){
-				bool fired = false;
-				if (isFired(nPhot[nRebin*i+j]) || isFired(nPhot[n_hodo+nRebin*i+j])) {
-					fired = true;
-					// break;
-				}
-				if (fired) {
-					numOfHits += 1;	
-				}
-			}
-
-			h1Hnum->Fill( numOfHits );	
-		}
-
-	}
-	
-	// file->Close();
-	
-}
-
-void getHist_FIRST(TString filename, TH1D* h1Hnum)
-{
-
-	cout << filename << endl;
-	// TChain *theChain1 = new TChain("T");
-
-	TFile *file = new TFile(filename);
-	TTree *theChain1 = (TTree*)file->Get("T");
-	// if (!theChain1) { std::
-	// theChain1->Add(filename);
-
-
-	Double_t eff[100] = {0.06, 0.15, 0.3, 0.4, 0.6, 0.6, 0.9, 1.2, 1.4, \
-		1.8, 1.9, 2.2, 2.6, 2.9, 3.4, 3.575, 3.95, 4.5, 4.825, 5.7, 5.9, 6.35, \
-		7, 7.4, 8.1, 8.4, 9.05, 10, 10.9, 11.5, 12.1, 12.75, 14, 15, 16.4, 17, \
-		18.3, 20.2, 22, 24, 25.6, 26.875, 29.75, 33, 35.5, 37.2, 39.175, 42.85, \
-		46, 50, 52, 53.625, 57.25, 60, 64.3, 66.2, 67.625, 70.75, 73.8, 75.6, 76.5, \
-		78.35, 80.1, 82, 83.6, 84.2, 84.9, 86.3, 87.3, 88.5, 89.1, 89.35, 90.2, 91, \
-		91.9, 92.3, 92.5, 93.1, 94, 94.2, 94.6, 94.875, 95.45, 96, 96.6, 96.8, 97, \
-		97.4, 97.7, 98.2, 98.35, 98.5, 98.8, 99.1, 99.4, 99.5, 99.55, 99.7, 99.9, 100 };
-
-
-	Int_t nPart1;
-	Int_t *nPhot = new Int_t[nSec*2];
-
-	Int_t n_hodo = nSec;
-
-	theChain1->SetBranchAddress("nPhot", nPhot);
-
-	Long_t nEv1 = theChain1->GetEntries();
-
-	
-	////////// Loop 1 //////////
-	for (Long_t j = 0; j <  nEv1; ++j) {
-		theChain1->GetEntry(j);
-
-		const Int_t nRebin = NREBIN;
-
-		for (Int_t i = 0; i < n_hodo/nRebin; ++i){
-			Double_t numOfHits = 0;			
-
-			for (Int_t j = 0; j < nRebin; ++j){
-				bool fired = false;
-				if (isFired(nPhot[nRebin*i+j])) {
-					fired = true;
-					// break;
-				}
-				if (fired) {
-					numOfHits += 1;	
-				}
-			}
-
-			h1Hnum->Fill( numOfHits );	
-		}
-
-	}
-	
-	// file->Close();
-	
-}
-
-
+};
 
 
 int main(int argc, char** argv){
-	TString filename = "file8.root";
 
+	stabana analyzer;
 
-	if (argc != 1) NMAX = atoi(argv[1]);
+	if (argc != 1) analyzer.NMAX = atoi(argv[1]);
 	if (argc != 2) {
-		filename = TString(argv[1]);
-		NMAX = atoi(argv[2]);
+		analyzer.filename = TString(argv[1]);
+		analyzer.NMAX = atoi(argv[2]);
 	}
 	if (argc != 3){
-		filename = TString(argv[1]);
-		NMAX = atoi(argv[2]);
-		NREBIN = atoi(argv[3]);
+		analyzer.filename = TString(argv[1]);
+		analyzer.NMAX = atoi(argv[2]);
 	}
 
 	// if (argc == 1) {
@@ -329,73 +316,7 @@ int main(int argc, char** argv){
 	// return 0 ;
 	// }
 
-
-	TH1D *array[9];
-	TH2D *array2[2];
-	
-
-
-
-	array[0]  = new TH1D(TString("total_raw"),TString("total_raw"), NMAX, 1, NMAX+1);
-	array[1]  = new TH1D(TString("layer1_raw"),TString("layer1_raw"), NMAX, 1, NMAX+1);
-	array[2]  = new TH1D(TString("layer2_raw"),TString("layer2_raw"), NMAX, 1, NMAX+1);
-	array2[0] = new TH2D(TString("layers_corr_raw"),TString("layers_corr_raw"), NMAX, 1, NMAX+1,
-																				NMAX, 1, NMAX+1);
- 
-
-	array[3] = new TH1D(TString("total_AND_th35"),TString("total_AND_th35"), NMAX, 1, NMAX+1);
-	array[4] = new TH1D(TString("layer1_AND_th35"),TString("total_AND_th35"), NMAX, 1, NMAX+1);
-	array[5] = new TH1D(TString("layer2_AND_th35"),TString("total_AND_th35"), NMAX, 1, NMAX+1);
-	array2[1] = new TH2D(TString("layers_corr_AND_th35"),TString("layers_corr_AND_th35"), 	NMAX, 1, NMAX+1,
-																							NMAX, 1, NMAX+1);
-
-
-
-	getHistSpectra(filename, 0, array[0], array[1], array[2], array2[0]);
-	getHistSpectra(filename, 1, array[3], array[4], array[5], array2[1]);
-
-	array[0]->SetLineColor(kGreen);
-	array[1]->SetLineColor(kRed);
-	array[2]->SetLineColor(kBlue);
-
-
-	array[3]->SetLineColor(kGreen);
-	array[4]->SetLineColor(kRed);
-	array[5]->SetLineColor(kBlue);
-
-
-
-	array[6] = new TH1D(TString("HitNumber_AND"),TString("HitNumber_AND"), nSec, 0, nSec);
-	array[7] = new TH1D(TString("HitNumber_OR"),TString("HitNumber_OR"), nSec, 0, nSec);
-	array[8] = new TH1D(TString("HitNumber_FIRST"),TString("HitNumber_FIRST"), nSec, 0, nSec);
-
-
-
-	getHist_AND(filename, array[6]);
-	getHist_OR(filename, array[7]);
-	getHist_FIRST(filename, array[8]);
-
-	array[6]->SetLineColor(kBlue);
-	array[7]->SetLineColor(kRed);
-	array[8]->SetLineColor(kGreen);
-
-
-	cout << "AND: \t" << array[0]->GetMean() << " \t+- \t" << array[0]->GetMeanError() << std::endl;
-	cout << "OR: \t" << array[1]->GetMean() << " \t+- \t" << array[1]->GetMeanError() << std::endl;
-	cout << "First: \t" << array[2]->GetMean() << " \t+- \t" << array[2]->GetMeanError() << std::endl;
-	
-
-	TFile *out = new TFile("histos.root","RECREATE");
-	out->cd();
-
-	for (auto hist : array){
-		hist->Write();
-	} 
-
-	array2[0]->Write();
-	array2[1]->Write();
-
-	// delete htemp;
+	analyzer.doTheJob();
 
 	
 	return 0;

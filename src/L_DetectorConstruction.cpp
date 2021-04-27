@@ -66,6 +66,7 @@ void L_DetectorConstruction::DefineMateials() {
 
     Beryllium = man->FindOrBuildMaterial("G4_Be");
     Copper = man->FindOrBuildMaterial("G4_Cu");
+    Aluminum = man->FindOrBuildMaterial("G4_Al");
 
     BPMaterial = Copper;
     //    BPMaterial = Beryllium;
@@ -235,37 +236,6 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     ////////////// Trapeze sectors and absorbers ///////////////
 
 
-    G4Tubs *secOut = new G4Tubs(
-                "sectorOut",
-                0.,
-                pmt_window.radius,
-                pmt_window.thickness / 2.,
-                0.,
-                twopi);
-
-
-
-    ////////////////////////////////////////////////////////////
-
-    ///////////// Photon detector at the surface ///////////////
-
-    G4VSolid *detectorOut = new G4Tubs(
-                "sectorOut",
-                0.,
-                pmt_detector.radius,
-                pmt_detector.thickness / 2.,
-                0.,
-                twopi);
-
-    ////////////////////////////////////////////////////////////
-
-
-    G4RotationMatrix RTilt = G4RotationMatrix();
-    RTilt.rotateX(LConst::pmt_angle);
-
-    G4cout << "PMT angle: \t" << atan( - LConst::pmt_center_rad / LConst::pmt_window_pos_z) / deg << G4endl;
-
-
     G4Transform3D Tr;
 
     // Assembly
@@ -273,141 +243,132 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     G4String name;
 
 
-    // Loop for sectors in order to place them with detectors and absorbers
-    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
-        /////////// sector /////////////
-        name = "sector out ";
-        name += std::to_string(j+1);
-        LSectorOut[j] = new G4LogicalVolume(secOut,
-                                            /*Vacuum*/SiO2,
-                                            name);
-        LSectorOut[j]->SetSensitiveDetector(LSD);
-        Ta = new G4ThreeVector(0.,0.,0.);
-        Ra = new G4RotationMatrix();
 
-//        Ra->rotateX(90.*deg);
-        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90*deg);
-        *Ra = *Ra * RTilt;
-
-        Ta->setX(LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::pmt_window_pos_z);
-        Ta->setZ(LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        Tr = G4Transform3D(*Ra, *Ta);
-        //        if (j == 0)
-        assembly->AddPlacedVolume(LSectorOut[j], Tr);
-
-
-        /////////// outer detector ///////
-
-        name = "detector out ";
-        name += std::to_string(j+1);
-
-        Ta = new G4ThreeVector(0.,0.,0.);
-        Ra = new G4RotationMatrix();
-
-        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90.*deg);
-
-
-//        Ta->setX((LConst::pmt_detector_rad *TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-//        Ta->setY(LConst::L1pozZ);
-//        Ta->setZ((LConst::pmt_detector_rad*TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        Ta->setX((LConst::pmt_detector_rad) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::pmt_window_pos_z);
-        Ta->setZ((LConst::pmt_detector_rad) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-
-        *Ta -= G4ThreeVector( LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::pmt_window_pos_z,
-                              LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
-
-        *Ta += G4ThreeVector( LConst::pmt_center_rad * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::pmt_window_pos_z,
-                              LConst::pmt_center_rad * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        *Ra = *Ra * RTilt;
-        Tr = G4Transform3D(*Ra,*Ta);
-
-        LDetectorOut[j] = new G4LogicalVolume(detectorOut,
-                                              /*Vacuum*/SiO2,
-                                              name);
-        //        if (j == 0)
-        assembly->AddPlacedVolume(LDetectorOut[j],Tr);
-
-
-
-        /////////// sector /////////////
-        name = "sector out ";
-        name += std::to_string(-j-1);
-        LSectorOut[LConst::pmt_n_channels+j] = new G4LogicalVolume(secOut,
-                                            /*Vacuum*/SiO2,
-                                            name);
-        LSectorOut[LConst::pmt_n_channels+j]->SetSensitiveDetector(LSD);
-        Ta = new G4ThreeVector(0.,0.,0.);
-        Ra = new G4RotationMatrix();
-
-//        Ra->rotateX(90.*deg);
-        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90*deg);
-        *Ra = *Ra * RTilt;
-
-        Ta->setX(LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::pmt_window_pos_z_1);
-        Ta->setZ(LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        Tr = G4Transform3D(*Ra, *Ta);
-        //        if (j == 0)
-        assembly->AddPlacedVolume(LSectorOut[LConst::pmt_n_channels+j], Tr);
-
-
-        /////////// outer detector ///////
-
-        name = "detector out ";
-        name += std::to_string(-j-1);
-
-        Ta = new G4ThreeVector(0.,0.,0.);
-        Ra = new G4RotationMatrix();
-
-        Ra->rotateY(- 360./LConst::pmt_n_channels*j *deg + 90.*deg);
-
-
-//        Ta->setX((LConst::pmt_detector_rad *TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-//        Ta->setY(LConst::L1pozZ);
-//        Ta->setZ((LConst::pmt_detector_rad*TMath::Cos(TMath::Pi() / LConst::pmt_n_channels)) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        Ta->setX((LConst::pmt_detector_rad_1) * TMath::Cos(360./LConst::pmt_n_channels*j *deg));
-        Ta->setY(LConst::pmt_window_pos_z_1);
-        Ta->setZ((LConst::pmt_detector_rad_1) * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-
-        *Ta -= G4ThreeVector( LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::pmt_window_pos_z_1,
-                              LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
-
-        *Ta += G4ThreeVector( LConst::pmt_center_rad_1 * TMath::Cos(360./LConst::pmt_n_channels*j *deg),
-                              LConst::pmt_window_pos_z_1,
-                              LConst::pmt_center_rad_1 * TMath::Sin(360./LConst::pmt_n_channels*j *deg));
-
-        *Ra = *Ra * RTilt;
-        Tr = G4Transform3D(*Ra,*Ta);
-
-        LDetectorOut[LConst::pmt_n_channels+j] = new G4LogicalVolume(detectorOut,
-                                              /*Vacuum*/SiO2,
-                                              name);
-        //        if (j == 0)
-        assembly->AddPlacedVolume(LDetectorOut[LConst::pmt_n_channels+j],Tr);
-
-
-
+    for (G4int j = 0; j < 48; ++j){
+        pmt_assembly[j].window->material = SiO2;
+        pmt_assembly[j].detector->material = SiO2;
+        pmt_assembly[j].tablet->material = SiO2;
+        pmt_assembly[j].body->material = Aluminum;
     }
+
+
+    G4int id = 0;
+
+
+    //////////////////////// Layer 1 /////////////////////////////
+
+    // Ring 1
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z,
+                    LConst::IPangle_1,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+    // Ring 2
+    for (G4int j = 0; j < 8; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z,
+                    LConst::IPangle_2,
+                    360. / 8. * j * deg);
+        ++id;
+    }
+
+    // Ring 3
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z,
+                    LConst::IPangle_3,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+    // Ring 4
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z,
+                    LConst::IPangle_4,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+    // Ring 5
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z,
+                    LConst::IPangle_5,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+    //////////////////////// Layer 2 /////////////////////////////
+
+    // Ring 1
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z_1,
+                    LConst::IPangle_1,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+    // Ring 2
+    for (G4int j = 0; j < 8; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z_1,
+                    LConst::IPangle_2,
+                    360. / 8. * j * deg);
+        ++id;
+    }
+
+    // Ring 3
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z_1,
+                    LConst::IPangle_3,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+    // Ring 4
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z_1,
+                    LConst::IPangle_4,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+    // Ring 5
+    for (G4int j = 0; j < 4; ++j){
+        pmt_assembly[id].SetIdZThetaPhi(
+                    id,
+                    LConst::pmt_window_pos_z_1,
+                    LConst::IPangle_5,
+                    360. / 4. * j * deg);
+        ++id;
+    }
+
+
+
+
+    for (G4int j = 0; j < 48; ++j){
+        pmt_assembly[j].sensitive = LSD;
+        pmt_assembly[j].Place(assembly);
+    }
+
+
 
     Ra = new G4RotationMatrix();
     Ta = new G4ThreeVector();
-
 
     // Managing the final position of the assembly
 
@@ -461,9 +422,9 @@ void L_DetectorConstruction::DefineOpticalBorders()
 
     for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
         new G4LogicalSkinSurface("DetectorAbsSurface",
-                                 LDetectorOut[j], OpVolumeKillSurface);
+                                 pmt_assembly[j].detector->logical, OpVolumeKillSurface);
         new G4LogicalSkinSurface("sectorSurface",
-                                 LSectorOut[j], quartzSurface);
+                                 pmt_assembly[j].window->logical, quartzSurface);
     }
 
 
@@ -485,6 +446,7 @@ void L_DetectorConstruction::SetVisAttributes()
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
     for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
-        LSectorOut[j]->SetVisAttributes(sectorVisAtt);
+        pmt_assembly[j].window->logical->SetVisAttributes(sectorVisAtt);
     }
+
 }

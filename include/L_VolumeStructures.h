@@ -8,6 +8,12 @@
 #include "G4Point3D.hh"
 #include "G4TwoVector.hh"
 #include "globals.hh"
+#include "G4Transform3D.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4Tubs.hh"
+#include "G4AssemblyVolume.hh"
+#include "G4VSensitiveDetector.hh"
 
 #include "TMath.h"
 
@@ -16,105 +22,27 @@
 
 // Base structure
 struct VolumeStruct {
-    G4Material*        material;
-    G4VSolid*          solid;
-    G4LogicalVolume*   logical;
-    G4VPhysicalVolume* physical;
+    G4String            name;
+    G4Material*         material;
+    G4VSolid*           solid;
+    G4LogicalVolume*    logical;
     VolumeStruct() :
         material(0),
         solid(0),
         logical(0),
-        physical(0)
+        name("")
     {;}
-    ~VolumeStruct() {;}
-};
-
-// Sector structure (inside beampipe)
-struct TrapezeSectorStructIn: VolumeStruct {
-    const G4double thickness;
-    const G4double height;
-    const G4double shortSide;
-    const G4double longSide;
-    const G4double angle;
-    const G4double sides;
-    const G4double middleLine;
-    TrapezeSectorStructIn():
-        thickness(LConst::sectorThicknessIn),
-        height(LConst::outerRadIn * TMath::Cos(TMath::Pi() / LConst::nSecIn) -
-               LConst::innerRadIn * TMath::Cos(TMath::Pi() / LConst::nSecIn)),
-        shortSide(LConst::innerSideIn),
-        longSide(LConst::outerSideIn),
-        angle(atan((longSide-shortSide)/2./height)),
-        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-        middleLine((longSide+shortSide)/2.)
-    {;}
-};
-
-// Sector structure (outside beampipe)
-struct TrapezeSectorStructOut: VolumeStruct {
-    const G4double thickness;
-    const G4double height;
-    const G4double shortSide;
-    const G4double longSide;
-    const G4double angle;
-    const G4double sides;
-    const G4double middleLine;
-    TrapezeSectorStructOut():
-        thickness(LConst::sectorThicknessOut),
-        height(LConst::lengthOut),
-        shortSide(LConst::innerSideOut),
-        longSide(LConst::outerSideOut),
-        angle(atan((longSide-shortSide)/2./height)),
-        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-        middleLine((longSide+shortSide)/2.)
-    {
-        G4cout << "Short side: \t" << shortSide / mm << "\t mm" << G4endl;
-        G4cout << "Long side: \t\t" << longSide / mm << "\t mm" << G4endl;
-        G4cout << "Length: \t\t" << height / mm << "\t mm" << G4endl;
-
-        G4cout << "Angle: \t\t" << LConst::angleOut / deg << "\t mm" << G4endl;
+    void SetMaterial(G4Material* mat){
+        material = mat;
     }
-};
-
-// Optical insulation between sectors (inside beampipe)
-struct TrapezeAbsStructIn: VolumeStruct {
-    const G4double shortSide;
-    const G4double longSide;
-    const G4double thickness;
-    const G4double height;
-    const G4double angle;
-    const G4double sides;
-    const G4double middleLine;
-    TrapezeAbsStructIn():
-        shortSide(LConst::absInnerSideIn),
-        longSide(LConst::absOuterSideIn),
-        thickness(LConst::sectorThicknessIn),
-        height(LConst::outerRadIn -
-               LConst::innerRadIn),
-        angle(atan((longSide-shortSide)/2./height)),
-        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-        middleLine((longSide+shortSide)/2.)
-    {;}
-};
-
-// Optical insulation between sectors (outside beampipe)
-struct TrapezeAbsStructOut: VolumeStruct {
-    const G4double shortSide;
-    const G4double longSide;
-    const G4double thickness;
-    const G4double height;
-    const G4double angle;
-    const G4double sides;
-    const G4double middleLine;
-    TrapezeAbsStructOut():
-        shortSide(LConst::absInnerSideOut),
-        longSide(LConst::absOuterSideOut),
-        thickness(LConst::sectorThicknessOut * 1.2),
-        height(LConst::lengthOut),
-        angle(atan((longSide-shortSide)/2./height)),
-        sides(sqrt(height*height + (longSide-shortSide)*(longSide-shortSide)/4.)),
-        middleLine((longSide+shortSide)/2.)
-    {;}
+    void ConstructLogical(){
+        logical = new G4LogicalVolume(solid,
+                                      material,
+                                      name);
+    }
+    ~VolumeStruct() {
+        delete solid, material, logical;
+    }
 };
 
 struct PMT_window: VolumeStruct {
@@ -123,7 +51,49 @@ struct PMT_window: VolumeStruct {
     PMT_window():
         radius(LConst::window_radius),
         thickness(LConst::window_thickness)
-    {;}
+    {
+        solid = new G4Tubs(
+                    "sectorOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
+};
+
+struct PMT_tablet: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_tablet():
+        radius(LConst::window_radius),
+        thickness(LConst::pmt_detector_thickness)
+    {
+        solid = new G4Tubs(
+                    "sectorOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
+};
+
+struct PMT_body: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_body():
+        radius(LConst::window_radius),
+        thickness(LConst::pmt_body_thickness)
+    {
+        solid = new G4Tubs(
+                    "bodyOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
 };
 
 struct PMT_detector: VolumeStruct {
@@ -132,6 +102,155 @@ struct PMT_detector: VolumeStruct {
     PMT_detector():
         radius(LConst::window_radius),
         thickness(LConst::pmt_detector_thickness)
-    {;}
+    {
+        solid = new G4Tubs(
+                    "sectorOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
 };
+
+////// ALL PMTs ARE THE SAME
+
+struct Assembly {
+    G4int ID = -1;
+    PMT_detector    *detector;
+    PMT_window      *window;
+    PMT_tablet      *tablet;
+    PMT_body        *body;
+    G4double angle;
+    G4double pos_z;
+    G4double phi;
+
+    G4double pmt_center_rad;
+    G4double pmt_detector_rad;
+    G4double pmt_body_rad;
+
+    G4VSensitiveDetector* sensitive;
+
+    Assembly() {
+        detector = new PMT_detector;
+        window =   new PMT_window;
+        tablet =   new PMT_tablet;
+        body =     new PMT_body;
+    }
+//    Assembly() {
+//        detector    = det_glob;
+//        window      = win_glob;
+//        tablet      = tab_glob;
+//    }
+    void SetIdZThetaPhi(Int_t Id, Double_t Z, Double_t Theta, Double_t Phi){
+        angle = Theta;
+        phi = Phi;
+        pos_z = Z;
+        ID = Id+1;
+
+        detector->name = "detector out " + std::to_string(ID);
+        window->name = "sector out " + std::to_string(ID);
+        tablet->name = "tablet out " + std::to_string(ID);
+    }
+    void Place(G4AssemblyVolume *assembly) {
+        if (ID == -1) return;
+
+        detector->ConstructLogical();
+        window->ConstructLogical();
+        tablet->ConstructLogical();
+        body->ConstructLogical();
+
+        window->logical->SetSensitiveDetector(sensitive);
+
+        pmt_center_rad = pos_z * tan(angle);
+        pmt_detector_rad = pmt_center_rad + window->thickness / 2. + detector->thickness / 2.;
+        pmt_body_rad = pmt_center_rad + window->thickness / 2. + detector->thickness + 5*mm;
+
+
+        G4RotationMatrix RTilt = G4RotationMatrix();
+        RTilt.rotateX(angle + 90*deg);
+
+        G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
+        G4RotationMatrix *Ra = new G4RotationMatrix();
+
+
+
+        G4Transform3D Tr;
+
+        G4String name;
+
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        //        Ra->rotateX(90.*deg);
+        Ra->rotateY(-phi + 90*deg);
+        *Ra = *Ra * RTilt;
+
+        Ta->setX(pmt_center_rad * TMath::Cos(phi));
+        Ta->setY(pos_z);
+        Ta->setZ(pmt_center_rad * TMath::Sin(phi));
+
+        Tr = G4Transform3D(*Ra, *Ta);
+        //        if (j == 0)
+        assembly->AddPlacedVolume(window->logical, Tr);
+
+
+        /////////// outer detector ///////
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateY(-phi + 90.*deg);
+
+        Ta->setX((pmt_detector_rad) * TMath::Cos(phi));
+        Ta->setY(pos_z);
+        Ta->setZ((pmt_detector_rad) * TMath::Sin(phi));
+
+
+        *Ta -= G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
+
+        *Ta += G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ra = *Ra * RTilt;
+        Tr = G4Transform3D(*Ra,*Ta);
+
+        assembly->AddPlacedVolume(detector->logical, Tr);
+
+        /////////// PMT body ///////
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateY(-phi + 90.*deg);
+
+        Ta->setX((pmt_body_rad) * TMath::Cos(phi));
+        Ta->setY(pos_z);
+        Ta->setZ((pmt_body_rad) * TMath::Sin(phi));
+
+
+        *Ta -= G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
+
+        *Ta += G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ra = *Ra * RTilt;
+        Tr = G4Transform3D(*Ra,*Ta);
+
+        assembly->AddPlacedVolume(body->logical, Tr);
+
+    }
+};
+
 

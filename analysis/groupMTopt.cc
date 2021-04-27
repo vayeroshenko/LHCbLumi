@@ -16,15 +16,15 @@ void groupMTopt(int num)
 	TFile *output = new TFile(TString("newData_"+std::to_string(num)+".root"), "UPDATE");
 	TTree *outTree = new TTree("T", "T");
 
-	Int_t nPhot[NSEC];
+	Int_t nPhot[NSEC] = {0};
 
 	input->SetBranchAddress("nPhot", nPhot);
 
 
-	Int_t EventIDnew;
-	Int_t nPhotNew[NSEC];
-	Int_t nSec;
-	Int_t nColl;
+	Int_t EventIDnew = 0;
+	Int_t nPhotNew[NSEC] = {0};
+	Int_t nSec = 0;
+	Int_t nColl = 0;
 
 	outTree->Branch("EventID", &EventIDnew, "EventID/I");
 	outTree->Branch("nSec", &nSec, "nSec/I");

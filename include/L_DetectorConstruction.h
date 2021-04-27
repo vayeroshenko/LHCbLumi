@@ -57,18 +57,15 @@ public:
     L_SensitiveDetector *LSD;
 
 
+
     G4LogicalVolume *L1PlaneLogInner;
     G4LogicalVolume *L2PlaneLogInner;
     G4LogicalVolume *L1PlaneLogOuter;
     G4LogicalVolume *L2PlaneLogOuter;
 
-    TrapezeSectorStructIn sectorIn;
-    TrapezeSectorStructOut sectorOut;
-    TrapezeAbsStructIn absorberIn;
-    TrapezeAbsStructOut absorberOut;
-
-    PMT_window pmt_window;
-    PMT_detector pmt_detector;
+    Assembly pmt_assembly[48];
+//    PMT_window pmt_window;
+//    PMT_detector pmt_detector;
 
     G4LogicalVolume *LSectorOut[LConst::pmt_n_channels*2];
 
@@ -87,6 +84,7 @@ private:
     G4Material *SiO2;
     G4Material *Copper;
     G4Material *Beryllium;
+    G4Material *Aluminum;
 
     G4Material *Air;
 

@@ -47,6 +47,7 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
     for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i) {
         runAction->_nPhot[i] = 0;
         _nPhot[i] = 0;
+        _nCharged[i] = 0;
     }
 
     // Reset stepping
@@ -68,8 +69,10 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
     runAction->_nSec = LConst::pmt_n_channels*2;
 
 
-    for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i)
+    for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i) {
         runAction->_nPhot[i] = _nPhot[i];
+        runAction->_nCharged[i] = _nCharged[i];
+    }
 	runAction->_EventID = eventNum;
 
 
