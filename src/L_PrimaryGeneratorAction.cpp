@@ -27,6 +27,9 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
     pythia.readString("Random:seed = " + std::to_string(pythiaSeed));
 
     // Starting up the pythia instance
+
+    initBeams();
+
     pythia.init();
 
 
@@ -35,6 +38,28 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 
+}
+
+void L_PrimaryGeneratorAction::initBeams() {
+    beam1p = G4ThreeVector(0.,0.,1.);
+    beam2p = G4ThreeVector(0.,0.,-1.);
+
+    beam1p.rotateX(-LConst::beam1AngleHorizontal);
+    beam2p.rotateX(LConst::beam1AngleHorizontal);
+
+    beam1p.rotateY(-LConst::beam1AngleVertical);
+    beam2p.rotateY(LConst::beam1AngleVertical);
+
+    beam1p *= LConst::beam1Energy;
+    beam2p *= LConst::beam2Energy;
+
+    pythia.readString("Beams:pxA = " + std::to_string(beam1p.x() / GeV));
+    pythia.readString("Beams:pyA = " + std::to_string(beam1p.y() / GeV));
+    pythia.readString("Beams:pzA = " + std::to_string(beam1p.z() / GeV));
+
+    pythia.readString("Beams:pxB = " + std::to_string(beam2p.x() / GeV));
+    pythia.readString("Beams:pyB = " + std::to_string(beam2p.y() / GeV));
+    pythia.readString("Beams:pzB = " + std::to_string(beam2p.z() / GeV));
 }
 
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
@@ -118,3 +143,4 @@ bool L_PrimaryGeneratorAction::GetEvent() {
 
     return true;
 }
+

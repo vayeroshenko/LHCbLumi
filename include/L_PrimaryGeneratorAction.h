@@ -51,6 +51,7 @@ public:
 
 private:
     bool GetEvent();
+    void initBeams();
 
 private:
     G4ParticleGun *_particleGun = new G4ParticleGun();
@@ -58,6 +59,10 @@ private:
     // Data to be transported from pythia to gun
     G4int nEvents = 0;
     G4int nParticles = 0;
+
+    G4ThreeVector beam1p;
+    G4ThreeVector beam2p;
+
     G4int pdgID[20000] = {0};
     G4float X[20000] = {0};
     G4float Y[20000] = {0};

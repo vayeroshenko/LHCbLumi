@@ -16,6 +16,18 @@
 
 namespace LConst{
 
+
+///////////////////////////////////////////// Beam ///////////////////////////////////////////////////
+
+const G4double beam1Energy = 6500 * GeV;
+const G4double beam2Energy = 6500 * GeV;
+
+const G4double beam1AngleVertical = 0.200 * mrad;
+const G4double beam1AngleHorizontal = 0.420 * mrad;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // World size
 const G4double worldSizeX = 1*m;
 const G4double worldSizeY = 1*m;
