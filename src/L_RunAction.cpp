@@ -30,11 +30,11 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
 
     // Histogramming
 
-    hfile = new TFile(_outputFileName, "RECREATE", "LHCb Luminometer Simulation Data", 1);
+    hfile = new TFile(_outputFileName, "RECREATE", "PLUME Geant4 Simulation Data", 1);
 
     G4cout << "Output file created" << G4endl;
     if (hfile->IsZombie()) exit(-1);
-    tree = new TTree("T", "LHCb Luminometer Data Tree");
+    tree = new TTree("T", "PLUME Simulations Data Tree");
     //	tree->SetAutoSave(1000000);
 
     // Create new event
@@ -48,6 +48,8 @@ void L_RunAction::BeginOfRunAction(const G4Run* run)
     tree->Branch("nSec", &_nSec, "nSec/I");
     // Number of photons detected in each sector
     tree->Branch("nPhot", _nPhot, "nPhot[nSec]/I");
+    // Number of charged particles entering each sector
+    tree->Branch("nCharged", _nCharged, "nCharged[nSec]/I");
 
     // Branches filled for each HIT (commented due to "optimization")
 

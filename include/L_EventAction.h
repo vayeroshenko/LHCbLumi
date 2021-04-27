@@ -37,6 +37,7 @@ private:
     G4int theCollectionID;
 
     G4int _nPhot[LConst::pmt_n_channels*2];
+    G4int _nCharged[LConst::pmt_n_channels*2];
 
     L_PrimaryGeneratorAction* _primGenerator;
 };
