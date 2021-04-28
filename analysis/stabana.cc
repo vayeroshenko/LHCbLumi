@@ -14,7 +14,6 @@
 
 using std::string;
 
-#define nSec 24
 
 // TH1D* getHist(TString);
 
@@ -29,15 +28,23 @@ using namespace std;
 class stabana : public histogramming {
 
 public:
-    stabana() {
+    stabana() = default;
+    ~stabana() = default;
+
+    void init(){
         file = new TFile(filename);
         theChain1 = (TTree *) file->Get("T");
         nEv1 = theChain1->GetEntries();
+
+        cout << "Number of entries: " << nEv1 << endl;
+
+        // nPhot = new Int_t[nSec * 2];
         theChain1->SetBranchAddress("nPhot", nPhot);
     }
-    ~stabana() = default;
 
     TRandom3 *rnd = new TRandom3(0);
+
+    const Int_t nSec = 24;
 
     Int_t NMAX = 500;
 
@@ -51,7 +58,8 @@ public:
     97.4, 97.7, 98.2, 98.35, 98.5, 98.8, 99.1, 99.4, 99.5, 99.55, 99.7, 99.9, 100};
 
     Int_t configuration[5] = {4,8,4,4,4};
-    string Names[5] = {"Right", "Top", "Left", "Bottom", "Diagonal"};
+    // string Names[5] = {"Right", "Top", "Left", "Bottom", "Diagonal"};
+    string Names[5] = {"Top", "Right", "Bottom", "Left", "Diagonal"};
 
 	TString filename = "file8.root";
 
@@ -62,9 +70,8 @@ public:
 
 
         // Int_t nPart1;
-    Int_t *nPhot = new Int_t[nSec * 2];
-
-    Long_t nEv1;
+    Int_t nPhot[48] = {0};
+    Long64_t nEv1;
 
 	void doTheJob(){
 
@@ -97,13 +104,28 @@ public:
                     nSec, 0, nSec);
                 book_1d("HitNumber_FIRST_"+ to_string(i_ring) + "_" + Names[i_side],
                     nSec, 0, nSec);
-                if (configuration[i_ring] == 4) {
+
+                book_1d("nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+	                1000, 1, 1001);
+	            book_1d("nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+	                1000, 1, 1001);
+            	
+            	cout << "Ring " << i_ring << ", side " << i_side << " (" << Names[i_side] << ") \t";
+            	cout << "HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side] << endl;
+                
+                if (configuration[i_ring] == 4) {    
                     getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
                                 i_first + i_side, i_first + i_side + 1);
                     getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
                                i_first + i_side, i_first + i_side + 1);
                     getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
                                   i_first + i_side, i_first + i_side + 1);
+
+                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+                                  i_first + i_side, i_first + i_side + 1);
+		            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+                                  i_first + i_side, i_first + i_side + 1);
+
                 } else if (configuration[i_ring] == 8){
                     getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
                                 i_first + 2*i_side, i_first + 2*i_side + 1);
@@ -112,7 +134,13 @@ public:
                     getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
                                   i_first + 2*i_side, i_first + 2*i_side + 1);
 
+                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+                                  i_first + 2*i_side, i_first + 2*i_side + 1);
+		            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+                                  i_first + 2*i_side, i_first + 2*i_side + 1);
+
                 }
+		        cout << "\n\n";
             }
 
             getHist_AND("HitNumber_AND_" + to_string(i_ring),
@@ -133,6 +161,7 @@ public:
             set_line_color_1d("HitNumber_FIRST_" + to_string(i_ring), kGreen+2);
 
         }
+
 
         book_1d("HitNumber_AND_tot",
             nSec, 0, nSec);
@@ -178,9 +207,9 @@ public:
 
     }
 
-    Bool_t isFired(Int_t nPhot) {
+    Bool_t isFired(Int_t nPhot_this) {
 
-        if (nPhot >= 150) return true;
+        if (nPhot_this >= 150) return true;
         else return false;
 
     }
@@ -188,12 +217,20 @@ public:
 
     template<class name_type>
     void getHistSpectra(Int_t flag, name_type name, Int_t sec_start, Int_t sec_end) {
+	    
+    	Int_t printed = 0;
+
 	    ////////// Loop 1 //////////
-        for (Long_t j = 0; j < nEv1; ++j) {
+        for (Long64_t j = 0; j < nEv1; ++j) {
             theChain1->GetEntry(j);
 
 
             for (Int_t i = sec_start; i < sec_end; ++i) {
+            	if (printed < 3){
+            		cout << name << " " << i << " - " << nSec + i << endl;
+            		++printed;
+            	}
+
                 if (flag == 0) {
                     fill_1d(name, nPhot[i]);
                     fill_1d(name, nPhot[i + nSec]);
@@ -214,12 +251,18 @@ public:
 
         std::cout << "AND " << sec_start << " - " << sec_end << std::endl;
 
+        Int_t printed = 0;
+
         ////////// Loop 1 //////////
-        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
             theChain1->GetEntry(i_ev);
 
             Double_t numOfHits = 0;
             for (Int_t j = sec_start; j < sec_end; ++j) {
+	        	if (printed < 3){
+	        		cout << name << " " << j << " - " << nSec + j << endl;
+	        		++printed;
+	        	}
                 bool fired = false;
                 if (isFired(nPhot[j]) && isFired(nPhot[nSec + j])) {
                     fired = true;
@@ -230,7 +273,6 @@ public:
                 }
             }
             fill_1d(name, numOfHits);
-
         }
 
     }
@@ -240,12 +282,18 @@ public:
 
         std::cout << "OR " << sec_start << " - " << sec_end << std::endl;
 
+        Int_t printed = 0;
+
         ////////// Loop 1 //////////
-        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
             theChain1->GetEntry(i_ev);
 
             Double_t numOfHits = 0;
             for (Int_t j = sec_start; j < sec_end; ++j) {
+            	if (printed < 3){
+            		cout << name << " " << j << " - " << nSec + j << endl;
+            		++printed;
+            	}
                 bool fired = false;
                 if (isFired(nPhot[j]) || isFired(nPhot[nSec + j])) {
                     fired = true;
@@ -265,12 +313,18 @@ public:
 
         std::cout << "FIRST " << sec_start << " - " << sec_end << std::endl;
 
+        Int_t printed = 0;
+
         ////////// Loop 1 //////////
-        for (Long_t i_ev = 0; i_ev < nEv1; ++i_ev) {
+        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
             theChain1->GetEntry(i_ev);
 
             Double_t numOfHits = 0;
             for (Int_t j = sec_start; j < sec_end; ++j) {
+            	if (printed < 3){
+            		cout << name << " " << j << " - " << nSec + j << endl;
+            		++printed;
+            	}
                 bool fired = false;
                 if (isFired(nPhot[j])) {
                     fired = true;
@@ -296,6 +350,8 @@ int main(int argc, char** argv){
 
 	stabana analyzer;
 
+	cout << "argc " << argc << endl;
+
 	if (argc != 1) analyzer.NMAX = atoi(argv[1]);
 	if (argc != 2) {
 		analyzer.filename = TString(argv[1]);
@@ -305,6 +361,10 @@ int main(int argc, char** argv){
 		analyzer.filename = TString(argv[1]);
 		analyzer.NMAX = atoi(argv[2]);
 	}
+
+
+	cout << "filename: " << analyzer.filename << endl;
+	cout << "NMAX: " << analyzer.NMAX << endl;
 
 	// if (argc == 1) {
 	// cout<<" PLUME simulation data analysis SW: "<<endl
@@ -316,6 +376,7 @@ int main(int argc, char** argv){
 	// return 0 ;
 	// }
 
+	analyzer.init();
 	analyzer.doTheJob();
 
 	
