@@ -248,7 +248,7 @@ struct Assembly {
         *Ra = *Ra * RTilt;
         Tr = G4Transform3D(*Ra,*Ta);
 
-        assembly->AddPlacedVolume(body->logical, Tr);
+//        assembly->AddPlacedVolume(body->logical, Tr);
 
     }
 };
