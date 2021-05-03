@@ -44,11 +44,11 @@ void L_PrimaryGeneratorAction::initBeams() {
     beam1p = G4ThreeVector(0.,0.,1.);
     beam2p = G4ThreeVector(0.,0.,-1.);
 
-    beam1p.rotateX(-LConst::beam1AngleHorizontal);
-    beam2p.rotateX(LConst::beam1AngleHorizontal);
+    beam1p.rotateY(+LConst::beam1AngleHorizontal);
+    beam2p.rotateY(-LConst::beam1AngleHorizontal);
 
-    beam1p.rotateY(-LConst::beam1AngleVertical);
-    beam2p.rotateY(LConst::beam1AngleVertical);
+    beam1p.rotateX(+LConst::beam1AngleVertical);
+    beam2p.rotateX(-LConst::beam1AngleVertical);
 
     beam1p *= LConst::beam1Energy;
     beam2p *= LConst::beam2Energy;
