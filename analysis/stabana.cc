@@ -72,117 +72,82 @@ public:
         // Int_t nPart1;
     Int_t nPhot[48] = {0};
     Long64_t nEv1;
+	Long64_t j_evt;
+
 
 	void doTheJob(){
 
         TFile *out = new TFile("histos.root","RECREATE");
+        book_hists();
 
-     // getHistSpectra(TString filename, Int_t flag, TH1D* htot);
+        for (j_evt = 0; j_evt < nEv1; ++j_evt) { // Loop for events
+        	print_progress(20);
+        	theChain1->GetEntry(j_evt);
 
-        Int_t i_first = 0;
-        Int_t i_end = 0;
+	        Int_t i_first = 0;
+	        Int_t i_end = 0;
 
-        for (Int_t i_ring = 0; i_ring < 5; ++i_ring){
-            i_end += configuration[i_ring];
-
-            book_1d("HitNumber_AND_"+ to_string(i_ring),
-                nSec, 0, nSec);
-            book_1d("HitNumber_OR_"+ to_string(i_ring),
-                nSec, 0, nSec);
-            book_1d("HitNumber_FIRST_"+ to_string(i_ring),
-                nSec, 0, nSec);
-
-            book_1d("nPhot_"+ to_string(i_ring),
-                1000, 1, 1001);
-            book_1d("nPhot_AND_"+ to_string(i_ring),
-                1000, 1, 1001);
-
-            for (Int_t i_side = 0; i_side < 4; ++i_side){
-                book_1d("HitNumber_AND_"+ to_string(i_ring) + "_" + Names[i_side],
-                    nSec, 0, nSec);
-                book_1d("HitNumber_OR_"+ to_string(i_ring) + "_" + Names[i_side],
-                    nSec, 0, nSec);
-                book_1d("HitNumber_FIRST_"+ to_string(i_ring) + "_" + Names[i_side],
-                    nSec, 0, nSec);
-
-                book_1d("nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
-	                1000, 1, 1001);
-	            book_1d("nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
-	                1000, 1, 1001);
-            	
-            	cout << "Ring " << i_ring << ", side " << i_side << " (" << Names[i_side] << ") \t";
-            	cout << "HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side] << endl;
-                
-                if (configuration[i_ring] == 4) {    
-                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
-                                i_first + i_side, i_first + i_side + 1);
-                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
-                               i_first + i_side, i_first + i_side + 1);
-                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
-                                  i_first + i_side, i_first + i_side + 1);
-
-                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
-                                  i_first + i_side, i_first + i_side + 1);
-		            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
-                                  i_first + i_side, i_first + i_side + 1);
-
-                } else if (configuration[i_ring] == 8){
-                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
-                                i_first + 2*i_side, i_first + 2*i_side + 1);
-                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
-                               i_first + 2*i_side, i_first + 2*i_side + 1);
-                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
-                                  i_first + 2*i_side, i_first + 2*i_side + 1);
-
-                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
-                                  i_first + 2*i_side, i_first + 2*i_side + 1);
-		            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
-                                  i_first + 2*i_side, i_first + 2*i_side + 1);
-
-                }
-		        cout << "\n\n";
-            }
-
-            getHist_AND("HitNumber_AND_" + to_string(i_ring),
-                        i_first, i_end);
-            getHist_OR("HitNumber_OR_" + to_string(i_ring),
-                       i_first, i_end);
-            getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring),
-                          i_first, i_end);
-
-            getHistSpectra(0, "nPhot_"+ to_string(i_ring), i_first, i_end);
-            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring), i_first, i_end);
+	        for (Int_t i_ring = 0; i_ring < 5; ++i_ring){
+	            i_end += configuration[i_ring];
 
 
-            i_first = i_end;
+	            for (Int_t i_side = 0; i_side < 4; ++i_side){
+	                
+	                if (configuration[i_ring] == 4) {    
+	                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
+	                                i_first + i_side, i_first + i_side + 1);
+	                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
+	                               i_first + i_side, i_first + i_side + 1);
+	                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
+	                                  i_first + i_side, i_first + i_side + 1);
 
-            set_line_color_1d("HitNumber_AND_" + to_string(i_ring), kBlue);
-            set_line_color_1d("HitNumber_OR_" + to_string(i_ring), kRed);
-            set_line_color_1d("HitNumber_FIRST_" + to_string(i_ring), kGreen+2);
+	                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+	                                  i_first + i_side, i_first + i_side + 1);
+			            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+	                                  i_first + i_side, i_first + i_side + 1);
 
-        }
+	                } else if (configuration[i_ring] == 8){
+	                    getHist_AND("HitNumber_AND_" + to_string(i_ring) + "_" + Names[i_side],
+	                                i_first + 2*i_side, i_first + 2*i_side + 1);
+	                    getHist_OR("HitNumber_OR_" + to_string(i_ring) + "_" + Names[i_side],
+	                               i_first + 2*i_side, i_first + 2*i_side + 1);
+	                    getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring) + "_" + Names[i_side],
+	                                  i_first + 2*i_side, i_first + 2*i_side + 1);
+
+	                    getHistSpectra(0, "nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+	                                  i_first + 2*i_side, i_first + 2*i_side + 1);
+			            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+	                                  i_first + 2*i_side, i_first + 2*i_side + 1);
+
+	                }
+	            }
+
+	            getHist_AND("HitNumber_AND_" + to_string(i_ring),
+	                        i_first, i_end);
+	            getHist_OR("HitNumber_OR_" + to_string(i_ring),
+	                       i_first, i_end);
+	            getHist_FIRST("HitNumber_FIRST_" + to_string(i_ring),
+	                          i_first, i_end);
+
+	            getHistSpectra(0, "nPhot_"+ to_string(i_ring), i_first, i_end);
+	            getHistSpectra(1, "nPhot_AND_"+ to_string(i_ring), i_first, i_end);
 
 
-        book_1d("HitNumber_AND_tot",
-            nSec, 0, nSec);
-        book_1d("HitNumber_OR_tot",
-            nSec, 0, nSec);
-        book_1d("HitNumber_FIRST_tot",
-            nSec, 0, nSec);
+	            i_first = i_end;
 
-        book_1d("nPhot_tot",
-            1000, 1, 1001);
-        book_1d("nPhot_AND_tot",
-            1000, 1, 1001);
-
-        getHistSpectra(0, "nPhot_tot", 0, 24);
-        getHistSpectra(1, "nPhot_AND_tot", 0, 24);
+	        }
 
 
-        getHist_AND("HitNumber_AND_tot", 0, 24);
-        getHist_OR("HitNumber_OR_tot", 0, 24);
-        getHist_FIRST("HitNumber_FIRST_tot", 0, 24);
+	        getHistSpectra(0, "nPhot_tot", 0, 24);
+	        getHistSpectra(1, "nPhot_AND_tot", 0, 24);
 
+
+	        getHist_AND("HitNumber_AND_tot", 0, 24);
+	        getHist_OR("HitNumber_OR_tot", 0, 24);
+	        getHist_FIRST("HitNumber_FIRST_tot", 0, 24);
+
+
+	    } // END Loop for events
 
         cout << "AND: \t" << get_mean_1d("HitNumber_AND_tot") << " \t+- \t"
                 << get_mean_error_1d("HitNumber_AND_tot") << std::endl;
@@ -197,14 +162,7 @@ public:
             hist.second->Write();
         }
 
-//        for (auto hist : hists2d){
-//            hist.second->Write();
-//        }
-
         out->Close();
-
-	// delete htemp;
-
     }
 
     Bool_t isFired(Int_t nPhot_this) {
@@ -217,131 +175,149 @@ public:
 
     template<class name_type>
     void getHistSpectra(Int_t flag, name_type name, Int_t sec_start, Int_t sec_end) {
-	    
-    	Int_t printed = 0;
-
-	    ////////// Loop 1 //////////
-        for (Long64_t j = 0; j < nEv1; ++j) {
-            theChain1->GetEntry(j);
-
-
-            for (Int_t i = sec_start; i < sec_end; ++i) {
-            	if (printed < 3){
-            		cout << name << " " << i << " - " << nSec + i << endl;
-            		++printed;
-            	}
-
-                if (flag == 0) {
+        for (Int_t i = sec_start; i < sec_end; ++i) {
+            if (flag == 0) {
+                fill_1d(name, nPhot[i]);
+                fill_1d(name, nPhot[i + nSec]);
+            }
+            if (flag == 1) {
+                if (isFired(nPhot[i]) && isFired(nPhot[i + nSec])) {
                     fill_1d(name, nPhot[i]);
                     fill_1d(name, nPhot[i + nSec]);
                 }
-                if (flag == 1) {
-                    if (isFired(nPhot[i]) && isFired(nPhot[i + nSec])) {
-                        fill_1d(name, nPhot[i]);
-                        fill_1d(name, nPhot[i + nSec]);
-                    }
-                }
             }
-
         }
     }
 
     template<class name_type>
     void getHist_AND(name_type name, Int_t sec_start, Int_t sec_end) {
+        Double_t numOfHits = 0;
+        for (Int_t j = sec_start; j < sec_end; ++j) {
 
-        std::cout << "AND " << sec_start << " - " << sec_end << std::endl;
-
-        Int_t printed = 0;
-
-        ////////// Loop 1 //////////
-        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
-            theChain1->GetEntry(i_ev);
-
-            Double_t numOfHits = 0;
-            for (Int_t j = sec_start; j < sec_end; ++j) {
-	        	if (printed < 3){
-	        		cout << name << " " << j << " - " << nSec + j << endl;
-	        		++printed;
-	        	}
-                bool fired = false;
-                if (isFired(nPhot[j]) && isFired(nPhot[nSec + j])) {
-                    fired = true;
-                    // break;
-                }
-                if (fired) {
-                    numOfHits += 1;
-                }
+            bool fired = false;
+            if (isFired(nPhot[j]) && isFired(nPhot[nSec + j])) {
+                fired = true;
             }
-            fill_1d(name, numOfHits);
+            if (fired) {
+                numOfHits += 1;
+            }
         }
-
+        fill_1d(name, numOfHits);
     }
 
     template<class name_type>
     void getHist_OR(name_type name, Int_t sec_start, Int_t sec_end) {
-
-        std::cout << "OR " << sec_start << " - " << sec_end << std::endl;
-
-        Int_t printed = 0;
-
-        ////////// Loop 1 //////////
-        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
-            theChain1->GetEntry(i_ev);
-
-            Double_t numOfHits = 0;
-            for (Int_t j = sec_start; j < sec_end; ++j) {
-            	if (printed < 3){
-            		cout << name << " " << j << " - " << nSec + j << endl;
-            		++printed;
-            	}
-                bool fired = false;
-                if (isFired(nPhot[j]) || isFired(nPhot[nSec + j])) {
-                    fired = true;
-                    // break;
-                }
-                if (fired) {
-                    numOfHits += 1;
-                }
+        Double_t numOfHits = 0;
+        for (Int_t j = sec_start; j < sec_end; ++j) {
+            bool fired = false;
+            if (isFired(nPhot[j]) || isFired(nPhot[nSec + j])) {
+                fired = true;
             }
-            fill_1d(name, numOfHits);
+            if (fired) {
+                numOfHits += 1;
+            }
         }
-
+        fill_1d(name, numOfHits);
     }
 
     template<class name_type>
     void getHist_FIRST(name_type name, Int_t sec_start, Int_t sec_end) {
+		Double_t numOfHits = 0;
+		for (Int_t j = sec_start; j < sec_end; ++j) {
 
-        std::cout << "FIRST " << sec_start << " - " << sec_end << std::endl;
-
-        Int_t printed = 0;
-
-        ////////// Loop 1 //////////
-        for (Long64_t i_ev = 0; i_ev < nEv1; ++i_ev) {
-            theChain1->GetEntry(i_ev);
-
-            Double_t numOfHits = 0;
-            for (Int_t j = sec_start; j < sec_end; ++j) {
-            	if (printed < 3){
-            		cout << name << " " << j << " - " << nSec + j << endl;
-            		++printed;
-            	}
-                bool fired = false;
-                if (isFired(nPhot[j])) {
-                    fired = true;
-                    // break;
-                }
-                if (fired) {
-                    numOfHits += 1;
-                }
-            }
-            fill_1d(name, numOfHits);
-
-        }
-
+		    bool fired = false;
+		    if (isFired(nPhot[j])) {
+		        fired = true;
+		    }
+		    if (fired) {
+		        numOfHits += 1;
+		    }
+		}
+		fill_1d(name, numOfHits);
     }
 
     template<class name_type>
     inline void set_line_color_1d(name_type name, Int_t color) {hists1d[name]->SetLineColor(color);}
+
+	void book_hists(){
+
+        book_1d("HitNumber_AND_tot",
+            nSec, 0, nSec);
+        book_1d("HitNumber_OR_tot",
+            nSec, 0, nSec);
+        book_1d("HitNumber_FIRST_tot",
+            nSec, 0, nSec);
+
+        book_1d("nPhot_tot",
+            1000, 1, 1001);
+        book_1d("nPhot_AND_tot",
+            1000, 1, 1001);
+
+		for (Int_t i_ring = 0; i_ring < 5; ++i_ring){
+            book_1d("HitNumber_AND_"+ to_string(i_ring),
+                nSec, 0, nSec);
+            book_1d("HitNumber_OR_"+ to_string(i_ring),
+                nSec, 0, nSec);
+            book_1d("HitNumber_FIRST_"+ to_string(i_ring),
+                nSec, 0, nSec);
+
+            book_1d("nPhot_"+ to_string(i_ring),
+                1000, 1, 1001);
+            book_1d("nPhot_AND_"+ to_string(i_ring),
+                1000, 1, 1001);
+
+			for (Int_t i_side = 0; i_side < 4; ++i_side){
+                book_1d("HitNumber_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+                book_1d("HitNumber_OR_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+                book_1d("HitNumber_FIRST_"+ to_string(i_ring) + "_" + Names[i_side],
+                    nSec, 0, nSec);
+
+                book_1d("nPhot_"+ to_string(i_ring)+ "_" + Names[i_side],
+	                1000, 1, 1001);
+	            book_1d("nPhot_AND_"+ to_string(i_ring) + "_" + Names[i_side],
+	                1000, 1, 1001);
+            }
+
+        set_line_color_1d("HitNumber_AND_" + to_string(i_ring), kBlue);
+        set_line_color_1d("HitNumber_OR_" + to_string(i_ring), kRed);
+        set_line_color_1d("HitNumber_FIRST_" + to_string(i_ring), kGreen+2);
+        }
+	}
+
+
+	// progress bar
+	Int_t last_printed = -1;
+	Long64_t nEntries;
+	Int_t frac_perc;
+	Int_t element_perc;
+
+
+	void print_progress(const Int_t &n_steps) {
+		Long64_t &i_entry = j_evt;
+		nEntries = nEv1;
+		frac_perc = Int_t(100. * (i_entry+1) / nEntries );
+		element_perc = Int_t(100. / n_steps);
+
+		if (frac_perc % element_perc == 0 && frac_perc > last_printed){
+			cout<< "Event #" << i_entry << "\t(" << frac_perc<<"%)\t [";
+			Int_t i;
+			for (i = 0; i < frac_perc / 2; ++i){
+				cout<< "=";
+			}
+			cout<< ">";
+			for (; i < 100/2; ++i){
+				cout<< " ";
+			}
+			if (frac_perc < 100)
+	            cout<< "]\r" << std::flush;
+	        else
+	            cout<< "]" << endl;
+			
+		}
+		last_printed = frac_perc;
+	}
 
 };
 
