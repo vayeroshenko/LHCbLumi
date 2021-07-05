@@ -358,14 +358,33 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     }
 
 
-
-
     for (G4int j = 0; j < 48; ++j){
         pmt_assembly[j].sensitive = LSD;
         pmt_assembly[j].Place(assembly);
     }
 
+    Ra = new G4RotationMatrix();
+    Ta = new G4ThreeVector();
 
+    G4VSolid *moedal_solid = new G4Box("moedal",
+                                   LConst::moedal_width / 2,
+                                   LConst::moedal_height / 2,
+                                   LConst::moedal_al_thickness / 2);
+    auto moedal_log = new G4LogicalVolume(moedal_solid, Aluminum, "moedal");
+
+    auto moedal_pos = G4ThreeVector(0,
+                                    - LConst::moedal_height/2 + LConst::moedal_y_max,
+                                    LConst::moedal_z);
+
+//    Ra->rotateX(90*deg);
+//    moedal_pos.rotateX(-90*deg);
+//    moedal_pos.rotateY(-90*deg);
+
+//    assembly->AddPlacedVolume(  moedal_log,
+//                                moedal_pos,
+//                                Ra);
+
+    new G4PVPlacement(Ra, moedal_pos, moedal_log, "moedal", worldLogical, false, 0);
 
     Ra = new G4RotationMatrix();
     Ta = new G4ThreeVector();
