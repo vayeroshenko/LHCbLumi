@@ -136,7 +136,7 @@ const G4double outerSideOut = innerSideOut;
 
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
-const G4int pmt_n_channels = 24;
+const G4int pmt_n_channels = 1;
 
 const G4double IPangle = 4.6 *deg;
 
@@ -169,7 +169,7 @@ const G4double pmt_window_pos_z_1 = -1900 *mm;
 
 const G4double pmt_detector_thickness = 0.1 *mm;
 
-const G4double tablet_thickness = 5 *mm;
+//const G4double tablet_thickness = 5 *mm;
 
 const G4double pmt_center_rad = pmt_window_pos_z * tan(IPangle);
 const G4double pmt_detector_rad = pmt_center_rad + window_thickness / 2. + pmt_detector_thickness / 2.;
@@ -193,6 +193,20 @@ const G4double VertexZ = 0.;
 const G4double VertexSigmaX = 0.;
 const G4double VertexSigmaY = 0.;
 const G4double VertexSigmaZ = 0.*cm;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////// 207-Bi source //////////////////////////////////////////////////////
+
+//const G4double bi_e_energy = 10 * GeV;
+//const G4double bi_z_pos = 100*mm;
+
+
+const G4double bi_e_energy = 1060 * keV;
+//const G4double bi_z_pos = -1.9*mm;
+const G4double bi_z_pos = 3.1*mm;
+//const G4double bi_z_pos = 0.6*mm;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

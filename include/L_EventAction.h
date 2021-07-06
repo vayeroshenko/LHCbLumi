@@ -36,8 +36,8 @@ private:
     G4int printModulo;
     G4int theCollectionID;
 
-    G4int _nPhot[LConst::pmt_n_channels*2];
-    G4int _nCharged[LConst::pmt_n_channels*2];
+    G4int _nPhot[LConst::pmt_n_channels];
+    G4int _nCharged[LConst::pmt_n_channels];
 
     L_PrimaryGeneratorAction* _primGenerator;
 };

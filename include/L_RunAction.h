@@ -43,8 +43,8 @@ public:
 //    G4int _nPart;
     G4int _EventID;
     G4int _nSec;
-    G4int _nPhot[LConst::pmt_n_channels*2];
-    G4int _nCharged[LConst::pmt_n_channels*2];
+    G4int _nPhot[LConst::pmt_n_channels];
+    G4int _nCharged[LConst::pmt_n_channels];
 
 //    static const G4int _nPartMax = 200000;
 //    G4int _TrackID[_nPartMax];

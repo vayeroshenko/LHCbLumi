@@ -23,7 +23,7 @@ L_EventAction::L_EventAction(L_RunAction* runact,
         L_SteppingAction* steppingAction) :
 		runAction(runact), _steppingAction(steppingAction), printModulo(100)
 {
-    for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i) {
+    for (G4int i = 0; i < LConst::pmt_n_channels; ++i) {
         _nPhot[i] = 0;
     }
 
@@ -44,7 +44,7 @@ void L_EventAction::BeginOfEventAction(const G4Event* event)
 	}
 
     // Setting the number of photons in each sector to 0 for further counting
-    for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i) {
+    for (G4int i = 0; i < LConst::pmt_n_channels; ++i) {
         runAction->_nPhot[i] = 0;
         _nPhot[i] = 0;
         _nCharged[i] = 0;
@@ -66,10 +66,10 @@ void L_EventAction::EndOfEventAction(const G4Event* event)
 	G4int eventNum = event->GetEventID();
 
     // Getting the number of sectors from the constant collection
-    runAction->_nSec = LConst::pmt_n_channels*2;
+    runAction->_nSec = LConst::pmt_n_channels;
 
 
-    for (G4int i = 0; i < LConst::pmt_n_channels*2; ++i) {
+    for (G4int i = 0; i < LConst::pmt_n_channels; ++i) {
         runAction->_nPhot[i] = _nPhot[i];
         runAction->_nCharged[i] = _nCharged[i];
     }

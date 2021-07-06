@@ -28,9 +28,9 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
 
     // Starting up the pythia instance
 
-    initBeams();
+//    initBeams();
 
-    pythia.init();
+//    pythia.init();
 
 
     //    G4cout << "Primary generator created" << G4endl;
@@ -65,36 +65,45 @@ void L_PrimaryGeneratorAction::initBeams() {
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
     // filling up class variables with event data from pythia
-    GetEvent();
+//    GetEvent();
 
     G4ParticleTable* particleTable;
     G4ParticleDefinition* particle;
     G4ThreeVector dir;
     G4double m, momentum, Ekin;
 
-    // generating all primaries from event
-    for (G4int pId = 0; pId < nParticles; ++pId){
-        particleTable = G4ParticleTable::GetParticleTable();
-        particle = particleTable->FindParticle(pdgID[pId]);
-        m = particle->GetPDGMass();
+    particleTable = G4ParticleTable::GetParticleTable();
+    particle = particleTable->FindParticle(11);
+    m = particle->GetPDGMass();
 
-        dir = G4ThreeVector(pX[pId],pY[pId],pZ[pId]);
+    auto cos_theta = G4RandFlat::shoot(-1., 1.);
+    auto phi = G4RandFlat::shoot(0., twopi);
 
-        momentum = TMath::Sqrt(pX[pId]*pX[pId] + pY[pId]*pY[pId] + pZ[pId]*pZ[pId]);
-        Ekin = (TMath::Sqrt(momentum*momentum + m*m) - m);
 
-        _particleGun->SetParticleDefinition(particle);
-        _particleGun->SetParticleMomentumDirection(dir);
-        _particleGun->SetParticleEnergy(Ekin);
-        _particleGun->SetParticleTime(T[pId]);
+//    dir = G4ThreeVector(sqrt(1 - cos_theta*cos_theta)*cos(phi),
+//                        sqrt(1 - cos_theta*cos_theta)*sin(phi),
+//                        cos_theta);
+//                        -abs(cos_theta));
 
-        _particleGun->SetParticlePosition(G4ThreeVector(X[pId], Y[pId], Z[pId]));
+    dir = G4ThreeVector(0,
+                        0,
+                        -1);
 
-        // Cut off low-momentum particles (< 20 MeV)
-        if (momentum < 20.) continue; //////////////////////// Momentum cut ////////////////////////////
+    Ekin = (LConst::bi_e_energy);
 
-        _particleGun->GeneratePrimaryVertex(anEvent);
-    }
+    _particleGun->SetParticleDefinition(particle);
+    _particleGun->SetParticleMomentumDirection(dir);
+    _particleGun->SetParticleEnergy(Ekin);
+    _particleGun->SetParticleTime(0);
+
+    _particleGun->SetParticlePosition(G4ThreeVector(0,0,LConst::bi_z_pos));
+
+    // Cut off low-momentum particles (< 20 MeV)
+//    if (momentum < 20.) continue; //////////////////////// Momentum cut ////////////////////////////
+
+
+
+    _particleGun->GeneratePrimaryVertex(anEvent);
 
 
     //    G4cout << "Primaries generated" << G4endl;

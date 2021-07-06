@@ -258,109 +258,17 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     //////////////////////// Layer 1 /////////////////////////////
 
     // Ring 1
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_1,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 2
-    for (G4int j = 0; j < 8; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_2,
-                    360. / 8. * j * deg);
-        ++id;
-    }
-
-    // Ring 3
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_3,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-    // Ring 4
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_4,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 5
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_5,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    //////////////////////// Layer 2 /////////////////////////////
-
-    // Ring 1
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_1,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 2
-    for (G4int j = 0; j < 8; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_2,
-                    360. / 8. * j * deg);
-        ++id;
-    }
-
-    // Ring 3
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_3,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-    // Ring 4
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_4,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 5
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_5,
-                    360. / 4. * j * deg);
-        ++id;
-    }
+    pmt_assembly[id].SetIdZThetaPhi(
+                id,
+                0.,
+                0.,
+                0.);
 
 
 
 
-    for (G4int j = 0; j < 48; ++j){
+
+    for (G4int j = 0; j < 1; ++j){
         pmt_assembly[j].sensitive = LSD;
         pmt_assembly[j].Place(assembly);
     }
@@ -420,7 +328,7 @@ void L_DetectorConstruction::DefineOpticalBorders()
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
-    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
         new G4LogicalSkinSurface("DetectorAbsSurface",
                                  pmt_assembly[j].detector->logical, OpVolumeKillSurface);
         new G4LogicalSkinSurface("sectorSurface",
@@ -445,7 +353,7 @@ void L_DetectorConstruction::SetVisAttributes()
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
-    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
         pmt_assembly[j].window->logical->SetVisAttributes(sectorVisAtt);
     }
 
