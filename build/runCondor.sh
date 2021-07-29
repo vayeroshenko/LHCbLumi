@@ -17,4 +17,8 @@ source /cvmfs/sft.cern.ch/lcg/views/LCG_95/x86_64-centos7-gcc8-opt/setup.sh
 #export G4REALSURFACEDATA=/cvmfs/geant4.cern.ch/share/data/RealSurface2.1.1
 #export G4INCLDATA=/cvmfs/geant4.cern.ch/share/data/G4INCL1.0
 
-/afs/cern.ch/work/v/vyeroshe/PLUME_G4/LHCbLumi/build/LHCbLumi vis_file.mac data_$1.root >> ap_output.txt
+gen_seed=$(($1*1000))
+# let gen_seed=$gen_seed
+gen_seed=$(($gen_seed+123))
+
+/afs/cern.ch/work/v/vyeroshe/PLUME_G4/LHCbLumi/build/LHCbLumi vis_file.mac data_$1.root $gen_seed >> ap_output.txt

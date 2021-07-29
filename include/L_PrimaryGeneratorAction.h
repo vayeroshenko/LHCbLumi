@@ -44,7 +44,7 @@ class G4Event;
 
 class L_PrimaryGeneratorAction: public G4VUserPrimaryGeneratorAction {
 public:
-    L_PrimaryGeneratorAction();
+    L_PrimaryGeneratorAction(long long gen_seed = -1);
     virtual ~L_PrimaryGeneratorAction();
 public:
     void GeneratePrimaries(G4Event* anEvent);
