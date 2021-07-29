@@ -53,13 +53,17 @@ int main(int argc, char** argv)
     physicsList->SetVerboseLevel(0);
 	runManager->SetUserInitialization(physicsList);
 
-
+    long long gen_seed = -1ll;
 
     L_RunAction* runAction = new L_RunAction;
     if (argc == 3) runAction->SetOutputFileName(G4String(argv[2]));
+    if (argc == 4){
+        runAction->SetOutputFileName(G4String(argv[2]));
+        gen_seed = atol(argv[3]);
+    }
     runManager->SetUserAction(runAction);
 
-    L_PrimaryGeneratorAction* genAction = new L_PrimaryGeneratorAction();
+    L_PrimaryGeneratorAction* genAction = new L_PrimaryGeneratorAction(gen_seed);
 	runManager->SetUserAction(genAction);
 
     L_SteppingAction* stepAction = new L_SteppingAction(genAction);

@@ -8,12 +8,18 @@
 #include "L_PrimaryGeneratorAction.h"
 
 
-L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
+L_PrimaryGeneratorAction::L_PrimaryGeneratorAction(long long gen_seed) {
 
     //    G4cout << "Start creating primary generator" << G4endl;
 
     // Pythia seed is generated from system time
-    Int_t pythiaSeed = time(NULL)%10000000;
+    Int_t pythiaSeed;
+
+    if (gen_seed == -1ll) {
+        pythiaSeed = time(NULL)%10000000;
+	} else {
+        pythiaSeed = gen_seed;
+    }
 
 
     // Getting number of event to be run in order to give Pythia
@@ -35,6 +41,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
 
     //    G4cout << "Primary generator created" << G4endl;
 }
+
 
 L_PrimaryGeneratorAction::~L_PrimaryGeneratorAction() {
 
