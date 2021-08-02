@@ -13,7 +13,7 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction(long long gen_seed) {
     //    G4cout << "Start creating primary generator" << G4endl;
 
     // Pythia seed is generated from system time
-    Int_t pythiaSeed;
+    long long pythiaSeed;
 
     if (gen_seed == -1ll) {
         pythiaSeed = time(NULL)%10000000;
