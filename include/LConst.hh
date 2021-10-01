@@ -22,7 +22,7 @@ namespace LConst{
 const G4double beam1Energy = 6500 * GeV;
 const G4double beam2Energy = 6500 * GeV;
 
-const G4double beam1AngleVertical = 0.200 * mrad;
+const G4double beam1AngleVertical = 0.00 * mrad;
 //const G4double beam1AngleHorizontal = 0.420 * mrad;
 
 //const G4double beam1AngleVertical = 0. * mrad;
