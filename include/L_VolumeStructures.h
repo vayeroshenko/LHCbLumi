@@ -104,7 +104,24 @@ struct PMT_detector: VolumeStruct {
         thickness(LConst::pmt_detector_thickness)
     {
         solid = new G4Tubs(
-                    "sectorOut",
+                    "detectorOut",
+                    0.,
+                    radius,
+                    thickness / 2.,
+                    0.,
+                    twopi);
+    }
+};
+
+struct PMT_coal: VolumeStruct {
+    const G4double radius;
+    const G4double thickness;
+    PMT_coal():
+        radius(LConst::window_radius),
+        thickness(LConst::pmt_detector_thickness)
+    {
+        solid = new G4Tubs(
+                    "coalOut",
                     0.,
                     radius,
                     thickness / 2.,
@@ -121,6 +138,7 @@ struct Assembly {
     PMT_window      *window;
     PMT_tablet      *tablet;
     PMT_body        *body;
+    PMT_coal        *coal;
     G4double angle;
     G4double pos_z;
     G4double phi;
@@ -128,6 +146,7 @@ struct Assembly {
     G4double pmt_center_rad;
     G4double pmt_detector_rad;
     G4double pmt_body_rad;
+    G4double pmt_coal_rad;
 
     G4VSensitiveDetector* sensitive;
 
@@ -136,6 +155,7 @@ struct Assembly {
         window =   new PMT_window;
         tablet =   new PMT_tablet;
         body =     new PMT_body;
+        coal =     new PMT_coal;
     }
 //    Assembly() {
 //        detector    = det_glob;
@@ -151,6 +171,7 @@ struct Assembly {
         detector->name = "detector out " + std::to_string(ID);
         window->name = "sector out " + std::to_string(ID);
         tablet->name = "tablet out " + std::to_string(ID);
+        coal->name = "coal out " + std::to_string(ID);
     }
     void Place(G4AssemblyVolume *assembly) {
         if (ID == -1) return;
@@ -159,12 +180,14 @@ struct Assembly {
         window->ConstructLogical();
         tablet->ConstructLogical();
         body->ConstructLogical();
+        coal->ConstructLogical();
 
         window->logical->SetSensitiveDetector(sensitive);
 
         pmt_center_rad = pos_z * tan(angle);
         pmt_detector_rad = pmt_center_rad + window->thickness / 2. + detector->thickness / 2.;
         pmt_body_rad = pmt_center_rad + window->thickness / 2. + detector->thickness + 5*mm;
+        pmt_coal_rad = pmt_center_rad - window->thickness / 2. - coal->thickness/2;
 
 
         G4RotationMatrix RTilt = G4RotationMatrix();
@@ -172,7 +195,6 @@ struct Assembly {
 
         G4ThreeVector *Ta = new G4ThreeVector(0.,0.,0.);
         G4RotationMatrix *Ra = new G4RotationMatrix();
-
 
 
         G4Transform3D Tr;
@@ -222,6 +244,34 @@ struct Assembly {
         Tr = G4Transform3D(*Ra,*Ta);
 
         assembly->AddPlacedVolume(detector->logical, Tr);
+
+        /////////// coal blackening ///////
+
+        Ta = new G4ThreeVector(0.,0.,0.);
+        Ra = new G4RotationMatrix();
+
+        Ra->rotateY(-phi + 90.*deg);
+
+        Ta->setX((pmt_coal_rad) * TMath::Cos(phi));
+        Ta->setY(pos_z);
+        Ta->setZ((pmt_coal_rad) * TMath::Sin(phi));
+
+
+        *Ta -= G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ta = (*Ra * (RTilt * (Ra->inverse() * (*Ta))));
+
+        *Ta += G4ThreeVector( pmt_center_rad * TMath::Cos(phi),
+                              pos_z,
+                              pmt_center_rad * TMath::Sin(phi));
+
+        *Ra = *Ra * RTilt;
+        Tr = G4Transform3D(*Ra,*Ta);
+
+        assembly->AddPlacedVolume(coal->logical, Tr);
+
 
         /////////// PMT body ///////
 

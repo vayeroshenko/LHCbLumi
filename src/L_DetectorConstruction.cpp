@@ -248,6 +248,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         pmt_assembly[j].window->material = SiO2;
         pmt_assembly[j].detector->material = SiO2;
         pmt_assembly[j].tablet->material = SiO2;
+        pmt_assembly[j].coal->material = SiO2;
         pmt_assembly[j].body->material = Aluminum;
     }
 
@@ -423,6 +424,8 @@ void L_DetectorConstruction::DefineOpticalBorders()
     for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
         new G4LogicalSkinSurface("DetectorAbsSurface",
                                  pmt_assembly[j].detector->logical, OpVolumeKillSurface);
+        new G4LogicalSkinSurface("CoalAbsSurface",
+                                 pmt_assembly[j].coal->logical, OpVolumeKillSurface);
         new G4LogicalSkinSurface("sectorSurface",
                                  pmt_assembly[j].window->logical, quartzSurface);
     }
@@ -445,8 +448,14 @@ void L_DetectorConstruction::SetVisAttributes()
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
+
+    G4VisAttributes *coalVisAtt = new G4VisAttributes;
+    coalVisAtt->SetColor(red);
+    coalVisAtt->SetVisibility(true);
+
     for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
-        pmt_assembly[j].window->logical->SetVisAttributes(sectorVisAtt);
+        pmt_assembly[j].detector->logical->SetVisAttributes(sectorVisAtt);
+        pmt_assembly[j].coal->logical->SetVisAttributes(coalVisAtt);
     }
 
 }
