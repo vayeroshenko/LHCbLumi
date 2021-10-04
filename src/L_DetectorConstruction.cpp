@@ -116,7 +116,7 @@ void L_DetectorConstruction::DefineMateials() {
          that the photon will be absorbed */
 
 //        QuartzAbsorption[i] = (-1)/log(QuartzAbsorption[i])*100*cm;
-        QuartzAbsorption[i] = 10.*cm;
+        QuartzAbsorption[i] = 100.*cm;
 
         //EpotekAbsorption[i] = (-1)/log(EpotekAbsorption[i])*
         //epotekBarJoint.thickness;
@@ -445,6 +445,10 @@ void L_DetectorConstruction::SetVisAttributes()
     G4Color DircColor   = G4Color(0.0, 0.0, 1.0, 0.2);
     G4Color SensColor   = G4Color(0.0, 1.0, 1.0, 0.1);
 
+    G4VisAttributes *windowVisAtt = new G4VisAttributes;
+    windowVisAtt->SetColor(white);
+    windowVisAtt->SetVisibility(true);
+
     G4VisAttributes *sectorVisAtt = new G4VisAttributes;
     sectorVisAtt->SetColor(green);
     sectorVisAtt->SetVisibility(true);
@@ -454,6 +458,7 @@ void L_DetectorConstruction::SetVisAttributes()
     coalVisAtt->SetVisibility(true);
 
     for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+        pmt_assembly[j].window->logical->SetVisAttributes(windowVisAtt);
         pmt_assembly[j].detector->logical->SetVisAttributes(sectorVisAtt);
         pmt_assembly[j].coal->logical->SetVisAttributes(coalVisAtt);
     }
