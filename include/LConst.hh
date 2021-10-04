@@ -32,9 +32,9 @@ const G4double beam1AngleHorizontal = 0. * mrad;
 
 
 // World size
-const G4double worldSizeX = 1*m;
-const G4double worldSizeY = 1*m;
-const G4double worldSizeZ = 4.6*m;
+const G4double worldSizeX = 0.5*m;
+const G4double worldSizeY = 0.5*m;
+const G4double worldSizeZ = 0.5*m;
 
 
 // Outer and inner radius of the beampipe
@@ -136,7 +136,7 @@ const G4double outerSideOut = innerSideOut;
 
 ///////////////////////////////////////// PMT window /////////////////////////////////////////////////////
 
-const G4int pmt_n_channels = 24;
+const G4int pmt_n_channels = 1;
 
 const G4double IPangle = 4.6 *deg;
 
@@ -187,14 +187,16 @@ const G4double pmt_angle = 90.*deg + IPangle;
 ///////////////////////////////////////// Vertex /////////////////////////////////////////////////////////
 const G4double VertexX = 0.;
 const G4double VertexY = 0.;
-const G4double VertexZ = 0.;
+const G4double VertexZ = 10.*cm;
 
 
 const G4double VertexSigmaX = 0.;
 const G4double VertexSigmaY = 0.;
 const G4double VertexSigmaZ = 0.*cm;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//G4double beamAngle = 0.*deg;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

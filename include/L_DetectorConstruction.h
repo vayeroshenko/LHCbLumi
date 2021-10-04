@@ -57,6 +57,8 @@ public:
     L_SensitiveDetector *LSD;
 
 
+    G4double beamAngle = 0*deg;
+
 
     G4LogicalVolume *L1PlaneLogInner;
     G4LogicalVolume *L2PlaneLogInner;

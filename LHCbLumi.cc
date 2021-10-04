@@ -24,6 +24,7 @@
 #include "L_SteppingAction.h"
 #include "L_PhysicsList.h"
 
+#include "LConst.hh"
 
 #include "Randomize.hh"
 
@@ -42,7 +43,10 @@ int main(int argc, char** argv)
 	// Run manager initialization
 	G4RunManager* runManager = new G4RunManager;
 
+
+
     L_DetectorConstruction* detector = new L_DetectorConstruction;
+    if (argc == 4) detector->beamAngle = atof(argv[3])*deg;
 	runManager->SetUserInitialization(detector);
 
 
@@ -56,8 +60,10 @@ int main(int argc, char** argv)
 
 
     L_RunAction* runAction = new L_RunAction;
-    if (argc == 3) runAction->SetOutputFileName(G4String(argv[2]));
+    if (argc == 3 || argc == 4) runAction->SetOutputFileName(G4String(argv[2]));
     runManager->SetUserAction(runAction);
+
+
 
     L_PrimaryGeneratorAction* genAction = new L_PrimaryGeneratorAction();
 	runManager->SetUserAction(genAction);

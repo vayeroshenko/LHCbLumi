@@ -28,9 +28,9 @@ L_PrimaryGeneratorAction::L_PrimaryGeneratorAction() {
 
     // Starting up the pythia instance
 
-    initBeams();
+//    initBeams();
 
-    pythia.init();
+//    pythia.init();
 
 
     //    G4cout << "Primary generator created" << G4endl;
@@ -64,37 +64,30 @@ void L_PrimaryGeneratorAction::initBeams() {
 
 void L_PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
-    // filling up class variables with event data from pythia
-    GetEvent();
-
     G4ParticleTable* particleTable;
     G4ParticleDefinition* particle;
     G4ThreeVector dir;
     G4double m, momentum, Ekin;
 
-    // generating all primaries from event
-    for (G4int pId = 0; pId < nParticles; ++pId){
-        particleTable = G4ParticleTable::GetParticleTable();
-        particle = particleTable->FindParticle(pdgID[pId]);
-        m = particle->GetPDGMass();
+    particleTable = G4ParticleTable::GetParticleTable();
+    particle = particleTable->FindParticle(2212);
+    m = particle->GetPDGMass();
 
-        dir = G4ThreeVector(pX[pId],pY[pId],pZ[pId]);
+    dir = G4ThreeVector(0,  0, -1).unit();
 
-        momentum = TMath::Sqrt(pX[pId]*pX[pId] + pY[pId]*pY[pId] + pZ[pId]*pZ[pId]);
-        Ekin = (TMath::Sqrt(momentum*momentum + m*m) - m);
+//    momentum = TMath::Sqrt(pX[pId]*pX[pId] + pY[pId]*pY[pId] + pZ[pId]*pZ[pId]);
+//    Ekin = (TMath::Sqrt(momentum*momentum + m*m) - m);
 
-        _particleGun->SetParticleDefinition(particle);
-        _particleGun->SetParticleMomentumDirection(dir);
-        _particleGun->SetParticleEnergy(Ekin);
-        _particleGun->SetParticleTime(T[pId]);
+    Ekin = ( 400* GeV);
 
-        _particleGun->SetParticlePosition(G4ThreeVector(X[pId], Y[pId], Z[pId]));
+    _particleGun->SetParticleDefinition(particle);
+    _particleGun->SetParticleMomentumDirection(dir);
+    _particleGun->SetParticleEnergy(Ekin);
+    _particleGun->SetParticleTime(0);
 
-        // Cut off low-momentum particles (< 20 MeV)
-        if (momentum < 20.) continue; //////////////////////// Momentum cut ////////////////////////////
+    _particleGun->SetParticlePosition(G4ThreeVector(LConst::VertexX, LConst::VertexY, LConst::VertexZ));
 
-        _particleGun->GeneratePrimaryVertex(anEvent);
-    }
+    _particleGun->GeneratePrimaryVertex(anEvent);
 
 
     //    G4cout << "Primaries generated" << G4endl;

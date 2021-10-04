@@ -176,57 +176,57 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
     // The solid to be extracted from VELO vessel upstream cap
     // in order to avoid overlap with beampipe
-    G4VSolid *ExtSolid = new G4Tubs("ExtTube",	// name
-                                    0.,											// inner radius
-                                    LConst::BPOuterRadius,						// outer radius
-                                    LConst::worldSizeZ/2.,							// dZ/2
-                                    0,											// theta start
-                                    twopi);										// theta of sector
+//    G4VSolid *ExtSolid = new G4Tubs("ExtTube",	// name
+//                                    0.,											// inner radius
+//                                    LConst::BPOuterRadius,						// outer radius
+//                                    LConst::worldSizeZ/2.,							// dZ/2
+//                                    0,											// theta start
+//                                    twopi);										// theta of sector
 
 
     ////////////////////// Beampipe ////////////////////////////
-    G4VSolid *BPSolid = new G4Tubs("BeamPipe",			// name
-                                   LConst::BPInnerRadius,						// inner radius
-                                   LConst::BPOuterRadius,						// outer radius
-                                   (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,  // dZ/2
-                                   0,											// theta start
-                                   twopi);										// theta of sector
-    G4LogicalVolume *BPLogical = new G4LogicalVolume(BPSolid,
-                                                     BPMaterial,
-                                                     "BeamPipe");
-    G4VPhysicalVolume *BPPhysical =  new G4PVPlacement(
-                new G4RotationMatrix(),
-                G4ThreeVector(0.,0., (- LConst::worldSizeZ/2. + LConst::BeamStart)/2.),
-                BPLogical,
-                "BeamPipe",
-                worldLogical,
-                false,
-                0);
+//    G4VSolid *BPSolid = new G4Tubs("BeamPipe",			// name
+//                                   LConst::BPInnerRadius,						// inner radius
+//                                   LConst::BPOuterRadius,						// outer radius
+//                                   (LConst::worldSizeZ/2. + LConst::BeamStart)/2.,  // dZ/2
+//                                   0,											// theta start
+//                                   twopi);										// theta of sector
+//    G4LogicalVolume *BPLogical = new G4LogicalVolume(BPSolid,
+//                                                     BPMaterial,
+//                                                     "BeamPipe");
+//    G4VPhysicalVolume *BPPhysical =  new G4PVPlacement(
+//                new G4RotationMatrix(),
+//                G4ThreeVector(0.,0., (- LConst::worldSizeZ/2. + LConst::BeamStart)/2.),
+//                BPLogical,
+//                "BeamPipe",
+//                worldLogical,
+//                false,
+//                0);
     ////////////////////////////////////////////////////////////
 
 
     ////////////////////// VELO cap ////////////////////////////
-    G4VSolid *VELOsphere = new G4Sphere("VELOsphere",
-                                        LConst::sphereInnerR,
-                                        LConst::sphereOuterR,
-                                        0,
-                                        twopi, //LConst::sphereTheta*2.,
-                                        0,
-                                        LConst::sphereTheta);
-    G4SubtractionSolid *VELOsphereSolid = new G4SubtractionSolid("VELOsphere", VELOsphere, ExtSolid);
-    G4LogicalVolume *VELOsphereLog = new G4LogicalVolume(VELOsphereSolid,
-                                                         INOX,
-                                                         "VELOsphere");
+//    G4VSolid *VELOsphere = new G4Sphere("VELOsphere",
+//                                        LConst::sphereInnerR,
+//                                        LConst::sphereOuterR,
+//                                        0,
+//                                        twopi, //LConst::sphereTheta*2.,
+//                                        0,
+//                                        LConst::sphereTheta);
+//    G4SubtractionSolid *VELOsphereSolid = new G4SubtractionSolid("VELOsphere", VELOsphere, ExtSolid);
+//    G4LogicalVolume *VELOsphereLog = new G4LogicalVolume(VELOsphereSolid,
+//                                                         INOX,
+//                                                         "VELOsphere");
     G4RotationMatrix *Rm = new G4RotationMatrix();
     Rm->rotateX(pi);
-    G4VPhysicalVolume *VELOspherePhys =  new G4PVPlacement(
-                Rm,
-                G4ThreeVector(0.,0., (LConst::sphereCenter)),
-                VELOsphereLog,
-                "VELOsphere",
-                worldLogical,
-                false,
-                0);
+//    G4VPhysicalVolume *VELOspherePhys =  new G4PVPlacement(
+//                Rm,
+//                G4ThreeVector(0.,0., (LConst::sphereCenter)),
+//                VELOsphereLog,
+//                "VELOsphere",
+//                worldLogical,
+//                false,
+//                0);
     ////////////////////////////////////////////////////////////
 
 
@@ -244,7 +244,7 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
 
 
 
-    for (G4int j = 0; j < 48; ++j){
+    for (G4int j = 0; j < 1; ++j){
         pmt_assembly[j].window->material = SiO2;
         pmt_assembly[j].detector->material = SiO2;
         pmt_assembly[j].tablet->material = SiO2;
@@ -259,109 +259,18 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
     //////////////////////// Layer 1 /////////////////////////////
 
     // Ring 1
-    for (G4int j = 0; j < 4; ++j){
+    for (G4int j = 0; j < 1; ++j){
         pmt_assembly[id].SetIdZThetaPhi(
                     id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_1,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 2
-    for (G4int j = 0; j < 8; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_2,
-                    360. / 8. * j * deg);
-        ++id;
-    }
-
-    // Ring 3
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_3,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-    // Ring 4
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_4,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 5
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z,
-                    LConst::IPangle_5,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    //////////////////////// Layer 2 /////////////////////////////
-
-    // Ring 1
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_1,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 2
-    for (G4int j = 0; j < 8; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_2,
-                    360. / 8. * j * deg);
-        ++id;
-    }
-
-    // Ring 3
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_3,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-    // Ring 4
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_4,
-                    360. / 4. * j * deg);
-        ++id;
-    }
-
-    // Ring 5
-    for (G4int j = 0; j < 4; ++j){
-        pmt_assembly[id].SetIdZThetaPhi(
-                    id,
-                    LConst::pmt_window_pos_z_1,
-                    LConst::IPangle_5,
+                    0.,
+                    beamAngle,
                     360. / 4. * j * deg);
         ++id;
     }
 
 
 
-
-    for (G4int j = 0; j < 48; ++j){
+    for (G4int j = 0; j < 1; ++j){
         pmt_assembly[j].sensitive = LSD;
         pmt_assembly[j].Place(assembly);
     }
@@ -421,7 +330,7 @@ void L_DetectorConstruction::DefineOpticalBorders()
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
-    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
         new G4LogicalSkinSurface("DetectorAbsSurface",
                                  pmt_assembly[j].detector->logical, OpVolumeKillSurface);
         new G4LogicalSkinSurface("CoalAbsSurface",
@@ -457,7 +366,7 @@ void L_DetectorConstruction::SetVisAttributes()
     coalVisAtt->SetColor(red);
     coalVisAtt->SetVisibility(true);
 
-    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
+    for (int j = 0; j < LConst::pmt_n_channels; ++j) {
         pmt_assembly[j].window->logical->SetVisAttributes(windowVisAtt);
         pmt_assembly[j].detector->logical->SetVisAttributes(sectorVisAtt);
         pmt_assembly[j].coal->logical->SetVisAttributes(coalVisAtt);
