@@ -365,6 +365,30 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         pmt_assembly[j].Place(assembly);
     }
 
+    G4VSolid *RadMonSolid = new G4Tubs("RadMonitor",			// name
+                                   0,						// inner radius
+                                   LConst::radmon_radius,						// outer radius
+                                   LConst::radmon_heights / 2.,  // dZ/2
+                                   0,											// theta start
+                                   twopi);										// theta of sector
+    G4LogicalVolume *RadMonLogical = new G4LogicalVolume(RadMonSolid,
+                                                         Aluminum,
+                                                         "RadMonitor");
+
+    Ra = new G4RotationMatrix();
+    Ra->rotateX(90*deg);
+    G4VPhysicalVolume *RadMonPhysical =  new G4PVPlacement(
+            Ra,
+            G4ThreeVector(
+                    LConst::radmon_pos_x,
+                    LConst::radmon_pos_y,
+                    LConst::radmon_pos_z),
+            RadMonLogical,
+            "RadMonitor",
+            worldLogical,
+            false,
+            0);
+
 
 
     Ra = new G4RotationMatrix();
