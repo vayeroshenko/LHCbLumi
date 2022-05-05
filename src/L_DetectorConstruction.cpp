@@ -365,7 +365,27 @@ G4VPhysicalVolume* L_DetectorConstruction::DefineVolumes(){
         pmt_assembly[j].Place(assembly);
     }
 
+    Ra = new G4RotationMatrix();
+    Ta = new G4ThreeVector();
 
+    G4VSolid *mesh_solid = new G4Box("mesh_solid",
+                                     LConst::mesh_xy / 2.,
+                                     LConst::mesh_xy / 2.,
+                                     LConst::mesh_thickness / 2.);
+
+    G4SubtractionSolid *mesh_cut_solid = new G4SubtractionSolid("mesh_solid",
+                                                                mesh_solid,
+                                                                ExtSolid);
+
+    G4LogicalVolume *mesh_logical = new G4LogicalVolume(mesh_cut_solid,
+                                                        Copper,
+                                                        "mesh_log");
+
+    Ta->setY(LConst::mesh_z);
+    Ra->rotateX(90*deg);
+    Tr = G4Transform3D(*Ra, *Ta);
+    assembly->AddPlacedVolume(mesh_logical,
+                              Tr);
 
     Ra = new G4RotationMatrix();
     Ta = new G4ThreeVector();
